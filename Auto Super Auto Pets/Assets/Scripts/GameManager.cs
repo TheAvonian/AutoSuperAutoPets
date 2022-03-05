@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -76,17 +77,38 @@ public class GameManager : MonoBehaviour
 
     bool StartBattle()
     {
+        foreach ( PetData pet in _teamOne.Pets )
+        {
+            pet?.OnBattleStart(_teamOne, _teamTwo);
+        }
         return true;
     }
 
     bool EndTurn()
     {
+        foreach ( PetData pet in _teamOne.Pets )
+        {
+            pet?.OnTurnEnd(_teamOne);
+        }
+
+        _tempOne = CloneTeam( _teamOne );
         return true;
+    }
+
+    Team CloneTeam( Team team )
+    {
+        Team tempNew = new();
+        foreach ( PetData p in team.Pets )
+        {
+            tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.CloneObject(p) as PetData) );
+        }
+
+        return tempNew;
     }
 
     bool Turn()
     {
-        return true;
+        return false;
     }
 
     bool TurnStart()
@@ -95,9 +117,9 @@ public class GameManager : MonoBehaviour
         _shop.RerollShop();
         _teamOne.Coins = 10;
         _teamOne.Turn++;
-        for ( int i = 0; i < _teamOne.Pets.Length; i++ )
+        foreach ( PetData pet in _teamOne.Pets )
         {
-            _teamOne.Pets[i]?.OnTurnStart(_teamOne);
+            pet?.OnTurnStart(_teamOne);
         }
         return true;
     }

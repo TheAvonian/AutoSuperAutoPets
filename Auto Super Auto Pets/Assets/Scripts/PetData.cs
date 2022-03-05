@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public abstract class PetData
 {
@@ -10,6 +14,35 @@ public abstract class PetData
     public int Damage;
     public int Level;
 
+    public static object CloneObject(object objSource)
+    {
+        //step : 1 Get the type of source object and create a new instance of that type
+        Type typeSource = objSource.GetType();
+        object objTarget = Activator.CreateInstance(typeSource);
+        //Step2 : Get all the properties of source object type
+        PropertyInfo[] propertyInfo = typeSource.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        //Step : 3 Assign all source property to taget object 's properties
+        foreach (PropertyInfo property in propertyInfo)
+        {
+            //Check whether property can be written to
+            if (property.CanWrite)
+            {
+                //Step : 4 check whether property type is value type, enum or string type
+                if (property.PropertyType.IsValueType || property.PropertyType.IsEnum || property.PropertyType == typeof(string))
+                {
+                    property.SetValue(objTarget, property.GetValue(objSource, null), null);
+                }
+                //else property type is object/complex types, so need to recursively call this method until the end of the tree is reached
+                else
+                {
+                    object objPropertyValue = property.GetValue(objSource, null);
+                    property.SetValue( objTarget, objPropertyValue == null ? null : CloneObject( objPropertyValue ), null );
+                }
+            }
+        }
+        return objTarget;
+    }
+    
     public virtual void OnBuy( Team petTeam )
     {
         foreach(PetData friend in petTeam.Pets) {
@@ -72,16 +105,26 @@ public abstract class PetData
     {
 
     }
+
+    public virtual void OnTurnStart( Team myTeam )
+    {
+        
+    }
+
+    public virtual void OnTurnEnd( Team myTeam )
+    {
+        
+    }
+
 }
 
-public class AntPet : PetData {
+public class AntPet : PetData 
+{
     public override void OnFaint(Team myTeam, Team otherTeam)
     {
         base.OnFaint(myTeam, otherTeam);
 
-        List<PetData> friends = new List<PetData>(myTeam.Pets);
-        PetData randomFriend = friends[Random.Range(0, friends.Count-1)];
-        
+        PetData randomFriend = myTeam.Pets.ElementAt( Random.Range( 0, myTeam.Pets.Count ) );
         randomFriend.Damage += 2 * Level;
         randomFriend.Health += 1 * Level;
     }
@@ -91,8 +134,6 @@ public class BeaverPet : PetData {
     public override void OnBuy(Team petTeam)
     {
         base.OnBuy(petTeam);
-        PetData[] friends = petTeam.Pets;
-        friends.
         
     }
 
