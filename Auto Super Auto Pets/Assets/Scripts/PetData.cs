@@ -3,43 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu]
-public class PetData : ScriptableObject, IShopItem, IEntity
+public abstract class PetData
 {
-    public PetType Type;
     public Image Image;
-    public List< Ability > Abilities;
-    
-    public void OnBuy( Team petTeam )
-    {
-        
-    }
 
-    public void OnSell( Team petTeam )
-    {
-    }
+    public abstract void OnBuy( Team petTeam );
 
-    public void OnFaint( Team myTeam, Team otherTeam )
-    {
-        
-    }
+    public abstract void OnSell( Team petTeam );
 
-    public void OnHurt( Team myTeam, Team otherTeam )
-    {
-    }
+    public abstract void OnFaint( Team myTeam, Team otherTeam );
 
-    public void OnBeforeAttack( Team myTeam, Team otherTeam )
-    {
-    }
+    public abstract void OnHurt( Team myTeam, Team otherTeam );
 
-    public void OnFrontPet( Team myTeam, Team otherTeam )
-    {
-    }
+    public abstract void OnBeforeAttack( Team myTeam, Team otherTeam );
 }
 
-public enum PetType
+public class AntPet : PetData
 {
-    None,
-    Ant,
-    
+
+    public override void OnBuy( Team petTeam )
+    {
+    }
+
+    public override void OnSell( Team petTeam )
+    {
+    }
+
+    public override void OnFaint( Team myTeam, Team otherTeam )
+    {
+    }
+
+    public override void OnHurt( Team myTeam, Team otherTeam )
+    {
+    }
+
+    public override void OnBeforeAttack( Team myTeam, Team otherTeam )
+    {
+    }
 }
