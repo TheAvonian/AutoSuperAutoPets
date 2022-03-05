@@ -13,6 +13,9 @@ public abstract class PetData
     public int Health;
     public int Damage;
     public int Level;
+    public int StackHeight;
+    public int Position;
+    public FoodData.Food Food;
 
     public static object CloneObject(object objSource)
     {
@@ -42,28 +45,59 @@ public abstract class PetData
         }
         return objTarget;
     }
-    
-    public virtual void OnBuy( Team petTeam )
-    {
-        foreach(PetData friend in petTeam.Pets) {
-            if(friend == this) continue;
-            friend.OnFriendSummoned(petTeam, null);
+
+    public void AddHealth(int amountGiven) {
+        this.Health += amountGiven;
+        if(this.Health > 50) {
+            this.Health = 50;
         }
     }
 
-    public virtual void OnSell( Team petTeam )
+    public void AddDamage(int amountGiven) {
+        this.Damage += amountGiven;
+        if(this.Health > 50) {
+            this.Damage = 50;
+        }
+    }
+    
+    public virtual void OnBuy( Team myTeam )
     {
-        
+        foreach(PetData friend in myTeam.Pets) {
+            if(friend == this) continue;
+            friend.OnFriendSummoned(myTeam, null);
+        }
+    }
+
+    public virtual void OnSell( Team myTeam )
+    {
+        myTeam.Pets.Remove(this);
+        myTeam.Coins += Level;
     }
 
     public virtual void OnFaint( Team myTeam, Team otherTeam )
     {
         myTeam.Pets.Remove(this);
+        foreach(PetData friend in myTeam.Pets) {
+            friend.OnFriendFaints(myTeam, otherTeam);
+        }
     }
 
-    public virtual void OnHurt( Team myTeam, Team otherTeam )
+    //Subtracts health the applicable amount and returns the final amount of damage taken
+    public virtual int OnHurt( Team myTeam, int damageTaken)
     {
+        if(this.Food == FoodData.Food.Garlic) {
+            damageTaken -= 2;
+            if(damageTaken <= 0) damageTaken = 1;
+        } else if(this.Food == FoodData.Food.Melon) {
+            damageTaken -= 20;
+            if(damageTaken < 0) damageTaken = 0;
+        }
 
+        if(damageTaken > 0) {
+            Health -= damageTaken;
+        }
+
+        return damageTaken;
     }
 
     public virtual void OnBeforeAttack( Team myTeam, Team otherTeam )
@@ -86,7 +120,7 @@ public abstract class PetData
 
     }
 
-    public virtual void OnFriendSummoned( Team myTeam, Team otherTeam )
+    public virtual void OnFriendSummoned( Team myTeam, PetData summonedFriend )
     {
 
     }
@@ -101,7 +135,7 @@ public abstract class PetData
 
     }
 
-    public virtual void OnEatShopFood( Team myTeam, Team otherTeam )
+    public virtual void OnEatShopFood(Team myTeam, FoodData food)
     {
 
     }
@@ -116,6 +150,26 @@ public abstract class PetData
         
     }
 
+    //Returns true if legal stack, false if not
+    public virtual bool OnStack(Team myTeam, PetData pet)
+    {
+        if(StackHeight >= 6 || pet.StackHeight == 0) return false;
+
+        //Stacks all copies of pets stacked on it.
+        pet.StackHeight -= 1;
+        this.OnStack(myTeam, pet);
+
+        StackHeight += 1;
+
+        this.Health = Math.Max(pet.Health, this.Health) + 1;
+        this.Damage = Math.Max(pet.Damage, this.Damage) + 1;
+
+        if(StackHeight == 3 || StackHeight == 6) {
+            Level += 1;
+        }
+
+        return true;
+    }
 }
 
 public class AntPet : PetData 
@@ -131,41 +185,112 @@ public class AntPet : PetData
 }
 
 public class BeaverPet : PetData {
-    public override void OnBuy(Team petTeam)
+    public override void OnSell(Team myTeam)
     {
-        base.OnBuy(petTeam);
-        
+        base.OnSell(myTeam);
+
+        List<PetData> friends = new List<PetData>(myTeam.Pets);
+
+        if(friends.Count >= 2) {
+            PetData friend1 = friends[Random.Range(0, friends.Count)];
+            friends.Remove(friend1);
+            PetData friend2 = friends[Random.Range(0, friends.Count)];
+
+            friend1.Health += 1 * Level;
+            friend2.Health += 1 * Level;
+        } else if (friends.Count == 1) {
+            friends[0].Health += 1 * Level;
+        }
     }
-
-
 }
 
 public class CricketPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        //Create zombie cricket and add it to the team
+
+        //myTeam.TryAddFriend();
+    }
 }
 
 public class DuckPet : PetData {
-    
+    public override void OnSell(Team myTeam)
+    {
+        base.OnSell(myTeam);
+
+        //Give current shop pets +1*level health
+        //myTeam.Shop(); 
+    }
 }
 
 public class FishPet : PetData {
-    
+    public override bool OnStack(Team myTeam, PetData pet)
+    {
+        if(base.OnStack(myTeam, pet)) {
+            if(this.StackHeight == 3 || this.StackHeight == 6) {
+                List<PetData> friends = new List<PetData>(myTeam.Pets);
+                friends.Remove(this);
+
+                foreach(PetData friend in friends)
+                {
+                    friend.Health += 1 * Level;
+                    friend.Damage += 1 * Level;
+                }
+            }
+
+            return true;
+        }
+        
+        return false;
+    }
 }
 
 public class HorsePet : PetData {
-    
+    public override void OnFriendSummoned(Team myTeam, PetData summonedFriend)
+    {
+        base.OnFriendSummoned(myTeam, summonedFriend);
+
+        summonedFriend.Damage += 1 * Level;
+    }
 }
 
 public class MosquitoPet : PetData {
-    
+    public override void OnBattleStart(Team myTeam, Team otherTeam)
+    {
+        base.OnBattleStart(myTeam, otherTeam);
+
+        if(otherTeam.Pets.Count >= 1) {
+            for(int i = 0; i < Level; i++) {
+                PetData enemy = otherTeam.Pets.ElementAt(Random.Range( 0, myTeam.Pets.Count ) );
+                enemy.OnHurt(otherTeam, 1);
+            }
+        }
+    }
 }
 
 public class OtterPet : PetData {
-    
+    public override void OnBuy(Team myTeam)
+    {
+        base.OnBuy(myTeam);
+
+        List<PetData> friends = new List<PetData>(myTeam.Pets);
+        friends.Remove(this);
+
+        PetData friend = friends.ElementAt(Random.Range(0, friends.Count));
+        friend.AddDamage(1 * Level);
+        friend.AddHealth(1 * Level);
+    }
 }
 
 public class PigPet : PetData {
-    
+    public override void OnSell(Team myTeam)
+    {
+        base.OnSell(myTeam);
+
+        myTeam.Coins += Level;
+    }
 }
 
 public class CrabPet : PetData {
