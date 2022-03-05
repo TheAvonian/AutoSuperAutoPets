@@ -72,6 +72,10 @@ public abstract class PetData
     {
         myTeam.Pets.Remove(this);
         myTeam.Coins += Level;
+
+        foreach(PetData friend in myTeam.Pets){
+            friend.OnFriendSold(myTeam);
+        }
     }
 
     public virtual void OnFaint( Team myTeam, Team otherTeam )
@@ -150,7 +154,12 @@ public abstract class PetData
         
     }
 
+    public virtual void OnFriendSold(Team myTeam) {
+
+    }
+
     //Returns true if legal stack, false if not
+    //Needs to return false if not the same type of pet??
     public virtual bool OnStack(Team myTeam, PetData pet)
     {
         if(StackHeight >= 6 || pet.StackHeight == 0) return false;
@@ -294,43 +303,155 @@ public class PigPet : PetData {
 }
 
 public class CrabPet : PetData {
-    
+    public override void OnBuy(Team myTeam)
+    {
+        base.OnBuy(myTeam);
+
+        int maxHealth = -1;
+        foreach(PetData friend in myTeam.Pets) {
+            maxHealth = Math.Max(friend.Health, maxHealth);
+        }
+
+        this.Health = maxHealth;
+    }
 }
 
 public class DodoPet : PetData {
-    
+    public override void OnBattleStart(Team myTeam, Team otherTeam)
+    {
+        base.OnBattleStart(myTeam, otherTeam);
+
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Next;
+        if(node != null) {
+            PetData friendAhead = node.Value;
+            int attackGiven = (int) (this.Damage * 0.5 * this.Level);
+            friendAhead.AddDamage(attackGiven);
+        }
+    }
 }
 
 public class ElephantPet : PetData {
-    
+    public override void OnBeforeAttack(Team myTeam, Team otherTeam)
+    {
+        base.OnBeforeAttack(myTeam, otherTeam);
+
+        int numFriendsTargeted = Level;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
+
+        while(numFriendsTargeted > 0 && node != null) {
+            node.Value.OnHurt(myTeam, 1);
+            numFriendsTargeted -= 1;
+            node = node.Previous;
+        }
+    }
 }
 
 public class FlamingoPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        int numFriendsTargeted = 2;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
+
+        while(numFriendsTargeted > 0 && node != null) {
+            PetData friend = node.Value;
+
+            friend.AddDamage(1 * Level);
+            friend.AddHealth(1 * Level);
+
+            numFriendsTargeted -= 1;
+            node = node.Previous;
+        }
+    }
 }
 
 public class HedgehogPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        foreach(PetData enemy in otherTeam.Pets) {
+            enemy.OnHurt(otherTeam, 2 * Level);
+        }
+        foreach(PetData friend in myTeam.Pets) {
+            friend.OnHurt(myTeam, 2 * Level);
+        }
+    }
 }
 
 public class PeacockPet : PetData {
-    
+
+    int charges = 1;
+
+    public override bool OnStack(Team myTeam, PetData pet)
+    {
+        if(base.OnStack(myTeam, pet)) {
+            if(StackHeight == 3 || StackHeight == 6) {
+                charges = 1 + (StackHeight / 3);
+            }
+
+            return true;
+        }
+        
+        return false;
+    }
+    public override int OnHurt(Team myTeam, int damageTaken)
+    {
+        damageTaken = base.OnHurt(myTeam, damageTaken);
+
+        if(this.Health >= 0 && damageTaken > 0 && charges > 0) {
+            this.AddDamage((int) (this.Damage * 1.5));
+            charges -= 1;
+        }
+
+        return damageTaken;
+    }
 }
 
 public class RatPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        //Summon Level * 1 dirty rats on opponents team
+
+        //otherTeam.TryAddFriend(dirtyRat, 1);
+    }
 }
 
 public class ShrimpPet : PetData {
-    
+    public override void OnFriendSold(Team myTeam) 
+    {
+        base.OnFriendSold(myTeam);
+
+        List<PetData> friends = new List<PetData>(myTeam.Pets);
+
+        if(friends.Count > 0) {
+            PetData friend = friends.ElementAt(Random.Range(0, friends.Count));
+            friend.AddHealth(1 * Level);
+        }
+    }
 }
 
 public class SpiderPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        //Create random tier 2 pet at level this.Level
+
+        //myTeam.TryAddFriend(friend, this.Position);
+    }
 }
 
 public class SwanPet : PetData {
-    
+    public override void OnTurnStart(Team myTeam)
+    {
+        base.OnTurnStart(myTeam);
+
+        myTeam.Coins += Level;
+    }
 }
 
 public class DogPet : PetData {
