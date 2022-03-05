@@ -7,15 +7,29 @@ public abstract class PetData
 {
     public Image Image;
 
-    public abstract void OnBuy( Team petTeam );
+    public virtual void OnBuy( Team petTeam )
+    {
+    }
 
-    public abstract void OnSell( Team petTeam );
+    public virtual void OnSell( Team petTeam )
+    {
+    }
 
-    public abstract void OnFaint( Team myTeam, Team otherTeam );
+    public virtual void OnFaint( Team myTeam, Team otherTeam )
+    {
+    }
 
-    public abstract void OnHurt( Team myTeam, Team otherTeam );
+    public virtual void OnHurt( Team myTeam, Team otherTeam )
+    {
+    }
 
-    public abstract void OnBeforeAttack( Team myTeam, Team otherTeam );
+    public virtual void OnBeforeAttack( Team myTeam, Team otherTeam )
+    {
+    }
+
+    public virtual void OnTurnStart( Team myTeam )
+    {
+    }
 }
 
 public class AntPet : PetData

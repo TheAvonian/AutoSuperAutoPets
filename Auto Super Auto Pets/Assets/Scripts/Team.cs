@@ -6,6 +6,7 @@ public class Team
 {
     public int Health;
     public int Coins;
+    public int Turn;
     public PetData[] Pets { get; } = new PetData[ 5 ];
     public ShopData Shop { get; set; }
 }

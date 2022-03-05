@@ -1,1 +1,4 @@
-﻿
+﻿public abstract class FoodData
+{
+    
+}

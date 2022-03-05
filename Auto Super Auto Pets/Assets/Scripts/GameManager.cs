@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    ShopData _shop;
+    
     Team _teamOne;
     Team _teamTwo;
+
+    Team _tempOne;
+    Team _tempTwo;
 
     public GameState State = GameState.TurnStart;
 
@@ -43,6 +48,13 @@ public class GameManager : MonoBehaviour
             case GameState.Battle:
                 if ( BattlePhase() )
                 {
+                    State = GameState.BattleEnd;
+                }
+
+                break;
+            case GameState.BattleEnd:
+                if ( EndBattle() )
+                {
                     State = GameState.TurnStart;
                 }
 
@@ -50,6 +62,11 @@ public class GameManager : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    bool EndBattle()
+    {
+        return true;
     }
 
     bool BattlePhase()
@@ -74,6 +91,14 @@ public class GameManager : MonoBehaviour
 
     bool TurnStart()
     {
+        _teamOne = _tempOne;
+        _shop.RerollShop();
+        _teamOne.Coins = 10;
+        _teamOne.Turn++;
+        for ( int i = 0; i < _teamOne.Pets.Length; i++ )
+        {
+            _teamOne.Pets[i]?.OnTurnStart(_teamOne);
+        }
         return true;
     }
 
@@ -84,5 +109,6 @@ public class GameManager : MonoBehaviour
         TurnEnd,
         BattleStart,
         Battle,
+        BattleEnd,
     }
 }
