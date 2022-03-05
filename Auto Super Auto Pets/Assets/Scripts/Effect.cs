@@ -1,4 +1,5 @@
 ﻿
+[System.Serializable]
 public class Ability
 {
     public Trigger Trigger;
@@ -7,6 +8,7 @@ public class Ability
     public GiveStatsData StatsData;
 }
 
+[System.Serializable]
 public class Trigger
 {
     public TriggerType TriggerType;
@@ -54,6 +56,7 @@ public enum Effect
     
 }
 
+[System.Serializable]
 public class GiveStatsData
 {
     public int Damage;
