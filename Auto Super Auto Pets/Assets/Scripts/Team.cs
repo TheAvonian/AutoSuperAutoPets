@@ -69,11 +69,12 @@ public class Team
             {
                 if ( petNode != null )
                 {
-                    Pets.AddAfter( petNode, shopItem.Pet );
+                    Pets.AddBefore( petNode, shopItem.Pet );
                 } else
                 {
                     Pets.AddFirst( shopItem.Pet );
                 }
+                shopItem.Pet.OnSummon(this);
             }
         }
         return true;
