@@ -9,13 +9,311 @@ using Random = UnityEngine.Random;
 
 public abstract class PetData
 {
-    public Image Image;
     public int PetID;
+    public static List< PetData > AllPets { get; } = new()
+    {
+        new AntPet
+        {
+            Health = 1,
+            Damage = 2,
+        },
+        new BadgerPet
+        {
+            Health = 4,
+            Damage = 5,
+        },
+        new BeaverPet
+        {
+            Health = 2,
+            Damage = 2,
+        },
+        new CricketPet
+        {
+            Damage = 1,
+            Health = 2,
+        },
+        new DuckPet
+        {
+            Damage = 1,
+            Health = 3,
+        },
+        new FishPet
+        {
+            Health = 3,
+            Damage = 2,
+        },
+        new HorsePet
+        {
+            Damage = 2,
+            Health = 1,
+        },
+        new MosquitoPet
+        {
+            Damage = 2,
+            Health = 2,
+        },
+        new OtterPet
+        {
+            Damage = 1,
+            Health = 2,
+        },
+        new PigPet
+        {
+            Damage = 3,
+            Health = 2,
+        },
+        new CrabPet
+        {
+            Damage = 3,
+            Health = 3,
+        },
+        new DodoPet
+        {
+            Damage = 2,
+            Health = 3,
+        },
+        new ElephantPet
+        {
+            Damage = 3,
+            Health = 5,
+        },
+        new FlamingoPet
+        {
+            Damage = 3,
+            Health = 1,
+        },
+        new HedgehogPet
+        {
+            Damage = 3,
+            Health = 2,
+        },
+        new PeacockPet
+        {
+            Damage = 1,
+            Health = 5,
+        },
+        new RatPet
+        {
+            Damage = 4,
+            Health = 5,
+        },
+        new ShrimpPet
+        {
+            Damage = 2,
+            Health = 5,
+        },
+        new SpiderPet
+        {
+            Damage = 2,
+            Health = 2,
+        },
+        new SwanPet
+        {
+            Damage = 1,
+            Health = 3,
+        },
+        new DogPet
+        {
+            Damage = 2,
+            Health = 2,
+        },
+        new BadgerPet
+        {
+            Damage = 5,
+            Health = 4,
+        },
+        new BlowfishPet
+        {
+            Damage = 3,
+            Health = 5,
+        },
+        new CamelPet
+        {
+            Damage = 2,
+            Health = 5,
+        },
+        new GiraffePet
+        {
+            Damage = 2,
+            Health = 5,
+        },
+        new KangarooPet
+        {
+            Health = 2,
+            Damage = 1,
+        },
+        new OxPet
+        {
+            Damage = 1,
+            Health = 4,
+        },
+        new RabbitPet
+        {
+            Damage = 3,
+            Health = 2,
+        },
+        new SheepPet
+        {
+            Damage = 2,
+            Health = 2,
+        },
+        new SnailPet
+        {
+            Damage = 2,
+            Health = 2,
+        },
+        new TurtlePet
+        {
+            Damage = 1,
+            Health = 2,
+        },
+        new WhalePet
+        {
+            Damage = 3,
+            Health = 8,
+        },
+        new BisonPet
+        {
+            Damage = 6,
+            Health = 6,
+        },
+        new DeerPet
+        {
+            Health = 1,
+            Damage = 1,
+        },
+        new DolphinPet
+        {
+            Damage = 4,
+            Health = 6,
+        },
+        new HippoPet
+        {
+            Damage = 4,
+            Health = 7,
+        },
+        new PenguinPet
+        {
+            Damage = 1,
+            Health = 2,
+        },
+        new RoosterPet
+        {
+            Damage = 5,
+            Health = 3,
+        },
+        new SkunkPet
+        {
+            Damage = 3,
+            Health = 6,
+        },
+        new SquirrelPet
+        {
+            Damage = 2,
+            Health = 2,
+        },
+        new WormPet
+        {
+            Damage = 2,
+            Health = 2,
+        },
+        new ParrotPet
+        {
+            Damage = 5,
+            Health = 3,
+        },
+        new MonkeyPet
+        {
+            Damage = 1,
+            Health = 2,
+        },
+        new CowPet
+        {
+            Damage = 4,
+            Health = 6,
+        },
+        new CrocodilePet
+        {
+            Damage = 8,
+            Health = 4,
+        },
+        new RhinoPet
+        {
+            Damage = 5,
+            Health = 8,
+        },
+        new ScorpionPet
+        {
+            Damage = 1,
+            Health = 1,
+        },
+        new SealPet
+        {
+            Damage = 3,
+            Health = 8,
+        },
+        new SharkPet
+        {
+            Damage = 4,
+            Health = 4,
+        },
+        new TurkeyPet
+        {
+            Damage = 3,
+            Health = 4,
+        },
+        new CatPet
+        {
+            Damage = 4,
+            Health = 5,
+        },
+        new BoarPet
+        {
+            Damage = 8,
+            Health = 6,
+        },
+        new DragonPet
+        {
+            Damage = 6,
+            Health = 8,
+        },
+        new FlyPet
+        {
+            Damage = 5,
+            Health = 5,
+        },
+        new GorillaPet
+        {
+            Damage = 6,
+            Health = 9,
+        },
+        new LeopardPet
+        {
+            Damage = 10,
+            Health = 4,
+        },
+        new MammothPet
+        {
+            Damage = 3,
+            Health = 10,
+        },
+        new SnakePet
+        {
+            Damage = 6,
+            Health = 6,
+        },
+        new TigerPet
+        {
+            Damage = 4,
+            Health = 3,
+        },
+    };
+        
     public int Health;
     public int Damage;
-    public int Level;
-    public int StackHeight;
-    public int Position;
+    public int Level = 1;
+    public int StackHeight = 1;
+    public int Position = -1;
     public FoodData.Food Food;
 
     public static object CloneObject(object objSource)
@@ -219,6 +517,11 @@ public abstract class PetData
         }
 
         return true;
+    }
+
+    public virtual void DamagePet( PetData firstValue )
+    {
+        
     }
 }
 
