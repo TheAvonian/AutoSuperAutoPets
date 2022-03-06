@@ -97,7 +97,7 @@ public abstract class PetData
         Peacock = AllPets.Peacock,
         Rat = AllPets.Rat,
         Shrimp = AllPets.Shrimp,
-        Spider = AllPets.Shrimp,
+        Spider = AllPets.Spider,
         Swan = AllPets.Swan
     }
 
