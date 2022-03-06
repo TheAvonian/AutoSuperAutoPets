@@ -112,14 +112,15 @@ public class GameManager
 
     bool StartBattle()
     {
-        foreach ( PetData pet in _tempOne.Pets )
-        {
-            pet?.OnBattleStart( _tempOne, _tempTwo );
-        }
 
-        foreach ( PetData pet in _tempTwo.Pets )
+        for ( LinkedListNode<PetData> node = _tempOne.Pets.First; node != null; node = node.Next )
         {
-            pet?.OnBattleStart( _tempTwo, _tempOne );
+            node.Value.OnBattleStart( _tempOne, _tempTwo );
+        }
+        
+        for ( LinkedListNode<PetData> node = _tempTwo.Pets.First; node != null; node = node.Next )
+        {
+            node.Value.OnBattleStart( _tempTwo, _tempOne );
         }
 
         return true;
