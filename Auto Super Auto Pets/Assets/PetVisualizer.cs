@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,22 +9,26 @@ public class PetVisualizer : MonoBehaviour
     public GameObject[] TeamTiles;
     public GameObject[] ShopTiles;
 
-    public Object[] Sprites;
+    public Sprite[] Sprites;
 
-    private Team myTeam;
+    Team _myTeam;
 
-    private void Awake() {
-        Sprites = Resources.LoadAll("Assets/Sprites");
+    void Awake()
+    {
+        Sprites = (Sprite[]) Resources.LoadAll( "Assets/Sprites", typeof( Sprite ) );
     }
 
-    void Update() {
-        if(myTeam != null) {
-            LinkedListNode<PetData> node = myTeam.Pets.First;
+    void Update()
+    {
+        if ( _myTeam != null )
+        {
+            LinkedListNode< PetData > node = _myTeam.Pets.First;
             int index = 0;
 
-            while(node != null) {
+            while ( node != null )
+            {
 
-                TeamTiles[index].GetComponent<Image>().sprite = Sprites.Select(x=> x.name == (PetData.AllPets) node.Value.PetID);
+                TeamTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
             }
         }
     }
