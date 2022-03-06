@@ -104,13 +104,9 @@ public class GameManager
         }
 
         // fix this 
-        _tempOne.Pets.First.Value.DamagePet( _tempTwo.Pets.First.Value );
-        _tempTwo.Pets.First.Value.DamagePet( _tempOne.Pets.First.Value );
-        
-        _tempOne.Pets.First.Next?.Value.OnPetAheadAttack(_tempOne, _tempTwo);
-        _tempTwo.Pets.First.Next?.Value.OnPetAheadAttack(_tempTwo, _tempOne);
-        
-
+        _tempOne.Pets.First.Value.OnAttack( _tempOne, _tempTwo );
+        _tempTwo.Pets.First.Value.OnAttack( _tempTwo, _tempOne );
+        return false;
     }
 
     bool StartBattle()
