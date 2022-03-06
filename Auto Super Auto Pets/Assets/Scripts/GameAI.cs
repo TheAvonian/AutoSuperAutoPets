@@ -198,7 +198,7 @@ public class GameAI : Agent
         if ( actions.DiscreteActions[ 0 ] == 7 && _myTeam.Coins >= 1 )
         {
             Debug.Log("Rerolling"  );
-            _myTeam.Shop.RerollShop( _myTeam.Turn );
+            _myTeam.Shop.RerollShop();
             _myTeam.Coins--;
         }
 

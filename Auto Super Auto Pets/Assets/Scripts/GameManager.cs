@@ -139,9 +139,8 @@ public class GameManager
     bool TurnStart()
     {
         _teamOne.Coins = 10;
-        _teamOne.Turn++;
-        _teamOne.Shop.UpdateAvailableTiers(_teamOne.Turn);
-        _teamOne.Shop.RerollShop( _teamOne.Turn );
+        _teamOne.Shop.IncrementTurn();
+        _teamOne.Shop.RerollShop();
         foreach ( PetData pet in _teamOne.Pets )
         {
             pet?.OnTurnStart( _teamOne );

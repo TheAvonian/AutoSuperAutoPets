@@ -11,383 +11,100 @@ public abstract class PetData
 {
     public int PetID;
 
-    public static List< PetData > TierOnePets { get; } = new()
-    {
-        new AntPet
-        {
-            PetID = 0,
-            Health = 1,
-            Damage = 2,
-        },
-        new BeaverPet
-        {
-            PetID = 2,
-            Health = 2,
-            Damage = 2,
-        },
-        new CricketPet
-        {
-            PetID = 3,
-            Damage = 1,
-            Health = 2,
-        },
-        new DuckPet
-        {
-            PetID = 4,
-            Damage = 1,
-            Health = 3,
-        },
-        new FishPet
-        {
-            PetID = 5,
-            Health = 3,
-            Damage = 2,
-        },
-        new HorsePet
-        {
-            PetID = 6,
-            Damage = 2,
-            Health = 1,
-        },
-        new MosquitoPet
-        {
-            PetID = 7,
-            Damage = 2,
-            Health = 2,
-        },
-        new OtterPet
-        {
-            PetID = 8,
-            Damage = 1,
-            Health = 2,
-        },
-        new PigPet
-        {
-            PetID = 9,
-            Damage = 3,
-            Health = 2,
-        },
-    };
+    public enum AllPets {
+        Ant, Beaver, Cricket, Duck, Fish, Horse, Mosquito, Otter, Pig, 
+        Crab, Dodo, Elephant, Flamingo, Hedgehog, Peacock, Rat, Shrimp, Spider, Swan, 
+        Dog, Badger, Blowfish, Camel, Giraffe, Kangaroo, Ox, Rabbit, Sheep, Snail, Turtle,
+        Whale, Bison, Deer, Dolphin, Hippo, Penguin, Rootser, Skunk, Squirrel, Worm, Parrot,
+        Monkey, Cow, Crocodile, Rhino, Scorpion, Seal, Shark, Turkey,
+        Cat, Boar, Dragon, Fly, Gorilla, Leopard, Mammoth, Snake, Tiger
+    }
 
-    public static List< PetData > TierTwoPets { get; } = new()
-    {
-        new CrabPet
-        {
-            PetID = 10,
-            Damage = 3,
-            Health = 3,
-        },
-        new DodoPet
-        {
-            PetID = 11,
-            Damage = 2,
-            Health = 3,
-        },
-        new ElephantPet
-        {
-            PetID = 12,
-            Damage = 3,
-            Health = 5,
-        },
-        new FlamingoPet
-        {
-            PetID = 13,
-            Damage = 3,
-            Health = 1,
-        },
-        new HedgehogPet
-        {
-            PetID = 14,
-            Damage = 3,
-            Health = 2,
-        },
-        new PeacockPet
-        {
-            PetID = 15,
-            Damage = 1,
-            Health = 5,
-        },
-        new RatPet
-        {
-            PetID = 16,
-            Damage = 4,
-            Health = 5,
-        },
-        new ShrimpPet
-        {
-            PetID = 17,
-            Damage = 2,
-            Health = 5,
-        },
-        new SpiderPet
-        {
-            PetID = 18,
-            Damage = 2,
-            Health = 2,
-        },
-        new SwanPet
-        {
-            PetID = 19,
-            Damage = 1,
-            Health = 3,
-        },
-    };
+    public enum TierOnePets {Ant = AllPets.Ant, Beaver = AllPets.Beaver, Cricket = AllPets.Cricket, Duck = AllPets.Duck, Fish = AllPets.Fish, Horse = AllPets.Horse, Mosquito = AllPets.Mosquito, Otter = AllPets.Otter, Pig = AllPets.Pig}
+    public enum TierTwoPets {Crab = AllPets.Crab, Dodo = AllPets.Dodo, Elephant = AllPets.Elephant, Flamingo = AllPets.Flamingo, Hedgehog = AllPets.Hedgehog, Peacock = AllPets.Peacock, Rat = AllPets.Rat, Shrimp = AllPets.Shrimp, Spider = AllPets.Shrimp, Swan = AllPets.Swan}
+    public enum TierThreePets {Dog = AllPets.Dog, Badger = AllPets.Badger, Blowfish = AllPets.Blowfish, Camel = AllPets.Camel, Giraffe = AllPets.Giraffe, Kangaroo = AllPets.Kangaroo, Ox = AllPets.Ox, Rabbit = AllPets.Rabbit, Sheep = AllPets.Sheep, Snail = AllPets.Snail, Turtle = AllPets.Turtle}
+    public enum TierFourPets {Whale = AllPets.Whale, Bison = AllPets.Bison, Deer = AllPets.Deer, Dolphin = AllPets.Dolphin, Hippo = AllPets.Hippo, Penguin = AllPets.Penguin, Rootser = AllPets.Rootser, Skunk = AllPets.Skunk, Squirrel = AllPets.Squirrel, Worm = AllPets.Worm, Parrot = AllPets.Parrot}
+    public enum TierFivePets {Monkey = AllPets.Monkey, Cow = AllPets.Cow, Crocodile = AllPets.Crocodile, Rhino = AllPets.Rhino, Scorpion = AllPets.Scorpion, Seal = AllPets.Seal, Shark = AllPets.Shark, Turkey = AllPets.Turkey}
+    public enum TierSixPets {Cat = AllPets.Cat, Boar = AllPets.Boar, Dragon = AllPets.Dragon, Fly = AllPets.Fly, Gorilla = AllPets.Gorilla, Leopard = AllPets.Leopard, Mammoth = AllPets.Mammoth, Snake = AllPets.Snake, Tiger = AllPets.Tiger}
 
-    public static List< PetData > TierThreePets { get; } = new()
-    {
-        new DogPet
-        {
-            PetID = 20,
-            Damage = 2,
-            Health = 2,
-        },
-        new BadgerPet
-        {
-            PetID = 21,
-            Damage = 5,
-            Health = 4,
-        },
-        new BlowfishPet
-        {
-            PetID = 22,
-            Damage = 3,
-            Health = 5,
-        },
-        new CamelPet
-        {
-            PetID = 23,
-            Damage = 2,
-            Health = 5,
-        },
-        new GiraffePet
-        {
-            PetID = 24,
-            Damage = 2,
-            Health = 5,
-        },
-        new KangarooPet
-        {
-            PetID = 25,
-            Health = 2,
-            Damage = 1,
-        },
-        new OxPet
-        {
-            PetID = 26,
-            Damage = 1,
-            Health = 4,
-        },
-        new BadgerPet
-        {
-            PetID = 1,
-            Health = 4,
-            Damage = 5,
-        },
-        new RabbitPet
-        {
-            PetID = 27,
-            Damage = 3,
-            Health = 2,
-        },
-        new SheepPet
-        {
-            PetID = 28,
-            Damage = 2,
-            Health = 2,
-        },
-        new SnailPet
-        {
-            PetID = 29,
-            Damage = 2,
-            Health = 2,
-        },
-        new TurtlePet
-        {
-            PetID = 30,
-            Damage = 1,
-            Health = 2,
-        },
-    };
+    public static PetData PetConstructor(PetData.AllPets petType) {
+        return petType switch {
+            AllPets.Ant => new AntPet { PetID = 0, Health = 1, Damage = 2, },
+            AllPets.Beaver =>  new BeaverPet { PetID = 2, Health = 2, Damage = 2, },
+            AllPets.Cricket => new CricketPet { PetID = 3, Damage = 1, Health = 2, },
+            AllPets.Duck => new DuckPet { PetID = 4, Damage = 1, Health = 3, },
+            AllPets.Fish => new FishPet { PetID = 5, Health = 3, Damage = 2, },
+            AllPets.Horse => new HorsePet { PetID = 6, Damage = 2, Health = 1, },
+            AllPets.Mosquito => new MosquitoPet { PetID = 7, Damage = 2, Health = 2, },
+            AllPets.Otter =>new OtterPet { PetID = 8, Damage = 1, Health = 2, },
+            AllPets.Pig => new PigPet { PetID = 9, Damage = 3, Health = 2, },
+            AllPets.Crab => new CrabPet { PetID = 10, Damage = 3, Health = 3, },
+            AllPets.Dodo => new DodoPet { PetID = 11, Damage = 2, Health = 3, },
+            AllPets.Elephant => new ElephantPet { PetID = 12, Damage = 3, Health = 5, },
+            AllPets.Flamingo => new FlamingoPet { PetID = 13, Damage = 3, Health = 1, },
+            AllPets.Hedgehog => new HedgehogPet { PetID = 14, Damage = 3, Health = 2, },
+            AllPets.Peacock => new PeacockPet { PetID = 15, Damage = 1, Health = 5, },
+            AllPets.Rat => new RatPet { PetID = 16, Damage = 4, Health = 5, },
+            AllPets.Shrimp => new ShrimpPet { PetID = 17, Damage = 2, Health = 5, },
+            AllPets.Spider => new SpiderPet { PetID = 18, Damage = 2, Health = 2, },
+            AllPets.Swan => new SwanPet { PetID = 19, Damage = 1, Health = 3, },
+            AllPets.Dog => new DogPet { PetID = 20, Damage = 2, Health = 2, },
+            AllPets.Badger => new BadgerPet { PetID = 21, Damage = 5, Health = 4, },
+            AllPets.Blowfish => new BlowfishPet { PetID = 22, Damage = 3, Health = 5, },
+            AllPets.Camel => new CamelPet { PetID = 23, Damage = 2, Health = 5, },
+            AllPets.Giraffe => new GiraffePet { PetID = 24, Damage = 2, Health = 5, },
+            AllPets.Kangaroo => new KangarooPet { PetID = 25, Health = 2, Damage = 1, },
+            AllPets.Ox => new OxPet { PetID = 26, Damage = 1, Health = 4, },
+            AllPets.Rabbit => new RabbitPet { PetID = 27, Damage = 3, Health = 2, },
+            AllPets.Sheep => new SheepPet { PetID = 28, Damage = 2, Health = 2, },
+            AllPets.Snail => new SnailPet { PetID = 29, Damage = 2, Health = 2, },
+            AllPets.Turtle => new TurtlePet { PetID = 30, Damage = 1, Health = 2, },
+            AllPets.Whale => new WhalePet { PetID = 31, Damage = 3, Health = 8, },
+            AllPets.Bison => new BisonPet { PetID = 32, Damage = 6, Health = 6, },
+            AllPets.Deer => new DeerPet { PetID = 33, Health = 1, Damage = 1, },
+            AllPets.Dolphin => new DolphinPet { PetID = 34, Damage = 4, Health = 6, },
+            AllPets.Hippo => new HippoPet { PetID = 35, Damage = 4, Health = 7, },
+            AllPets.Penguin => new PenguinPet { PetID = 36, Damage = 1, Health = 2, },
+            AllPets.Rootser => new RoosterPet { PetID = 37, Damage = 5, Health = 3, },
+            AllPets.Skunk => new SkunkPet { PetID = 38, Damage = 3, Health = 6, },
+            AllPets.Squirrel => new SquirrelPet { PetID = 39, Damage = 2, Health = 2, },
+            AllPets.Worm => new WormPet { PetID = 40, Damage = 2, Health = 2, },
+            AllPets.Parrot => new ParrotPet { PetID = 41, Damage = 5, Health = 3, },
+            AllPets.Monkey => new MonkeyPet { PetID = 42, Damage = 1, Health = 2, },
+            AllPets.Cow => new CowPet { PetID = 43, Damage = 4, Health = 6, },
+            AllPets.Crocodile => new CrocodilePet { PetID = 44, Damage = 8, Health = 4, },
+            AllPets.Rhino => new RhinoPet { PetID = 45, Damage = 5, Health = 8, },
+            AllPets.Scorpion => new ScorpionPet { PetID = 46, Damage = 1, Health = 1, },
+            AllPets.Seal => new SealPet { PetID = 47, Damage = 3, Health = 8, },
+            AllPets.Shark => new SharkPet { PetID = 48, Damage = 4, Health = 4, },
+            AllPets.Turkey => new TurkeyPet { PetID = 49, Damage = 3, Health = 4, },
+            AllPets.Cat => new CatPet { PetID = 50, Damage = 4, Health = 5, },
+            AllPets.Boar => new BoarPet { PetID = 51, Damage = 8, Health = 6, },
+            AllPets.Dragon => new DragonPet { PetID = 52, Damage = 6, Health = 8, },
+            AllPets.Fly => new FlyPet { PetID = 53, Damage = 5, Health = 5, },
+            AllPets.Gorilla => new GorillaPet { PetID = 54, Damage = 6, Health = 9, },
+            AllPets.Leopard => new LeopardPet { PetID = 55, Damage = 10, Health = 4, },
+            AllPets.Mammoth => new MammothPet { PetID = 56, Damage = 3, Health = 10, },
+            AllPets.Snake => new SnakePet { PetID = 57, Damage = 6, Health = 6, },
+            AllPets.Tiger => new TigerPet { PetID = 58, Damage = 4, Health = 3, },
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 
-    public static List< PetData > TierFourPets { get; } = new()
-    {
-        new WhalePet
-        {
-            PetID = 31,
-            Damage = 3,
-            Health = 8,
-        },
-        new BisonPet
-        {
-            PetID = 32,
-            Damage = 6,
-            Health = 6,
-        },
-        new DeerPet
-        {
-            PetID = 33,
-            Health = 1,
-            Damage = 1,
-        },
-        new DolphinPet
-        {
-            PetID = 34,
-            Damage = 4,
-            Health = 6,
-        },
-        new HippoPet
-        {
-            PetID = 35,
-            Damage = 4,
-            Health = 7,
-        },
-        new PenguinPet
-        {
-            PetID = 36,
-            Damage = 1,
-            Health = 2,
-        },
-        new RoosterPet
-        {
-            PetID = 37,
-            Damage = 5,
-            Health = 3,
-        },
-        new SkunkPet
-        {
-            PetID = 38,
-            Damage = 3,
-            Health = 6,
-        },
-        new SquirrelPet
-        {
-            PetID = 39,
-            Damage = 2,
-            Health = 2,
-        },
-        new WormPet
-        {
-            PetID = 40,
-            Damage = 2,
-            Health = 2,
-        },
-        new ParrotPet
-        {
-            PetID = 41,
-            Damage = 5,
-            Health = 3,
-        },
-    };
-
-    public static List< PetData > TierFivePets { get; } = new()
-    {
-        new MonkeyPet
-        {
-            PetID = 42,
-            Damage = 1,
-            Health = 2,
-        },
-        new CowPet
-        {
-            PetID = 43,
-            Damage = 4,
-            Health = 6,
-        },
-        new CrocodilePet
-        {
-            PetID = 44,
-            Damage = 8,
-            Health = 4,
-        },
-        new RhinoPet
-        {
-            PetID = 45,
-            Damage = 5,
-            Health = 8,
-        },
-        new ScorpionPet
-        {
-            PetID = 46,
-            Damage = 1,
-            Health = 1,
-        },
-        new SealPet
-        {
-            PetID = 47,
-            Damage = 3,
-            Health = 8,
-        },
-        new SharkPet
-        {
-            PetID = 48,
-            Damage = 4,
-            Health = 4,
-        },
-        new TurkeyPet
-        {
-            PetID = 49,
-            Damage = 3,
-            Health = 4,
-        },
-    };
-
-    public static List< PetData > TierSixPets { get; } = new()
-    {
-        new CatPet
-        {
-            PetID = 50,
-            Damage = 4,
-            Health = 5,
-        },
-        new BoarPet
-        {
-            PetID = 51,
-            Damage = 8,
-            Health = 6,
-        },
-        new DragonPet
-        {
-            PetID = 52,
-            Damage = 6,
-            Health = 8,
-        },
-        new FlyPet
-        {
-            PetID = 53,
-            Damage = 5,
-            Health = 5,
-        },
-        new GorillaPet
-        {
-            PetID = 54,
-            Damage = 6,
-            Health = 9,
-        },
-        new LeopardPet
-        {
-            PetID = 55,
-            Damage = 10,
-            Health = 4,
-        },
-        new MammothPet
-        {
-            PetID = 56,
-            Damage = 3,
-            Health = 10,
-        },
-        new SnakePet
-        {
-            PetID = 57,
-            Damage = 6,
-            Health = 6,
-        },
-        new TigerPet
-        {
-            PetID = 58,
-            Damage = 4,
-            Health = 3,
-        },
-    };
+    public static PetData RandomPet(int tier) {
+        var list = tier switch {
+            1 => Enum.GetValues( typeof(TierOnePets) ),
+            2 => Enum.GetValues( typeof(TierTwoPets) ),
+            3 => Enum.GetValues( typeof(TierThreePets) ),
+            4 => Enum.GetValues( typeof(TierFourPets) ),
+            5 => Enum.GetValues( typeof(TierFivePets) ),
+            6 => Enum.GetValues( typeof(TierSixPets) ),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+            
+        AllPets randomPet = (AllPets) list.GetValue(Random.Range(0, list.Length));
+        return PetConstructor(randomPet);
+    }
 
     public int Health;
     public int baseHealth;
@@ -1034,8 +751,7 @@ public class SpiderPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create random tier 2 pet at level this.Level
-        PetData randomTier2 = TierTwoPets[Random.Range(0, TierTwoPets.Count)];
-        PetData summonPet = CloneObject(randomTier2) as PetData;
+        PetData summonPet = RandomPet(2);
 
         summonPet.Level = this.Level;
         summonPet.baseDamage = 2;
