@@ -59,6 +59,7 @@ public class Team
             if ( Pets.Count < 5 )
             {
                 Pets.AddAfter( petNode ?? Pets.Last, shopItem.Pet );
+                shopItem.Pet.OnSummon(this);
             }
         }
         return true;
