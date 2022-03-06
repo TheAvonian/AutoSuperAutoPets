@@ -14,296 +14,355 @@ public abstract class PetData
     {
         new AntPet
         {
+            PetID = 0,
             Health = 1,
             Damage = 2,
         },
         new BadgerPet
         {
+            PetID = 1,
             Health = 4,
             Damage = 5,
         },
         new BeaverPet
         {
+            PetID = 2,
             Health = 2,
             Damage = 2,
         },
         new CricketPet
         {
+            PetID = 3,
             Damage = 1,
             Health = 2,
         },
         new DuckPet
         {
+            PetID = 4,
             Damage = 1,
             Health = 3,
         },
         new FishPet
         {
+            PetID = 5,
             Health = 3,
             Damage = 2,
         },
         new HorsePet
         {
+            PetID = 6,
             Damage = 2,
             Health = 1,
         },
         new MosquitoPet
         {
+            PetID = 7,
             Damage = 2,
             Health = 2,
         },
         new OtterPet
         {
+            PetID = 8,
             Damage = 1,
             Health = 2,
         },
         new PigPet
         {
+            PetID = 9,
             Damage = 3,
             Health = 2,
         },
         new CrabPet
         {
+            PetID = 10,
             Damage = 3,
             Health = 3,
         },
         new DodoPet
         {
+            PetID = 11,
             Damage = 2,
             Health = 3,
         },
         new ElephantPet
         {
+            PetID = 12,
             Damage = 3,
             Health = 5,
         },
         new FlamingoPet
         {
+            PetID = 13,
             Damage = 3,
             Health = 1,
         },
         new HedgehogPet
         {
+            PetID = 14,
             Damage = 3,
             Health = 2,
         },
         new PeacockPet
         {
+            PetID = 15,
             Damage = 1,
             Health = 5,
         },
         new RatPet
         {
+            PetID = 16,
             Damage = 4,
             Health = 5,
         },
         new ShrimpPet
         {
+            PetID = 17,
             Damage = 2,
             Health = 5,
         },
         new SpiderPet
         {
+            PetID = 18,
             Damage = 2,
             Health = 2,
         },
         new SwanPet
         {
+            PetID = 19,
             Damage = 1,
             Health = 3,
         },
         new DogPet
         {
+            PetID = 20,
             Damage = 2,
             Health = 2,
         },
         new BadgerPet
         {
+            PetID = 21,
             Damage = 5,
             Health = 4,
         },
         new BlowfishPet
         {
+            PetID = 22,
             Damage = 3,
             Health = 5,
         },
         new CamelPet
         {
+            PetID = 23,
             Damage = 2,
             Health = 5,
         },
         new GiraffePet
         {
+            PetID = 24,
             Damage = 2,
             Health = 5,
         },
         new KangarooPet
         {
+            PetID = 25,
             Health = 2,
             Damage = 1,
         },
         new OxPet
         {
+            PetID = 26,
             Damage = 1,
             Health = 4,
         },
         new RabbitPet
         {
+            PetID = 27,
             Damage = 3,
             Health = 2,
         },
         new SheepPet
         {
+            PetID = 28,
             Damage = 2,
             Health = 2,
         },
         new SnailPet
         {
+            PetID = 29,
             Damage = 2,
             Health = 2,
         },
         new TurtlePet
         {
+            PetID = 30,
             Damage = 1,
             Health = 2,
         },
         new WhalePet
         {
+            PetID = 31,
             Damage = 3,
             Health = 8,
         },
         new BisonPet
         {
+            PetID = 32,
             Damage = 6,
             Health = 6,
         },
         new DeerPet
         {
+            PetID = 33,
             Health = 1,
             Damage = 1,
         },
         new DolphinPet
         {
+            PetID = 34,
             Damage = 4,
             Health = 6,
         },
         new HippoPet
         {
+            PetID = 35,
             Damage = 4,
             Health = 7,
         },
         new PenguinPet
         {
+            PetID = 36,
             Damage = 1,
             Health = 2,
         },
         new RoosterPet
         {
+            PetID = 37,
             Damage = 5,
             Health = 3,
         },
         new SkunkPet
         {
+            PetID = 38,
             Damage = 3,
             Health = 6,
         },
         new SquirrelPet
         {
+            PetID = 39,
             Damage = 2,
             Health = 2,
         },
         new WormPet
         {
+            PetID = 40,
             Damage = 2,
             Health = 2,
         },
         new ParrotPet
         {
+            PetID = 41,
             Damage = 5,
             Health = 3,
         },
         new MonkeyPet
         {
+            PetID = 42,
             Damage = 1,
             Health = 2,
         },
         new CowPet
         {
+            PetID = 43,
             Damage = 4,
             Health = 6,
         },
         new CrocodilePet
         {
+            PetID = 44,
             Damage = 8,
             Health = 4,
         },
         new RhinoPet
         {
+            PetID = 45,
             Damage = 5,
             Health = 8,
         },
         new ScorpionPet
         {
+            PetID = 46,
             Damage = 1,
             Health = 1,
         },
         new SealPet
         {
+            PetID = 47,
             Damage = 3,
             Health = 8,
         },
         new SharkPet
         {
+            PetID = 48,
             Damage = 4,
             Health = 4,
         },
         new TurkeyPet
         {
+            PetID = 49,
             Damage = 3,
             Health = 4,
         },
         new CatPet
         {
+            PetID = 50,
             Damage = 4,
             Health = 5,
         },
         new BoarPet
         {
+            PetID = 51,
             Damage = 8,
             Health = 6,
         },
         new DragonPet
         {
+            PetID = 52,
             Damage = 6,
             Health = 8,
         },
         new FlyPet
         {
+            PetID = 53,
             Damage = 5,
             Health = 5,
         },
         new GorillaPet
         {
+            PetID = 54,
             Damage = 6,
             Health = 9,
         },
         new LeopardPet
         {
+            PetID = 55,
             Damage = 10,
             Health = 4,
         },
         new MammothPet
         {
+            PetID = 56,
             Damage = 3,
             Health = 10,
         },
         new SnakePet
         {
+            PetID = 57,
             Damage = 6,
             Health = 6,
         },
         new TigerPet
         {
+            PetID = 58,
             Damage = 4,
             Health = 3,
         },
