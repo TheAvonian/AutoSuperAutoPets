@@ -312,6 +312,7 @@ public abstract class PetData
 
     public virtual void OnFaint( Team myTeam, Team otherTeam )
     {
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this)!.Previous;
         myTeam.Pets.Remove( this );
 
         if ( this.Food == FoodData.Food.Honey )
@@ -328,8 +329,7 @@ public abstract class PetData
             if ( myTeam.TryAddFriend( selfCopy, this.Position ) ) selfCopy.OnSummon( myTeam );
         }
 
-        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
-        if(node != null) node.Value.OnPetAheadFaint(myTeam, otherTeam);
+        node?.Value.OnPetAheadFaint(myTeam, otherTeam);
 
         foreach ( PetData friend in myTeam.Pets )
         {
