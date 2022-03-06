@@ -69,6 +69,11 @@ public class GameAI : Agent
             {
                 _myTeam.MovePet( actions.DiscreteActions[ 2 ], actions.DiscreteActions[ 3 ] );
             }
+        } else if ( actions.DiscreteActions[ 2 ] == 5 )
+        {
+            AddReward( 0.00025f );
+            _myTeam.SellPet( actions.DiscreteActions[ 3 ] );
+            _myTeam.Coins++;
         }
 
         switch ( _manager.Update() )
@@ -114,10 +119,11 @@ public class GameAI : Agent
                 sensor.AddObservation( p.Pet.Health );
             } //else if ( p.Food != null )
             //{
-                //sensor.AddObservation( p.Food.stuff );
+            //sensor.AddObservation( p.Food.stuff );
             //}
         }
-        sensor.AddObservation(_myTeam.Shop.Items.Count);
+
+        sensor.AddObservation( _myTeam.Shop.Items.Count );
         sensor.AddObservation( _myTeam.Pets.Count );
     }
 }

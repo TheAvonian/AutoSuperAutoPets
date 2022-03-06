@@ -482,17 +482,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 12
-    NumStackedVectorObservations: 6
+    VectorObservationSize: 30
+    NumStackedVectorObservations: 8
     m_ActionSpec:
       m_NumContinuousActions: 0
-      BranchSizes: 0a000000000000000000000000000000000000000000000000000000000000000000000000000000
-    VectorActionSize: 0a000000000000000000000000000000000000000000000000000000000000000000000000000000
+      BranchSizes: 08000000060000000600000005000000
+    VectorActionSize: 08000000060000000600000005000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
-  m_InferenceDevice: 1
+  m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: PetBehavior
   TeamId: 0
@@ -508,13 +508,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1598123256}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b9e0c8e4cd932043a887eb378193ac4, type: 3}
+  m_Script: {fileID: 11500000, guid: 27801af095f54b5d801abdc59235f3c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 1000000
+  MaxStep: 0
 --- !u!4 &1598123259
 Transform:
   m_ObjectHideFlags: 0

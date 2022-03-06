@@ -61,12 +61,14 @@ public class GameManager
                     if(_teamOne.Pets.Count > 0)
                     {
                         _teamOne.Wins++;
+                        Debug.Log( "Win" );
                         return WinState.Win;
                     }
 
                     if ( _teamTwo.Pets.Count > 0 )
                     {
                         _teamOne.Health--;
+                        Debug.Log( "Loss" );
                         return WinState.Loss;
                     }
 

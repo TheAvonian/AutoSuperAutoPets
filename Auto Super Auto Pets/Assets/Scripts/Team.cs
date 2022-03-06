@@ -45,4 +45,9 @@ public class Team
     {
         
     }
+
+    public void SellPet( int actionsDiscreteAction )
+    {
+        
+    }
 }
