@@ -134,8 +134,8 @@ public class GameManager
         // CHANGE RANDOM ENEMIES
 
         LinkedList< PetData > tmp = new();
-        tmp.AddFirst( PetData.RandomPet( 1 ) );
-        tmp.AddLast( PetData.RandomPet( 1 ) );
+        tmp.AddFirst( _teamOne.Shop.RandomPet() );
+        tmp.AddLast( _teamOne.Shop.RandomPet() );
         _tempTwo = new Team()
         {
             TeamName = "Random Team",

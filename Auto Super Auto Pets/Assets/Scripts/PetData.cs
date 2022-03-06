@@ -391,42 +391,17 @@ public abstract class PetData
     };
 
     public int Health;
-    public int baseHealth;
+    public int BaseHealth;
     public int Damage;
-    public int baseDamage;
+    public int BaseDamage;
     public int Level = 1;
     public int StackHeight = 1;
     public int Position = -1;
     public FoodData.Food Food;
 
-    public static object CloneObject( object objSource )
+    protected PetData()
     {
-        //step : 1 Get the type of source object and create a new instance of that type
-        Type typeSource = objSource.GetType();
-        object objTarget = Activator.CreateInstance( typeSource );
-        //Step2 : Get all the properties of source object type
-        PropertyInfo[] propertyInfo = typeSource.GetProperties( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance );
-        //Step : 3 Assign all source property to taget object 's properties
-        foreach ( PropertyInfo property in propertyInfo )
-        {
-            //Check whether property can be written to
-            if ( property.CanWrite )
-            {
-                //Step : 4 check whether property type is value type, enum or string type
-                if ( property.PropertyType.IsValueType || property.PropertyType.IsEnum || property.PropertyType == typeof( string ) )
-                {
-                    property.SetValue( objTarget, property.GetValue( objSource, null ), null );
-                }
-                //else property type is object/complex types, so need to recursively call this method until the end of the tree is reached
-                else
-                {
-                    object objPropertyValue = property.GetValue( objSource, null );
-                    property.SetValue( objTarget, objPropertyValue == null ? null : CloneObject( objPropertyValue ), null );
-                }
-            }
-        }
-
-        return objTarget;
+        
     }
 
     public override string ToString()
@@ -436,26 +411,26 @@ public abstract class PetData
 
     public void AddHealth( int amountGiven, bool temp = false)
     {
-        if(!temp) this.baseHealth += amountGiven;
+        if(!temp) this.BaseHealth += amountGiven;
         this.Health += amountGiven;
         if ( this.Health > 50 )
         {
             this.Health = 50;
         }
-        if(this.baseHealth > 50) {
-            this.baseHealth = 50;
+        if(this.BaseHealth > 50) {
+            this.BaseHealth = 50;
         }
     }
 
     public void AddDamage(int amountGiven, bool temp = false) {
-        if(!temp) this.baseDamage += amountGiven;
+        if(!temp) this.BaseDamage += amountGiven;
         this.Damage += amountGiven;
         if ( this.Health > 50 )
         {
             this.Damage = 50;
         }
-        if(this.baseDamage > 50) {
-            this.baseDamage = 50;
+        if(this.BaseDamage > 50) {
+            this.BaseDamage = 50;
         }
     }
 
@@ -480,18 +455,19 @@ public abstract class PetData
         }
     }
 
+    
     public virtual void OnFaint( Team myTeam, Team otherTeam )
     {
         myTeam.Pets.Remove(this);
 
         if(this.Food == FoodData.Food.Honey) {
-            myTeam.TryAddFriend(new BeePet { baseHealth = 1, baseDamage = 1, Health = 1, Damage = 1 }, this.Position);
+            myTeam.TryAddFriend(new BeePet { BaseHealth = 1, BaseDamage = 1, Health = 1, Damage = 1 }, this.Position);
         } else if (this.Food == FoodData.Food.Mushroom) {
             PetData selfCopy = CloneObject(this) as PetData;
             selfCopy.Health = 1;
-            selfCopy.baseHealth = 1;
+            selfCopy.BaseHealth = 1;
             selfCopy.Damage = 1;
-            selfCopy.baseDamage = 1;
+            selfCopy.BaseDamage = 1;
             selfCopy.Food = FoodData.Food.None;
             if(myTeam.TryAddFriend(selfCopy, this.Position)) selfCopy.OnSummon(myTeam);
         }
@@ -691,8 +667,8 @@ public abstract class PetData
 
     public virtual void OnTurnStart( Team myTeam )
     {
-        this.Health = baseHealth;
-        this.Damage = baseDamage;
+        this.Health = BaseHealth;
+        this.Damage = BaseDamage;
     }
 
     public virtual void OnTurnEnd( Team myTeam )
@@ -734,6 +710,7 @@ public abstract class PetData
 
 public class AntPet : PetData
 {
+
     public override void OnFaint( Team myTeam, Team otherTeam )
     {
         base.OnFaint( myTeam, otherTeam );
@@ -773,7 +750,7 @@ public class CricketPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create zombie cricket and add it to the team
-        PetData zombie = new ZombieCricketPet { baseHealth = 1 * Level, baseDamage = 1 * Level, Health = 1 * Level, Damage = 1 * Level};
+        PetData zombie = new ZombieCricketPet { BaseHealth = 1 * Level, BaseDamage = 1 * Level, Health = 1 * Level, Damage = 1 * Level};
 
         if(myTeam.TryAddFriend(zombie, this.Position)) zombie.OnSummon(myTeam);
     }
@@ -1008,7 +985,7 @@ public class RatPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         if(otherTeam != null) {
-            PetData dirtyRat = new DirtyRatPet { baseHealth = 1, baseDamage = 1, Health = 1, Damage = 1 };
+            PetData dirtyRat = new DirtyRatPet { BaseHealth = 1, BaseDamage = 1, Health = 1, Damage = 1 };
 
             if(otherTeam.TryAddFriend(dirtyRat, 1)) dirtyRat.OnSummon(otherTeam);
         }
@@ -1042,10 +1019,10 @@ public class SpiderPet : PetData
         PetData summonPet = CloneObject(randomTier2) as PetData;
 
         summonPet.Level = this.Level;
-        summonPet.baseDamage = 2;
+        summonPet.BaseDamage = 2;
         summonPet.Damage = 2;
         summonPet.Health = 2;
-        summonPet.baseHealth = 2;
+        summonPet.BaseHealth = 2;
         if(myTeam.TryAddFriend(summonPet, this.Position)) summonPet.OnSummon(myTeam);
     }
 }
@@ -1195,7 +1172,7 @@ public class SheepPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create two rams at health and attack 2 * Level
-        PetData ram1 = new RamPet { baseHealth = 2 * Level, baseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level };
+        PetData ram1 = new RamPet { BaseHealth = 2 * Level, BaseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level };
         PetData ram2 = CloneObject(ram1) as PetData;
 
         if(myTeam.TryAddFriend(ram1, this.Position)) ram1.OnSummon(myTeam);
@@ -1252,9 +1229,9 @@ public class WhalePet : PetData
             swallowedFriend = friendAhead.Value;
 
             //Change stats to be base * Level
-            swallowedFriend.baseDamage = 1 * Level;
+            swallowedFriend.BaseDamage = 1 * Level;
             swallowedFriend.Damage = 1 * Level;
-            swallowedFriend.baseHealth = 1 * Level;
+            swallowedFriend.BaseHealth = 1 * Level;
             swallowedFriend.Health = 1 * Level;
 
             swallowedFriend.OnFaint( myTeam, otherTeam );
@@ -1294,7 +1271,7 @@ public class DeerPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create new bus with health 5 * Level and damage
-        PetData bus = new BusPet { baseDamage = 5 * Level, Damage = 5 * Level, baseHealth = 5 * Level, Health = 5 * Level };
+        PetData bus = new BusPet { BaseDamage = 5 * Level, Damage = 5 * Level, BaseHealth = 5 * Level, Health = 5 * Level };
         bus.Food = FoodData.Food.Chili;
 
         if(myTeam.TryAddFriend(bus, this.Position)) bus.OnSummon(myTeam);
@@ -1358,7 +1335,7 @@ public class RoosterPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         for(int i = 0; i < Level; i++) {
-            PetData chick = new ChickPet { baseHealth = 1, Health = 1, baseDamage = (int) (0.5 * this.Damage), Damage = (int) (0.5 * Damage) };
+            PetData chick = new ChickPet { BaseHealth = 1, Health = 1, BaseDamage = (int) (0.5 * this.Damage), Damage = (int) (0.5 * Damage) };
             if(myTeam.TryAddFriend(chick, this.Position)) chick.OnSummon(myTeam);
         }
     }
@@ -1412,8 +1389,8 @@ public class ParrotPet : PetData
 
             PetData newParrot = CloneObject(friendAhead) as PetData;
 
-            newParrot.baseDamage = this.baseDamage;
-            newParrot.baseHealth = this.baseHealth;
+            newParrot.BaseDamage = this.BaseDamage;
+            newParrot.BaseHealth = this.BaseHealth;
             newParrot.Damage = this.Damage;
             newParrot.Health = this.Health;
             newParrot.Food = this.Food;
@@ -1625,7 +1602,7 @@ public class FlyPet : PetData
         if ( charges > 0 )
         {
             //Create zombie fly with stats 5 * Level
-            PetData zombieFly = new ZombieFlyPet { baseDamage = 5 * Level, Damage = 5 * Level, baseHealth = 5 * Level, Health = 5 * Level };
+            PetData zombieFly = new ZombieFlyPet { BaseDamage = 5 * Level, Damage = 5 * Level, BaseHealth = 5 * Level, Health = 5 * Level };
             //Try add zombie fly at friend.Position
             if(myTeam.TryAddFriend(zombieFly, friend.Position)) zombieFly.OnSummon(myTeam);
         }
