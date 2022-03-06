@@ -7,7 +7,7 @@ public class Team
 {
     public int Health = 10;
     public int Coins;
-    public int Turn;
+    public int Turn = 1;
     public int Wins;
     public LinkedList< PetData > Pets { get; } = new();
     public ShopData Shop { get; set; } = new();
@@ -21,7 +21,7 @@ public class Team
             return false;
         }
 
-        Pets.AddBefore( Pets.Find( Pets.ElementAt( index ) )!, pet );
+        Pets.AddBefore( Pets.Find( Pets.ElementAt( index ) ) ?? Pets.Last, pet );
         return true;
     }
 
@@ -40,25 +40,25 @@ public class Team
     {
         LinkedListNode< PetData > petNode = Pets.First;
         int i;
-        for ( i = 0; i <= targetIndex && petNode.Next != null; i++ )
+        for ( i = 0; i <= targetIndex && petNode?.Next != null; i++ )
         {
             petNode = petNode.Next;
         }
 
         if ( i == targetIndex )
         {
-            if ( petNode.Value.PetID == shopItem.Pet?.PetID )
+            if ( petNode?.Value.PetID == shopItem.Pet?.PetID )
             {
-                petNode.Value.OnStack(this, shopItem.Pet);
+                petNode?.Value.OnStack(this, shopItem.Pet);
             } else
             {
-                petNode.Value.OnEatShopFood(this, shopItem.Food);
+                petNode?.Value.OnEatShopFood(this, shopItem.Food);
             }
         } else
         {
             if ( Pets.Count < 5 )
             {
-                Pets.AddAfter( petNode, shopItem.Pet );
+                Pets.AddAfter( petNode ?? Pets.Last, shopItem.Pet );
             }
         }
         return true;
@@ -98,16 +98,17 @@ public class Team
             node = node?.Next;
         }
 
+        if ( node == null ) return;
         Pets.Remove( node! );
     }
 
     public override string ToString()
     {
-        string endString = "";
+        string endString = $"Team C:{Coins} H:{Health} : ";
         int i = 0;
         foreach ( PetData p in Pets )
         {
-            endString += $"Pet {++i}: D:{p.Damage} H:{p.Health} ID:{p.PetID}, ";
+            endString += $"Pet {++i}: {p}, ";
         }
 
         return endString;

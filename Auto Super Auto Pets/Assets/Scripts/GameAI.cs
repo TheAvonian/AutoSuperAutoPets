@@ -5,6 +5,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameAI : Agent
 {
@@ -22,18 +23,23 @@ public class GameAI : Agent
             if ( _manager.State == GameManager.GameState.Turn )
             {
                 Debug.Log("getting decision"  );
+                Debug.Log( _myTeam );
+                Debug.Log( _myTeam.Shop );
                 RequestDecision();
             }
 
             switch ( _manager.Update() )
             {
                 case GameManager.WinState.Loss:
+                    Debug.Log( "Lose" );
                     AddReward( -0.1f );
                     break;
                 case GameManager.WinState.Tie:
+                    Debug.Log( "Tie" );
                     AddReward( 0.005f );
                     break;
                 case GameManager.WinState.Win:
+                    Debug.Log( "Win" );
                     AddReward( 0.1f );
                     break;
                 case GameManager.WinState.Nothing:
@@ -42,8 +48,6 @@ public class GameAI : Agent
                     throw new ArgumentOutOfRangeException();
             }
 
-            Debug.Log( _myTeam );
-            Debug.Log( _myTeam.Shop );
             _timer = 0;
         }
     }
@@ -57,6 +61,11 @@ public class GameAI : Agent
     public override void Heuristic( in ActionBuffers actionsOut )
     {
         ActionSegment< int > dActions = actionsOut.DiscreteActions;
+        dActions[0] = Mathf.RoundToInt(Random.value * 7);
+        dActions[1] = Mathf.RoundToInt(Random.value * 5);
+        dActions[2] = Mathf.RoundToInt(Random.value * 5);
+        dActions[3] = Mathf.RoundToInt(Random.value * 4);
+        /*
         if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
         {
             dActions[ 0 ] = 0;
@@ -158,7 +167,7 @@ public class GameAI : Agent
         if ( Input.GetKeyDown( KeyCode.B ) )
         {
             dActions[ 3 ] = 4;
-        }
+        }*/
     }
 
     public override void OnActionReceived( ActionBuffers actions )
