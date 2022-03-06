@@ -128,7 +128,7 @@ public abstract class PetData
         Skunk = AllPets.Skunk,
         Squirrel = AllPets.Squirrel,
         Worm = AllPets.Worm,
-        Parrot = AllPets.Parrot
+        Parrot = AllPets.Parrot,
     }
 
     public enum TierFivePets
@@ -140,7 +140,7 @@ public abstract class PetData
         Scorpion = AllPets.Scorpion,
         Seal = AllPets.Seal,
         Shark = AllPets.Shark,
-        Turkey = AllPets.Turkey
+        Turkey = AllPets.Turkey,
     }
 
     public enum TierSixPets
@@ -153,7 +153,162 @@ public abstract class PetData
         Leopard = AllPets.Leopard,
         Mammoth = AllPets.Mammoth,
         Snake = AllPets.Snake,
-        Tiger = AllPets.Tiger
+        Tiger = AllPets.Tiger,
+    }
+
+    public enum TierTwoShop
+    {
+        Ant = AllPets.Ant,
+        Beaver = AllPets.Beaver,
+        Cricket = AllPets.Cricket,
+        Duck = AllPets.Duck,
+        Fish = AllPets.Fish,
+        Horse = AllPets.Horse,
+        Mosquito = AllPets.Mosquito,
+        Otter = AllPets.Otter,
+        Pig = AllPets.Pig,
+        Crab = AllPets.Crab,
+        Dodo = AllPets.Dodo,
+        Elephant = AllPets.Elephant,
+        Flamingo = AllPets.Flamingo,
+        Hedgehog = AllPets.Hedgehog,
+        Peacock = AllPets.Peacock,
+        Rat = AllPets.Rat,
+        Shrimp = AllPets.Shrimp,
+        Spider = AllPets.Spider,
+        Swan = AllPets.Swan
+    }
+
+    public enum TierThreeShop 
+    {
+        Ant = AllPets.Ant,
+        Beaver = AllPets.Beaver,
+        Cricket = AllPets.Cricket,
+        Duck = AllPets.Duck,
+        Fish = AllPets.Fish,
+        Horse = AllPets.Horse,
+        Mosquito = AllPets.Mosquito,
+        Otter = AllPets.Otter,
+        Pig = AllPets.Pig,
+        Crab = AllPets.Crab,
+        Dodo = AllPets.Dodo,
+        Elephant = AllPets.Elephant,
+        Flamingo = AllPets.Flamingo,
+        Hedgehog = AllPets.Hedgehog,
+        Peacock = AllPets.Peacock,
+        Rat = AllPets.Rat,
+        Shrimp = AllPets.Shrimp,
+        Spider = AllPets.Spider,
+        Swan = AllPets.Swan,
+        Dog = AllPets.Dog,
+        Badger = AllPets.Badger,
+        Blowfish = AllPets.Blowfish,
+        Camel = AllPets.Camel,
+        Giraffe = AllPets.Giraffe,
+        Kangaroo = AllPets.Kangaroo,
+        Ox = AllPets.Ox,
+        Rabbit = AllPets.Rabbit,
+        Sheep = AllPets.Sheep,
+        Snail = AllPets.Snail,
+        Turtle = AllPets.Turtle,
+    }
+
+    public enum TierFourShop 
+    {
+        Ant = AllPets.Ant,
+        Beaver = AllPets.Beaver,
+        Cricket = AllPets.Cricket,
+        Duck = AllPets.Duck,
+        Fish = AllPets.Fish,
+        Horse = AllPets.Horse,
+        Mosquito = AllPets.Mosquito,
+        Otter = AllPets.Otter,
+        Pig = AllPets.Pig,
+        Crab = AllPets.Crab,
+        Dodo = AllPets.Dodo,
+        Elephant = AllPets.Elephant,
+        Flamingo = AllPets.Flamingo,
+        Hedgehog = AllPets.Hedgehog,
+        Peacock = AllPets.Peacock,
+        Rat = AllPets.Rat,
+        Shrimp = AllPets.Shrimp,
+        Spider = AllPets.Spider,
+        Swan = AllPets.Swan,
+        Dog = AllPets.Dog,
+        Badger = AllPets.Badger,
+        Blowfish = AllPets.Blowfish,
+        Camel = AllPets.Camel,
+        Giraffe = AllPets.Giraffe,
+        Kangaroo = AllPets.Kangaroo,
+        Ox = AllPets.Ox,
+        Rabbit = AllPets.Rabbit,
+        Sheep = AllPets.Sheep,
+        Snail = AllPets.Snail,
+        Turtle = AllPets.Turtle,
+        Whale = AllPets.Whale,
+        Bison = AllPets.Bison,
+        Deer = AllPets.Deer,
+        Dolphin = AllPets.Dolphin,
+        Hippo = AllPets.Hippo,
+        Penguin = AllPets.Penguin,
+        Rootser = AllPets.Rootser,
+        Skunk = AllPets.Skunk,
+        Squirrel = AllPets.Squirrel,
+        Worm = AllPets.Worm,
+        Parrot = AllPets.Parrot,
+    }
+
+    public enum TierFiveShop
+    {
+        Ant = AllPets.Ant,
+        Beaver = AllPets.Beaver,
+        Cricket = AllPets.Cricket,
+        Duck = AllPets.Duck,
+        Fish = AllPets.Fish,
+        Horse = AllPets.Horse,
+        Mosquito = AllPets.Mosquito,
+        Otter = AllPets.Otter,
+        Pig = AllPets.Pig,
+        Crab = AllPets.Crab,
+        Dodo = AllPets.Dodo,
+        Elephant = AllPets.Elephant,
+        Flamingo = AllPets.Flamingo,
+        Hedgehog = AllPets.Hedgehog,
+        Peacock = AllPets.Peacock,
+        Rat = AllPets.Rat,
+        Shrimp = AllPets.Shrimp,
+        Spider = AllPets.Spider,
+        Swan = AllPets.Swan,
+        Dog = AllPets.Dog,
+        Badger = AllPets.Badger,
+        Blowfish = AllPets.Blowfish,
+        Camel = AllPets.Camel,
+        Giraffe = AllPets.Giraffe,
+        Kangaroo = AllPets.Kangaroo,
+        Ox = AllPets.Ox,
+        Rabbit = AllPets.Rabbit,
+        Sheep = AllPets.Sheep,
+        Snail = AllPets.Snail,
+        Turtle = AllPets.Turtle,
+        Whale = AllPets.Whale,
+        Bison = AllPets.Bison,
+        Deer = AllPets.Deer,
+        Dolphin = AllPets.Dolphin,
+        Hippo = AllPets.Hippo,
+        Penguin = AllPets.Penguin,
+        Rootser = AllPets.Rootser,
+        Skunk = AllPets.Skunk,
+        Squirrel = AllPets.Squirrel,
+        Worm = AllPets.Worm,
+        Parrot = AllPets.Parrot,
+        Monkey = AllPets.Monkey,
+        Cow = AllPets.Cow,
+        Crocodile = AllPets.Crocodile,
+        Rhino = AllPets.Rhino,
+        Scorpion = AllPets.Scorpion,
+        Seal = AllPets.Seal,
+        Shark = AllPets.Shark,
+        Turkey = AllPets.Turkey,
     }
 
     public static PetData PetConstructor( PetData.AllPets petType )
@@ -222,19 +377,33 @@ public abstract class PetData
         };
     }
 
-    public static PetData RandomPet( int tier )
+    public static PetData RandomPet( int tier, bool tierSpecific )
     {
-        Array list = tier switch
-        {
-            1 => Enum.GetValues( typeof( TierOnePets ) ),
-            2 => Enum.GetValues( typeof( TierTwoPets ) ),
-            3 => Enum.GetValues( typeof( TierThreePets ) ),
-            4 => Enum.GetValues( typeof( TierFourPets ) ),
-            5 => Enum.GetValues( typeof( TierFivePets ) ),
-            6 => Enum.GetValues( typeof( TierSixPets ) ),
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-
+        Array list;
+        if(tierSpecific) {
+            list = tier switch
+            {
+                1 => Enum.GetValues( typeof( TierOnePets ) ),
+                2 => Enum.GetValues( typeof( TierTwoPets ) ),
+                3 => Enum.GetValues( typeof( TierThreePets ) ),
+                4 => Enum.GetValues( typeof( TierFourPets ) ),
+                5 => Enum.GetValues( typeof( TierFivePets ) ),
+                6 => Enum.GetValues( typeof( TierSixPets ) ),
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+        } else {
+            list = tier switch
+            {
+                1 => Enum.GetValues( typeof( TierOnePets ) ),
+                2 => Enum.GetValues( typeof( TierTwoShop ) ),
+                3 => Enum.GetValues( typeof( TierThreeShop ) ),
+                4 => Enum.GetValues( typeof( TierFourShop ) ),
+                5 => Enum.GetValues( typeof( TierFiveShop ) ),
+                6 => Enum.GetValues( typeof( AllPets ) ),
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+        }
+        
         AllPets randomPet = (AllPets) list.GetValue( Random.Range( 0, list.Length ) );
         return PetConstructor( randomPet );
     }
@@ -899,7 +1068,7 @@ public class SpiderPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create random tier 2 pet at level this.Level
-        PetData summonPet = RandomPet( 2 );
+        PetData summonPet = RandomPet( 2 , tierSpecific:true);
 
         summonPet.Level = this.Level;
         summonPet.BaseDamage = 2;
