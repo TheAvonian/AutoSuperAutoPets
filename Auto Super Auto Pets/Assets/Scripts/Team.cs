@@ -134,4 +134,13 @@ public class Team
 
         return endString;
     }
+
+    public void UpdatePetPositions() {
+        LinkedListNode<PetData> node = Pets.First;
+        int position = 1;
+        while(node != null) {
+            node.Value.Position = position;
+            node = node.Next;
+        }
+    }
 }
