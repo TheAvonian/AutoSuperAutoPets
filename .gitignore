@@ -13,6 +13,9 @@
 **/Timers/**
 results/
 
+**/.vscode
+.vscode/
+
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
 
