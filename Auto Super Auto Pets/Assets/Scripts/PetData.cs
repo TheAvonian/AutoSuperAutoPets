@@ -465,11 +465,7 @@ public abstract class PetData
 
     public virtual void OnBuy( Team myTeam )
     {
-        foreach ( PetData friend in myTeam.Pets )
-        {
-            if ( friend == this ) continue;
-            friend.OnFriendSummoned( myTeam, null );
-        }
+        
     }
 
     public virtual void OnSell( Team myTeam )
@@ -496,7 +492,7 @@ public abstract class PetData
             selfCopy.Damage = 1;
             selfCopy.baseDamage = 1;
             selfCopy.Food = FoodData.Food.None;
-            myTeam.TryAddFriend(selfCopy, this.Position);
+            if(myTeam.TryAddFriend(selfCopy, this.Position)) selfCopy.OnSummon(myTeam);
         }
 
         foreach(PetData friend in myTeam.Pets) {
@@ -595,6 +591,14 @@ public abstract class PetData
     public virtual void OnBattleStart( Team myTeam, Team otherTeam )
     {
 
+    }
+
+    public virtual void OnSummon(Team myTeam) {
+        foreach ( PetData friend in myTeam.Pets )
+        {
+            if ( friend == this ) continue;
+            friend.OnFriendSummoned( myTeam, null );
+        }
     }
 
     public virtual void OnFriendSummoned( Team myTeam, PetData summonedFriend )
@@ -786,7 +790,7 @@ public class CricketPet : PetData
         //Create zombie cricket and add it to the team
         PetData zombie = new ZombieCricketPet { baseHealth = 1 * Level, baseDamage = 1 * Level, Health = 1 * Level, Damage = 1 * Level};
 
-        myTeam.TryAddFriend(zombie, this.Position);
+        if(myTeam.TryAddFriend(zombie, this.Position)) zombie.OnSummon(myTeam);
     }
 }
 
@@ -1017,7 +1021,7 @@ public class RatPet : PetData
         if(otherTeam != null) {
             PetData dirtyRat = new DirtyRatPet { baseHealth = 1, baseDamage = 1, Health = 1, Damage = 1 };
 
-            otherTeam.TryAddFriend(dirtyRat, 1);
+            if(otherTeam.TryAddFriend(dirtyRat, 1)) dirtyRat.OnSummon(otherTeam);
         }
     }
 }
@@ -1053,7 +1057,7 @@ public class SpiderPet : PetData
         summonPet.Damage = 2;
         summonPet.Health = 2;
         summonPet.baseHealth = 2;
-        myTeam.TryAddFriend(summonPet, this.Position);
+        if(myTeam.TryAddFriend(summonPet, this.Position)) summonPet.OnSummon(myTeam);
     }
 }
 
@@ -1205,8 +1209,8 @@ public class SheepPet : PetData
         PetData ram1 = new RamPet { baseHealth = 2 * Level, baseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level };
         PetData ram2 = CloneObject(ram1) as PetData;
 
-        myTeam.TryAddFriend(ram1, this.Position);
-        myTeam.TryAddFriend(ram2, this.Position);
+        if(myTeam.TryAddFriend(ram1, this.Position)) ram1.OnSummon(myTeam);
+        if(myTeam.TryAddFriend(ram2, this.Position)) ram2.OnSummon(myTeam);
     }
 }
 
@@ -1272,7 +1276,7 @@ public class WhalePet : PetData
     {
         base.OnFaint( myTeam, otherTeam );
 
-        myTeam.TryAddFriend( swallowedFriend, this.Position );
+        if(myTeam.TryAddFriend( swallowedFriend, this.Position)) swallowedFriend.OnSummon(myTeam);
     }
 }
 
@@ -1304,7 +1308,7 @@ public class DeerPet : PetData
         PetData bus = new BusPet { baseDamage = 5 * Level, Damage = 5 * Level, baseHealth = 5 * Level, Health = 5 * Level };
         bus.Food = FoodData.Food.Chili;
 
-        myTeam.TryAddFriend(bus, this.Position);
+        if(myTeam.TryAddFriend(bus, this.Position)) bus.OnSummon(myTeam);
     }
 }
 
@@ -1366,7 +1370,7 @@ public class RoosterPet : PetData
 
         for(int i = 0; i < Level; i++) {
             PetData chick = new ChickPet { baseHealth = 1, Health = 1, baseDamage = (int) (0.5 * this.Damage), Damage = (int) (0.5 * Damage) };
-            myTeam.TryAddFriend(chick, this.Position);
+            if(myTeam.TryAddFriend(chick, this.Position)) chick.OnSummon(myTeam);
         }
     }
 }
@@ -1511,9 +1515,9 @@ public class ScorpionPet : PetData
         }
     }
 
-    public override void OnBuy(Team myTeam)
+    public override void OnSummon(Team myTeam)
     {
-        base.OnBuy(myTeam);
+        base.OnSummon(myTeam);
 
         this.Food = FoodData.Food.Poison;
     }
@@ -1601,7 +1605,7 @@ public class DragonPet : PetData
         base.OnFriendBought( myTeam, friendBought );
 
         //If friend bought in tier 1
-        if ( true )
+        if ( friendBought.PetID < 10 )
         {
             foreach ( PetData friend in myTeam.Pets )
             {
@@ -1626,7 +1630,7 @@ public class FlyPet : PetData
             //Create zombie fly with stats 5 * Level
             PetData zombieFly = new ZombieFlyPet { baseDamage = 5 * Level, Damage = 5 * Level, baseHealth = 5 * Level, Health = 5 * Level };
             //Try add zombie fly at friend.Position
-            myTeam.TryAddFriend(zombieFly, friend.Position);
+            if(myTeam.TryAddFriend(zombieFly, friend.Position)) zombieFly.OnSummon(myTeam);
         }
     }
 }
