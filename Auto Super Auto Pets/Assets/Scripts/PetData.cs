@@ -588,9 +588,12 @@ public class AntPet : PetData
     {
         base.OnFaint( myTeam, otherTeam );
 
-        PetData randomFriend = myTeam.Pets.ElementAt( Random.Range( 0, myTeam.Pets.Count ) );
-        randomFriend.AddDamage( 2 * Level );
-        randomFriend.AddHealth( 1 * Level );
+        if ( myTeam.Pets.Count >= 1 )
+        {
+            PetData randomFriend = myTeam.Pets.ElementAt( Random.Range( 0, myTeam.Pets.Count ) );
+            randomFriend.AddDamage( 2 * Level );
+            randomFriend.AddHealth( 1 * Level );
+        }
     }
 }
 

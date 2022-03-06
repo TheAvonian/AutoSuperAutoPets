@@ -102,9 +102,11 @@ public class GameManager
         {
             return true;
         }
-
-        _tempOne.Pets.First.Value.OnAttack( _tempOne, _tempTwo );
-        _tempTwo.Pets.First.Value.OnAttack( _tempTwo, _tempOne );
+        
+        PetData frontPetOne = _tempOne.Pets.First.Value; 
+        PetData frontPetTwo = _tempTwo.Pets.First.Value;
+        frontPetOne.OnAttack( _tempOne, _tempTwo );
+        frontPetTwo.OnAttack( _tempTwo, _tempOne );
         return false;
     }
 
@@ -130,12 +132,14 @@ public class GameManager
             pet?.OnTurnEnd( _teamOne );
         }
 
-        _tempOne = _teamOne;
+        _tempOne = _teamOne.CloneTeam();
         // CHANGE RANDOM ENEMIES
 
         LinkedList< PetData > tmp = new();
-        tmp.AddFirst( PetData.RandomPet(1) );
-        tmp.AddLast( PetData.RandomPet(1) );
+        for ( int i = 0; i < Math.Clamp( _teamOne.Turn, 0, 6 ); i++ )
+        {
+            tmp.AddLast( PetData.RandomPet( Math.Clamp( _teamOne.Turn, 0, 6 ) ) );
+        }
         _tempTwo = new Team
         {
             TeamName = "Random Team",
