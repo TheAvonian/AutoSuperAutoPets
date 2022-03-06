@@ -10,19 +10,13 @@ using Random = UnityEngine.Random;
 public abstract class PetData
 {
     public int PetID;
-    public static List< PetData > AllPets { get; } = new()
+    public static List< PetData > TierOnePets { get; } = new()
     {
         new AntPet
         {
             PetID = 0,
             Health = 1,
             Damage = 2,
-        },
-        new BadgerPet
-        {
-            PetID = 1,
-            Health = 4,
-            Damage = 5,
         },
         new BeaverPet
         {
@@ -72,6 +66,10 @@ public abstract class PetData
             Damage = 3,
             Health = 2,
         },
+    };
+
+    public static List< PetData > TierTwoPets { get; } = new()
+    {
         new CrabPet
         {
             PetID = 10,
@@ -132,6 +130,10 @@ public abstract class PetData
             Damage = 1,
             Health = 3,
         },
+    };
+
+    public static List< PetData > TierThreePets { get; } = new()
+    {
         new DogPet
         {
             PetID = 20,
@@ -174,6 +176,12 @@ public abstract class PetData
             Damage = 1,
             Health = 4,
         },
+        new BadgerPet
+        {
+            PetID = 1,
+            Health = 4,
+            Damage = 5,
+        },
         new RabbitPet
         {
             PetID = 27,
@@ -198,6 +206,10 @@ public abstract class PetData
             Damage = 1,
             Health = 2,
         },
+    };
+
+    public static List< PetData > TierFourPets { get; } = new()
+    {
         new WhalePet
         {
             PetID = 31,
@@ -264,6 +276,10 @@ public abstract class PetData
             Damage = 5,
             Health = 3,
         },
+    };
+
+    public static List< PetData > TierFivePets { get; } = new()
+    {
         new MonkeyPet
         {
             PetID = 42,
@@ -312,6 +328,10 @@ public abstract class PetData
             Damage = 3,
             Health = 4,
         },
+    };
+
+    public static List< PetData > TierSixPets { get; } = new()
+    {
         new CatPet
         {
             PetID = 50,
@@ -578,9 +598,38 @@ public abstract class PetData
         return true;
     }
 
-    public virtual void DamagePet( PetData firstValue )
+    public static PetData RandomPet( int i )
     {
+        List< PetData > allPets = new();
         
+        allPets.AddRange(TierOnePets);
+
+        if ( i > 1 )
+        {
+            allPets.AddRange(TierTwoPets);
+        }
+        
+        if ( i > 2 )
+        {
+            allPets.AddRange(TierThreePets);
+        }
+        
+        if ( i > 3 )
+        {
+            allPets.AddRange(TierFourPets);
+        }
+        
+        if ( i > 4 )
+        {
+            allPets.AddRange(TierFivePets);
+        }
+        
+        if ( i > 5 )
+        {
+            allPets.AddRange(TierSixPets);
+        }
+
+        return allPets[ Random.Range( 0, allPets.Count ) ];
     }
 }
 
