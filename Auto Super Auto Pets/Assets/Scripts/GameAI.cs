@@ -236,6 +236,12 @@ public class GameAI : Agent
         {
             EndEpisode();
         }
+
+        if ( _myTeam.Wins >= 10 )
+        {
+            SetReward(1.0f);
+            EndEpisode();
+        }
     }
 
     public override void CollectObservations( VectorSensor sensor )
