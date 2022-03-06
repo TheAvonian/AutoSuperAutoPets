@@ -1,20 +1,25 @@
 using System;
 using System.Collections.Generic;
+using Unity.MLAgents.Actuators;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager
 {
-    ShopData _shop;
-    
     Team _teamOne;
     Team _teamTwo;
 
     Team _tempOne;
     Team _tempTwo;
 
-    public GameState State = GameState.TurnStart;
+    public GameManager( Team team )
+    {
+        _teamOne = team;
+        State = GameState.TurnStart;
+    }
 
-    void Update()
+    public GameState State;
+
+    public WinState Update()
     {
         switch ( State )
         {
@@ -26,10 +31,6 @@ public class GameManager : MonoBehaviour
 
                 break;
             case GameState.Turn:
-                if ( Turn() )
-                {
-                    State = GameState.TurnEnd;
-                }
                 
                 break;
             case GameState.TurnEnd:
@@ -57,14 +58,36 @@ public class GameManager : MonoBehaviour
                 if ( EndBattle() )
                 {
                     State = GameState.TurnStart;
+                    if(_teamOne.Pets.Count > 0)
+                    {
+                        _teamOne.Wins++;
+                        return WinState.Win;
+                    }
+
+                    if ( _teamTwo.Pets.Count > 0 )
+                    {
+                        _teamOne.Health--;
+                        return WinState.Loss;
+                    }
+
+                    return WinState.Tie;
                 }
 
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        return WinState.Nothing;
     }
 
+    public enum WinState
+    {
+        Nothing,
+        Tie,
+        Loss,
+        Win,
+    }
     bool EndBattle()
     {
         return true;
@@ -91,32 +114,19 @@ public class GameManager : MonoBehaviour
             pet?.OnTurnEnd(_teamOne);
         }
 
-        _tempOne = CloneTeam( _teamOne );
+        _tempOne = _teamOne.CloneTeam();
+        _tempTwo = _teamTwo.CloneTeam();
         return true;
     }
 
-    Team CloneTeam( Team team )
-    {
-        Team tempNew = new();
-        foreach ( PetData p in team.Pets )
-        {
-            tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.CloneObject(p) as PetData) );
-        }
-
-        return tempNew;
-    }
-
-    bool Turn()
-    {
-        return false;
-    }
 
     bool TurnStart()
     {
-        _teamOne = _tempOne;
-        _shop.RerollShop();
+        _teamOne = _tempOne.CloneTeam();
+        _teamTwo = _tempTwo.CloneTeam();
         _teamOne.Coins = 10;
         _teamOne.Turn++;
+        _teamOne.Shop.RerollShop(_teamOne.Turn);
         foreach ( PetData pet in _teamOne.Pets )
         {
             pet?.OnTurnStart(_teamOne);

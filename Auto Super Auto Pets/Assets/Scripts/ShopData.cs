@@ -1,8 +1,16 @@
-﻿public class ShopData
+﻿using System.Collections.Generic;
+
+public class ShopData
 {
-    public void RerollShop()
+    public List< ShopItem > Items = new();
+    public void RerollShop(int turn)
     {
         
+    }
+
+    public ShopItem TryGetItem(int index)
+    {
+        return Items[ index ];
     }
 }
 
