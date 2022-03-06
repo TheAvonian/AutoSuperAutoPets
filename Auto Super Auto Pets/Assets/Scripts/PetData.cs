@@ -255,7 +255,7 @@ public abstract class PetData
 
     public override string ToString()
     {
-        return $"D:{Damage} H:{Health} ID:{PetID}";
+        return $"D:{Damage} H:{Health} ID:{(AllPets)PetID}";
     }
 
     public void AddHealth( int amountGiven, bool temp = false )
@@ -512,8 +512,8 @@ public abstract class PetData
             {
                 if ( shopItem?.Pet != null )
                 {
-                    shopItem?.Pet.AddDamage( 2 );
-                    shopItem?.Pet.AddHealth( 1 );
+                    shopItem.Pet.AddDamage( 2 );
+                    shopItem.Pet.AddHealth( 1 );
                 }
             }
 

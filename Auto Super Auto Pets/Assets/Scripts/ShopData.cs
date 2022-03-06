@@ -63,7 +63,7 @@ public class ShopData
     
     public ShopItem TryGetItem( int index )
     {
-        return index < Items.Count && index > 0 ? Items[ index ] ?? new ShopItem() : new ShopItem();
+        return index < Items.Count && index > 0 ? Items[ index ] : null;
     }
 
     public override string ToString()

@@ -66,7 +66,7 @@ public class Team
             }
         } else
         {
-            if ( Pets.Count < 5 )
+            if ( Pets.Count < 5 && shopItem.Food == null )
             {
                 if ( petNode != null )
                 {
@@ -76,6 +76,9 @@ public class Team
                     Pets.AddFirst( shopItem.Pet );
                 }
                 shopItem.Pet.OnSummon(this);
+            } else
+            {
+                return false;
             }
         }
         return true;
