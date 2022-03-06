@@ -14,6 +14,11 @@ public class GameAI : Agent
     GameManager _manager;
 
     float _timer;
+    
+    void Awake()
+    {
+        _manager = new GameManager( _myTeam );
+    }
 
     void FixedUpdate()
     {
