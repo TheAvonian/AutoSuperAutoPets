@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 public abstract class PetData
 {
+    public int PetID;
     public static List< PetData > AllPets { get; } = new()
     {
         new AntPet
@@ -404,6 +405,31 @@ public abstract class PetData
         }
 
         return damageTaken;
+    }
+
+    public virtual void OnAttack(Team myTeam, Team otherTeam) {
+        int attack = this.Damage;
+        if(this.Food == FoodData.Food.Meatbone) attack += 5;
+        else if(this.Food == FoodData.Food.Steak) attack += 20;
+
+        if(attack > 50) attack = 50;
+
+        LinkedListNode<PetData> node = otherTeam.Pets.First;
+        if(node != null) {
+            PetData enemy = node.Value;
+            enemy.OnHurt(otherTeam, myTeam, attack);
+
+            if(node.Next != null && this.Food == FoodData.Food.Chili) {
+                PetData enemy2 = node.Next.Value;
+
+                enemy2.OnHurt(otherTeam, myTeam, 5);
+            }
+
+            if(enemy.Health <= 0) {
+                this.OnFaintEnemy(myTeam, otherTeam);
+            }
+        }
+        
     }
 
     public virtual void OnBeforeAttack( Team myTeam, Team otherTeam )
@@ -926,23 +952,78 @@ public class TurtlePet : PetData {
 }
 
 public class WhalePet : PetData {
-    
+    public PetData swallowedFriend;
+
+    public override void OnBattleStart(Team myTeam, Team otherTeam) 
+    {
+        base.OnBattleStart(myTeam, otherTeam);
+
+        LinkedListNode<PetData> friendAhead = myTeam.Pets.Find(this).Next;
+        if(friendAhead != null) {
+            swallowedFriend = friendAhead.Value;
+            //Change stats to be base * Level
+
+            swallowedFriend.OnFaint(myTeam, otherTeam);
+        }
+    }
+
+    public override void OnFaint(Team myTeam, Team otherTeam) 
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        myTeam.TryAddFriend(swallowedFriend, this.Position);
+    }
 }
 
 public class BisonPet : PetData {
-    
+    public override void OnTurnEnd(Team myTeam) 
+    {
+        base.OnTurnEnd(myTeam);
+
+        foreach(PetData friend in myTeam.Pets) {
+            if(friend.Level == 3) {
+                this.AddDamage(2 * Level);
+                this.AddHealth(2 * Level);
+                break;
+            }
+        }
+    }
 }
 
 public class DeerPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        //Create new bus with health 5 * Level and damage
+
+        //myTeam.TryAddFriend(bus, this.Position);
+    }
 }
 
 public class DolphinPet : PetData {
-    
+    public override void OnBattleStart(Team myTeam, Team otherTeam)
+    {
+        base.OnBattleStart(myTeam, otherTeam);
+
+        int minHealth = int.MaxValue;
+        PetData targetEnemy = null;
+        foreach(PetData enemy in otherTeam.Pets) {
+            if(enemy.Health < minHealth) {
+                targetEnemy = enemy;
+                minHealth = enemy.Health;
+            }
+        }
+
+        targetEnemy.OnHurt(myTeam, otherTeam, 5 * Level);
+    }
 }
 
 public class HippoPet : PetData {
-    
+    public override void OnAttack(Team myTeam, Team otherTeam)
+    {
+        base.OnAttack(myTeam, otherTeam);
+    }
 }
 
 public class PenguinPet : PetData {
