@@ -189,7 +189,6 @@ public class ShopData
     public override string ToString()
     {
         string endString = "Shop: ";
-        int i = 0;
         
         foreach ( ShopItem p in Items )
         {

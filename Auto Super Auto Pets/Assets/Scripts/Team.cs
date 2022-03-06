@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Team
 {
-    public int Health;
+    public int Health = 10;
     public int Coins;
     public int Turn;
     public int Wins;
