@@ -87,7 +87,7 @@ public abstract class PetData
     }
 
     //Subtracts health the applicable amount and returns the final amount of damage taken
-    public virtual int OnHurt( Team myTeam, int damageTaken)
+    public virtual int OnHurt( Team myTeam, Team otherTeam, int damageTaken)
     {
         if(this.Food == FoodData.Food.Garlic) {
             damageTaken -= 2;
@@ -99,6 +99,10 @@ public abstract class PetData
 
         if(damageTaken > 0) {
             Health -= damageTaken;
+        }
+
+        if(Health <= 0) {
+            this.OnFaint(myTeam, otherTeam);
         }
 
         return damageTaken;
@@ -140,6 +144,13 @@ public abstract class PetData
     }
 
     public virtual void OnEatShopFood(Team myTeam, FoodData food)
+    {
+        foreach(PetData friend in myTeam.Pets) {
+            friend.OnFriendEatsShopFood(myTeam, this);
+        }
+    }
+
+    public virtual void OnFriendEatsShopFood(Team myTeam, PetData friend) 
     {
 
     }
@@ -273,7 +284,7 @@ public class MosquitoPet : PetData {
         if(otherTeam.Pets.Count >= 1) {
             for(int i = 0; i < Level; i++) {
                 PetData enemy = otherTeam.Pets.ElementAt(Random.Range( 0, myTeam.Pets.Count ) );
-                enemy.OnHurt(otherTeam, 1);
+                enemy.OnHurt(otherTeam, myTeam, 1);
             }
         }
     }
@@ -339,7 +350,7 @@ public class ElephantPet : PetData {
         LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
 
         while(numFriendsTargeted > 0 && node != null) {
-            node.Value.OnHurt(myTeam, 1);
+            node.Value.OnHurt(myTeam, otherTeam, 1);
             numFriendsTargeted -= 1;
             node = node.Previous;
         }
@@ -372,10 +383,10 @@ public class HedgehogPet : PetData {
         base.OnFaint(myTeam, otherTeam);
 
         foreach(PetData enemy in otherTeam.Pets) {
-            enemy.OnHurt(otherTeam, 2 * Level);
+            enemy.OnHurt(otherTeam, myTeam, 2 * Level);
         }
         foreach(PetData friend in myTeam.Pets) {
-            friend.OnHurt(myTeam, 2 * Level);
+            friend.OnHurt(myTeam, otherTeam, 2 * Level);
         }
     }
 }
@@ -396,9 +407,9 @@ public class PeacockPet : PetData {
         
         return false;
     }
-    public override int OnHurt(Team myTeam, int damageTaken)
+    public override int OnHurt(Team myTeam, Team otherTeam, int damageTaken)
     {
-        damageTaken = base.OnHurt(myTeam, damageTaken);
+        damageTaken = base.OnHurt(myTeam, otherTeam, damageTaken);
 
         if(this.Health >= 0 && damageTaken > 0 && charges > 0) {
             this.AddDamage((int) (this.Damage * 1.5));
@@ -455,47 +466,160 @@ public class SwanPet : PetData {
 }
 
 public class DogPet : PetData {
-    
+    public override void OnFriendSummoned(Team myTeam, PetData summonedFriend)
+    {
+        base.OnFriendSummoned(myTeam, summonedFriend);
+
+        this.AddDamage(1 * Level);
+        this.AddHealth(1 * Level);
+    }
 }
 
 public class BadgerPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this);
+
+        if(node.Next == null) {
+            PetData enemy = otherTeam.Pets.First.Value;
+            enemy.OnHurt(otherTeam, myTeam, this.Damage);
+        } else {
+            PetData friendAhead = node.Next.Value;
+            friendAhead.OnHurt(myTeam, otherTeam, this.Damage);
+        }
+
+        if(node.Previous != null){
+            PetData friendBehind = node.Previous.Value;
+            friendBehind.OnHurt(myTeam, otherTeam, this.Damage);
+        }
+
+        base.OnFaint(myTeam, otherTeam);
+    }
 }
 
 public class BlowfishPet : PetData {
-    
+    public override int OnHurt(Team myTeam, Team otherTeam, int damageTaken)
+    {
+        damageTaken = base.OnHurt(myTeam, otherTeam, damageTaken);
+
+        if(Health > 0 && damageTaken > 0 && otherTeam.Pets.Count > 0) {
+            PetData enemy = otherTeam.Pets.ElementAt(Random.Range(0, otherTeam.Pets.Count));
+            enemy.OnHurt(otherTeam, myTeam, 2 * Level);
+        }
+
+        return damageTaken;
+    }
 }
 
 public class CamelPet : PetData {
+    public override int OnHurt(Team myTeam, Team otherTeam, int damageTaken) 
+    {   
+        damageTaken = base.OnHurt(myTeam, otherTeam, damageTaken);
+
+        LinkedListNode<PetData> friendBehind = myTeam.Pets.Find(this).Previous;
+
+        if(Health > 0 && damageTaken > 0 && friendBehind != null) {
+            PetData friend = friendBehind.Value;
+            friend.AddDamage(1 * Level);
+            friend.AddHealth(2 * Level);
+        }
+
+        return damageTaken;
+    }
     
 }
 
 public class GiraffePet : PetData {
-    
+    public override void OnTurnEnd(Team myTeam)
+    {
+        base.OnTurnEnd(myTeam);
+
+        int numFriendsTargeted = Level;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Next;
+
+        while(numFriendsTargeted > 0 && node != null) {
+            PetData friend = node.Value;
+
+            friend.AddDamage(1);
+            friend.AddHealth(1);
+
+            numFriendsTargeted -= 1;
+            node = node.Next;
+        }
+    }
 }
 
 public class KangarooPet : PetData {
-    
+    public override void OnPetAheadAttack(Team myTeam, Team otherTeam)
+    {
+        base.OnPetAheadAttack(myTeam, otherTeam);
+
+        this.AddDamage(2 * Level);
+        this.AddHealth(2 * Level);
+    }
 }
 
 public class OxPet : PetData {
+    public override void OnPetAheadFaint(Team myTeam, Team otherTeam) 
+    {
+        base.OnPetAheadFaint(myTeam, otherTeam);
+
+        this.AddDamage(2 * Level);
+        //Gain melon armor
+    }
     
 }
 
 public class RabbitPet : PetData {
-    
+    public override void OnFriendEatsShopFood(Team myTeam, PetData friend)
+    {
+        base.OnFriendEatsShopFood(myTeam, friend);
+
+        friend.AddHealth(1 * Level);
+    }
 }
 
 public class SheepPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        //Create two rams at health and attack 2 * Level
+
+        //myTeam.TryAddFriend(ram1, this.Position);
+        //myTeam.TryAddFriend(ram2, this.Position);
+    }
 }
 
 public class SnailPet : PetData {
-    
+    public override void OnBuy(Team myTeam)
+    {
+        foreach(PetData friend in myTeam.Pets) {
+            friend.AddDamage(1 * Level);
+            friend.AddHealth(1 * Level);
+        }
+
+        base.OnBuy(myTeam);
+    }
 }
 
 public class TurtlePet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        int numFriendsTargeted = Level;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
+
+        while(numFriendsTargeted > 0 && node != null) {
+            PetData friend = node.Value;
+
+            friend.Food = FoodData.Food.Melon;
+
+            numFriendsTargeted -= 1;
+            node = node.Previous;
+        }
+    }
 }
 
 public class WhalePet : PetData {
