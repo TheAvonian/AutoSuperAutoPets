@@ -58,7 +58,7 @@ public class GameManager
                 if ( EndBattle() )
                 {
                     State = GameState.TurnStart;
-                    if ( _tempTwo.Pets.Count > 0 )
+                    if ( _tempOne.Pets.Count > 0 )
                     {
                         _teamOne.Wins++;
                         Debug.Log( "Win" );
@@ -130,14 +130,25 @@ public class GameManager
             pet?.OnTurnEnd( _teamOne );
         }
 
-        _tempOne = _teamOne.CloneTeam();
-        _tempTwo = _teamTwo.CloneTeam();
+        _tempOne = _teamOne;
+        // CHANGE RANDOM ENEMIES
+
+        LinkedList< PetData > tmp = new();
+        tmp.AddFirst( PetData.RandomPet( 1 ) );
+        tmp.AddLast( PetData.RandomPet( 1 ) );
+        _tempTwo = new Team()
+        {
+            TeamName = "Random Team",
+            Pets = tmp,
+        };
         return true;
     }
 
 
     bool TurnStart()
     {
+        Debug.Log( "start turn" );
+        _teamOne.TeamName = "AI";
         _teamOne.Coins = 10;
         _teamOne.Turn++;
         _teamOne.Shop.RerollShop( _teamOne.Turn );

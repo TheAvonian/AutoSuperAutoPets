@@ -160,7 +160,6 @@ public class ShopData
                             Pet = PetData.RandomPet( 1 ),
                         };
                         
-                        Debug.Log( p );
                         Items.Add( p );
                     }
                 }
@@ -205,6 +204,14 @@ public class ShopData
         }
 
         return endString;
+    }
+
+    public void RemoveItem( int index )
+    {
+        if ( index < Items.Count )
+        {
+            Items.RemoveAt(index);
+        }
     }
 }
 

@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class Team
 {
+    public string TeamName;
     public int Health = 10;
     public int Coins;
     public int Turn = 1;
     public int Wins;
-    public LinkedList< PetData > Pets { get; } = new();
-    public ShopData Shop { get; set; } = new();
+    public LinkedList< PetData > Pets { get; set; } = new();
+    public ShopData Shop { get; } = new();
 
     //Attempts to add a friend to the team at given index
     //Returns true if successful false if unsuccessful
@@ -21,7 +22,15 @@ public class Team
             return false;
         }
 
-        Pets.AddBefore( Pets.Find( Pets.ElementAt( index ) ) ?? Pets.Last, pet );
+        LinkedListNode< PetData > node = Pets.Find( Pets.ElementAt( index ) );
+        if ( node != null )
+        {
+            Pets.AddBefore( node, pet );
+        } else
+        {
+            Pets.AddLast( pet );
+        }
+
         return true;
     }
 
@@ -50,7 +59,7 @@ public class Team
             if ( petNode?.Value.PetID == shopItem.Pet?.PetID )
             {
                 petNode?.Value.OnStack(this, shopItem.Pet);
-            } else
+            } else if(shopItem.Food != null)
             {
                 petNode?.Value.OnEatShopFood(this, shopItem.Food);
             }
@@ -58,7 +67,13 @@ public class Team
         {
             if ( Pets.Count < 5 )
             {
-                Pets.AddAfter( petNode ?? Pets.Last, shopItem.Pet );
+                if ( petNode != null )
+                {
+                    Pets.AddAfter( petNode, shopItem.Pet );
+                } else
+                {
+                    Pets.AddFirst( shopItem.Pet );
+                }
             }
         }
         return true;
@@ -85,7 +100,7 @@ public class Team
         // finish this
     }
 
-    public void SellPet( int targetIndex )
+    public bool SellPet( int targetIndex )
     {
         LinkedListNode< PetData > node = Pets.First;
         for ( int i = 0; i <= targetIndex; i++ )
@@ -98,8 +113,9 @@ public class Team
             node = node?.Next;
         }
 
-        if ( node == null ) return;
+        if ( node == null ) return false;
         Pets.Remove( node! );
+        return true;
     }
 
     public override string ToString()

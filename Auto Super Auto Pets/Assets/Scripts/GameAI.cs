@@ -22,7 +22,7 @@ public class GameAI : Agent
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
-                Debug.Log("getting decision"  );
+                Debug.Log( "getting decision" );
                 Debug.Log( _myTeam );
                 Debug.Log( _myTeam.Shop );
                 RequestDecision();
@@ -31,15 +31,12 @@ public class GameAI : Agent
             switch ( _manager.Update() )
             {
                 case GameManager.WinState.Loss:
-                    Debug.Log( "Lose" );
                     AddReward( -0.1f );
                     break;
                 case GameManager.WinState.Tie:
-                    Debug.Log( "Tie" );
                     AddReward( 0.005f );
                     break;
                 case GameManager.WinState.Win:
-                    Debug.Log( "Win" );
                     AddReward( 0.1f );
                     break;
                 case GameManager.WinState.Nothing:
@@ -61,10 +58,10 @@ public class GameAI : Agent
     public override void Heuristic( in ActionBuffers actionsOut )
     {
         ActionSegment< int > dActions = actionsOut.DiscreteActions;
-        dActions[0] = Mathf.RoundToInt(Random.value * 7);
-        dActions[1] = Mathf.RoundToInt(Random.value * 5);
-        dActions[2] = Mathf.RoundToInt(Random.value * 5);
-        dActions[3] = Mathf.RoundToInt(Random.value * 4);
+        dActions[ 0 ] = Mathf.RoundToInt( Random.value * 7 );
+        dActions[ 1 ] = Mathf.RoundToInt( Random.value * 5 );
+        dActions[ 2 ] = Mathf.RoundToInt( Random.value * 5 );
+        dActions[ 3 ] = Mathf.RoundToInt( Random.value * 4 );
         /*
         if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
         {
@@ -173,38 +170,40 @@ public class GameAI : Agent
     public override void OnActionReceived( ActionBuffers actions )
     {
         // Handle turn here
-        Debug.Log($"Shop Selection: {actions.DiscreteActions[0]}"  );
-        Debug.Log($"Target Selection: {actions.DiscreteActions[1]}"  );
-        Debug.Log($"Move Selection: {actions.DiscreteActions[2]}"  );
-        Debug.Log($"Sell Selection if Move 5: {actions.DiscreteActions[3]}"  );
+        
         if ( actions.DiscreteActions[ 0 ] != 7 && _myTeam.Coins >= 3 )
         {
             ShopItem p = _myTeam.Shop.TryGetItem( actions.DiscreteActions[ 0 ] );
-            Debug.Log("Grabbing shop guy"  );
-            if ( p != null )
+            Debug.Log( $"Shop Selection: {actions.DiscreteActions[ 0 ]}: {p}" );
+            if ( p != null && ( p.Food != null || p.Pet != null ) )
             {
                 if ( actions.DiscreteActions[ 1 ] == 5 )
                 {
+                    Debug.Log( $"Froze Selection: {actions.DiscreteActions[ 1 ]}: {p}" );
                     // Freeze it
                     // p.Freeze()
                 } else if ( _myTeam.TryPlaceItem( p, actions.DiscreteActions[ 1 ] ) )
                 {
                     _myTeam.Coins -= 3;
                     AddReward( 0.00025f );
+                    _myTeam.Shop.RemoveItem( actions.DiscreteActions[ 0 ] );
                 }
+            } else
+            {
+                Debug.Log( "Couldn't buy" );
             }
         }
 
         if ( actions.DiscreteActions[ 0 ] == 7 && _myTeam.Coins >= 1 )
         {
-            Debug.Log("Rerolling"  );
+            Debug.Log( "Rerolling" );
             _myTeam.Shop.RerollShop( _myTeam.Turn );
             _myTeam.Coins--;
         }
 
         if ( actions.DiscreteActions[ 2 ] != 5 )
         {
-            Debug.Log("Moving Pet"  );
+            Debug.Log( "Moving Pet" );
             int position = actions.DiscreteActions[ 3 ];
             if ( position == actions.DiscreteActions[ 2 ] )
             {
@@ -215,15 +214,18 @@ public class GameAI : Agent
             }
         } else if ( actions.DiscreteActions[ 2 ] == 5 )
         {
-            Debug.Log("Selling Pet"  );
-            AddReward( 0.00025f );
-            _myTeam.SellPet( actions.DiscreteActions[ 3 ] );
-            _myTeam.Coins++;
+            Debug.Log( $"Sell Selection: {actions.DiscreteActions[ 3 ]}" );
+            if ( _myTeam.SellPet( actions.DiscreteActions[ 3 ] ) )
+            {
+                Debug.Log( "Sold Pet" );
+                _myTeam.Coins++;
+                AddReward( 0.00025f );
+            }
         }
 
         if ( _myTeam.Coins <= 0 )
         {
-            Debug.Log("Ending turn"  );
+            Debug.Log( "Ending turn" );
             _manager.State = GameManager.GameState.TurnEnd;
         }
 
@@ -259,11 +261,13 @@ public class GameAI : Agent
                 sensor.AddObservation( -1 );
                 sensor.AddObservation( -1 );
             }
+
             node = node?.Next;
         }
-        
-        foreach ( ShopItem p in _myTeam.Shop.Items )
+
+        for ( int index = 0; index < 7; index++ )
         {
+            ShopItem p = index < _myTeam.Shop.Items.Count ? _myTeam.Shop.Items[ index ] : null;
             if ( p?.Pet != null )
             {
                 sensor.AddObservation( p.Pet.PetID );
@@ -276,9 +280,9 @@ public class GameAI : Agent
                 //sensor.AddObservation(p.SomethingElse);
             } else
             {
-                sensor.AddObservation(-1);
-                sensor.AddObservation(-1);
-                sensor.AddObservation(-1);
+                sensor.AddObservation( -1 );
+                sensor.AddObservation( -1 );
+                sensor.AddObservation( -1 );
             }
         }
 

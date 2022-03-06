@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -547,7 +548,8 @@ public abstract class PetData
         {
             PetData enemy = node.Value;
             enemy.OnHurt( otherTeam, myTeam, attack );
-
+            
+            Debug.Log( $"{myTeam.TeamName} attacks {otherTeam.TeamName} for {attack} damage." );
             if ( node.Next != null && this.Food == FoodData.Food.Chili )
             {
                 PetData enemy2 = node.Next.Value;
@@ -558,6 +560,7 @@ public abstract class PetData
             if ( enemy.Health <= 0 )
             {
                 this.OnFaintEnemy( myTeam, otherTeam );
+                Debug.Log( $"{myTeam.TeamName} killed a pet of {otherTeam.TeamName}! {otherTeam.Pets.Count} enemies remain." );
             }
         }
 
@@ -566,6 +569,7 @@ public abstract class PetData
         {
             petBehind.Value.OnPetAheadAttack( myTeam, otherTeam );
         }
+        
     }
 
     public virtual void OnBeforeAttack( Team myTeam, Team otherTeam )

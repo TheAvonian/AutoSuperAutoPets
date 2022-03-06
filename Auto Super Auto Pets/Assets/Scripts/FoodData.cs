@@ -1,15 +1,39 @@
 ﻿public class FoodData
 {
-    public enum Food {None, Garlic, Honey, Apple, Cupcake, Meatbone, Pill, Salad, CannedFood, Pear, Chili, Chocolate, Sushi, Melon, Mushroom, Pizza, Steak, Milk, Coconut, Poison}
+    public enum Food
+    {
+        None,
+        Garlic,
+        Honey,
+        Apple,
+        Cupcake,
+        Meatbone,
+        Pill,
+        Salad,
+        CannedFood,
+        Pear,
+        Chili,
+        Chocolate,
+        Sushi,
+        Melon,
+        Mushroom,
+        Pizza,
+        Steak,
+        Milk,
+        Coconut,
+        Poison
+    }
 
     public int Health;
     public int Damage;
     public Food Type;
 
-    public FoodData(Food food) {
+    public FoodData( Food food )
+    {
         this.Type = food;
 
-        switch(food) {
+        switch ( food )
+        {
             case Food.Apple:
                 Health = 1;
                 Damage = 1;
@@ -32,7 +56,7 @@
                 break;
         }
     }
-    
+
     public override string ToString()
     {
         return "";
