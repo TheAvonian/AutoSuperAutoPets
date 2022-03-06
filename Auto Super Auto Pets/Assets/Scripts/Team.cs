@@ -21,13 +21,18 @@ public class Team
             return false;
         }
 
-        LinkedListNode< PetData > node = Pets.Find( Pets.ElementAt( index ) );
+        LinkedListNode< PetData > node = Pets.First;
+        for ( int i = 0; i <= index && node?.Next != null; i++)
+        {
+            node = node?.Next;
+        }
+        
         if ( node != null )
         {
             Pets.AddBefore( node, pet );
         } else
         {
-            Pets.AddLast( pet );
+            Pets.AddFirst( pet );
         }
 
         return true;
@@ -41,6 +46,7 @@ public class Team
             tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.PetConstructor((PetData.AllPets)p.PetID) ) );
         }
 
+        tempNew.TeamName = TeamName;
         return tempNew;
     }
 

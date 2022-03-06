@@ -542,6 +542,7 @@ public abstract class PetData
 
     public virtual void OnAttack( Team myTeam, Team otherTeam )
     {
+        LinkedListNode< PetData > petBehind = myTeam.Pets.Find( this )!.Previous;
         this.OnBeforeAttack( myTeam, otherTeam );
 
         int attack = this.Damage;
@@ -573,11 +574,7 @@ public abstract class PetData
             }
         }
 
-        LinkedListNode< PetData > petBehind = myTeam.Pets.Find( this )!.Previous;
-        if ( petBehind != null )
-        {
-            petBehind.Value.OnPetAheadAttack( myTeam, otherTeam );
-        }
+        petBehind?.Value.OnPetAheadAttack( myTeam, otherTeam );
 
     }
 
