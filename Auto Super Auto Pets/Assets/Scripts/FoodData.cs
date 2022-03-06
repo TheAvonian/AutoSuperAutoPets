@@ -97,6 +97,6 @@ public class FoodData
 
     public override string ToString()
     {
-        return "";
+        return Type.ToString();
     }
 }

@@ -558,18 +558,18 @@ public abstract class PetData
             PetData enemy = node.Value;
             enemy.OnHurt( otherTeam, myTeam, attack );
 
-            Debug.Log( $"{myTeam.TeamName} attacks {otherTeam.TeamName} for {attack} damage." );
+            Debug.Log( $"{myTeam.TeamName}: {myTeam.Pets.First.Value} attacks {enemy} for {attack} damage." );
             if ( node.Next != null && Food == FoodData.Food.Chili )
             {
                 PetData enemy2 = node.Next.Value;
-
+                Debug.Log( $"{myTeam.TeamName}: {myTeam.Pets.First.Value} attacks {enemy2} with Chili!" );
                 enemy2.OnHurt( otherTeam, myTeam, 5 );
             }
 
             if ( enemy.Health <= 0 )
             {
+                Debug.Log( $"{myTeam.TeamName}: {myTeam.Pets.First.Value} killed {enemy}! {otherTeam.Pets.Count} enemies remain." );
                 OnFaintEnemy( myTeam, otherTeam );
-                Debug.Log( $"{myTeam.TeamName} killed a pet of {otherTeam.TeamName}! {otherTeam.Pets.Count} enemies remain." );
             }
         }
 
@@ -870,7 +870,7 @@ public class MosquitoPet : PetData
         {
             for ( int i = 0; i < Level; i++ )
             {
-                PetData enemy = otherTeam.Pets.ElementAt( Random.Range( 0, myTeam.Pets.Count ) );
+                PetData enemy = otherTeam.Pets.ElementAt( Random.Range( 0, otherTeam.Pets.Count ) );
                 enemy.OnHurt( otherTeam, myTeam, 1 );
             }
         }
@@ -883,7 +883,7 @@ public class OtterPet : PetData
     {
         base.OnBuy( myTeam );
 
-        List< PetData > friends = new List< PetData >( myTeam.Pets );
+        List< PetData > friends = new( myTeam.Pets );
         friends.Remove( this );
 
         PetData friend = friends.ElementAt( Random.Range( 0, friends.Count ) );

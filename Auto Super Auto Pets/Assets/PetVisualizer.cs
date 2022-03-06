@@ -16,7 +16,7 @@ public class PetVisualizer : MonoBehaviour
     void Start()
     {
         Sprites = Resources.LoadAll( "Pets", typeof( Sprite ) ).Cast<Sprite>().ToArray();
-        _myTeam = GameManager.Instance.GetTeam(0);
+        _myTeam = GameManager.Instance?.GetTeam(0);
     }
 
     void Update()
@@ -28,13 +28,20 @@ public class PetVisualizer : MonoBehaviour
 
             while ( node != null )
             {
+                Debug.Log( ( (PetData.AllPets) node.Value.PetID ).ToString() );
                 TeamTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
                 node = node.Next;
+                index++;
             }
 
+            index = 0;
             foreach(ShopItem item in _myTeam.Shop.Items) {
                 ShopTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) item.Pet.PetID ).ToString() ) );
+                index++;
             }
+        } else
+        {
+            _myTeam = GameManager.Instance?.GetTeam( 0 );
         }
     }
 

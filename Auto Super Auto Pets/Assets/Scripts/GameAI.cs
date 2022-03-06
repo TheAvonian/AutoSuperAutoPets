@@ -14,7 +14,7 @@ public class GameAI : Agent
     GameManager _manager;
 
     float _timer;
-    
+
     void Awake()
     {
         _manager = new GameManager( _myTeam );
@@ -175,13 +175,13 @@ public class GameAI : Agent
     public override void OnActionReceived( ActionBuffers actions )
     {
         // Handle turn here
-        
+
         if ( actions.DiscreteActions[ 0 ] != 7 && _myTeam.Coins >= 3 )
         {
             ShopItem p = _myTeam.Shop.TryGetItem( actions.DiscreteActions[ 0 ] );
-            Debug.Log( $"Shop Selection: {actions.DiscreteActions[ 0 ]}: {p}" );
             if ( p != null && ( p.Food != null || p.Pet != null ) )
             {
+                Debug.Log( $"Shop Selection: {actions.DiscreteActions[ 0 ]}: {p}" );
                 if ( actions.DiscreteActions[ 1 ] == 5 )
                 {
                     Debug.Log( $"Froze Selection: {actions.DiscreteActions[ 1 ]}: {p}" );
@@ -190,6 +190,7 @@ public class GameAI : Agent
                 } else if ( _myTeam.TryPlaceItem( p, actions.DiscreteActions[ 1 ] ) )
                 {
                     _myTeam.Coins -= 3;
+                    Debug.Log( $"Bought pet: {p}" );
                     AddReward( 0.00025f );
                     _myTeam.Shop.RemoveItem( actions.DiscreteActions[ 0 ] );
                 }
@@ -201,20 +202,20 @@ public class GameAI : Agent
 
         if ( actions.DiscreteActions[ 0 ] == 7 && _myTeam.Coins >= 1 )
         {
-            Debug.Log("Rerolling"  );
+            Debug.Log( "Rerolling" );
             _myTeam.Shop.RerollShop();
             _myTeam.Coins--;
         }
 
         if ( actions.DiscreteActions[ 2 ] != 5 )
         {
-            Debug.Log( "Moving Pet" );
             int position = actions.DiscreteActions[ 3 ];
             if ( position == actions.DiscreteActions[ 2 ] )
             {
                 AddReward( -0.00025f );
             } else
             {
+                Debug.Log( "Moving Pet" );
                 _myTeam.MovePet( actions.DiscreteActions[ 2 ], actions.DiscreteActions[ 3 ] );
             }
         } else if ( actions.DiscreteActions[ 2 ] == 5 )
@@ -244,7 +245,7 @@ public class GameAI : Agent
 
         if ( _myTeam.Wins >= 10 )
         {
-            SetReward(1.0f);
+            SetReward( 1.0f );
             EndEpisode();
         }
     }
@@ -286,9 +287,9 @@ public class GameAI : Agent
                 sensor.AddObservation( p.Pet.Health );
             } else if ( p?.Food != null )
             {
-                //sensor.AddObservation( p.Food );
-                //sensor.AddObservation(p.SomethingElse);
-                //sensor.AddObservation(p.SomethingElse);
+                sensor.AddObservation( p.Food.Damage );
+                sensor.AddObservation( p.Food.Health );
+                sensor.AddObservation( (int)p.Food.Type );
             } else
             {
                 sensor.AddObservation( -1 );

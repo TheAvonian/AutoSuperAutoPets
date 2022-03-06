@@ -48,7 +48,7 @@ public class ShopData
     public void IncrementTurn() {
         this.Turn += 1;
 
-        if(Turn == 3 || Turn == 5 || Turn == 7 || Turn == 9 || Turn == 11) this.CurrentTier += 1;
+        if(Turn is 3 or 5 or 7 or 9 or 11) this.CurrentTier += 1;
     }
 
     bool SpotFree( int index )
