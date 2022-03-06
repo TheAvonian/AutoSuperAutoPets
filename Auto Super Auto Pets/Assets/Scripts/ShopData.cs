@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class ShopData
 {
     
-    public List< ShopItem > Items = new();
+    public List< ShopItem > Items = new(7) { null, null, null, null, null, null, null };
     public void RerollShop(int turn)
     {
         // turn 1, 1 food 3 animal
@@ -20,23 +20,23 @@ public class ShopData
             {
                 for ( int i = 0; i < 5; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
-                            Pet = PetData.RandomPet(6),
-                        };
+                            Pet = PetData.RandomPet( 6 ),
+                        });
                     }
                 }
 
                 for ( int i = 5; i < 7; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             //Food = FoodData.RandomFood(6),
-                        };
+                        });
                     }
                 }
 
@@ -46,23 +46,23 @@ public class ShopData
             {
                 for ( int i = 0; i < 5; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
-                            Pet = PetData.RandomPet(5),
-                        };
+                            Pet = PetData.RandomPet( 5 ),
+                        });
                     }
                 }
 
                 for ( int i = 5; i < 7; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             //Food = FoodData.RandomFood(5),
-                        };
+                        });
                     }
                 }
 
@@ -72,23 +72,23 @@ public class ShopData
             {
                 for ( int i = 0; i < 4; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
-                            Pet = PetData.RandomPet(4),
-                        };
+                            Pet = PetData.RandomPet( 4 ),
+                        });
                     }
                 }
 
                 for ( int i = 4; i < 6; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             //Food = FoodData.RandomFood(4),
-                        };
+                        });
                     }
                 }
 
@@ -98,23 +98,23 @@ public class ShopData
             {
                 for ( int i = 0; i < 4; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
-                            Pet = PetData.RandomPet(3),
-                        };
+                            Pet = PetData.RandomPet( 3 ),
+                        });
                     }
                 }
 
                 for ( int i = 4; i < 6; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             //Food = FoodData.RandomFood(3),
-                        };
+                        });
                     }
                 }
 
@@ -124,23 +124,23 @@ public class ShopData
             {
                 for ( int i = 0; i < 3; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             Pet = PetData.RandomPet( 2 ),
-                        };
+                        });
                     }
                 }
 
                 for ( int i = 3; i < 5; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             //Food = FoodData.RandomFood(2),
-                        };
+                        });
                     }
                 }
 
@@ -150,23 +150,23 @@ public class ShopData
             {
                 for ( int i = 0; i < 3; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             Pet = PetData.RandomPet( 1 ),
-                        };
+                        });
                     }
                 }
 
                 for ( int i = 3; i < 5; i++ )
                 {
-                    if ( Items[ i ] != null && !Items[ i ].Frozen )
+                    if ( SpotFree(i) )
                     {
-                        Items[ i ] = new ShopItem
+                        Items.Insert(i, new ShopItem
                         {
                             //Food = FoodData.RandomFood(1),
-                        };
+                        });
                     }
                 }
 
@@ -177,9 +177,27 @@ public class ShopData
         }
     }
 
+    bool SpotFree( int index )
+    {
+        return Items[index] == null || (index < Items.Count && Items[ index ] != null || index < Items.Count && !Items[ index ].Frozen);
+    }
     public ShopItem TryGetItem(int index)
     {
         return Items[ index ];
+    }
+
+    public override string ToString()
+    {
+        string endString = "Shop: ";
+        int i = 0;
+        
+        foreach ( ShopItem p in Items )
+        {
+            endString += p?.ToString() ?? "Nothing";
+            endString += ", ";
+        }
+
+        return endString;
     }
 }
 

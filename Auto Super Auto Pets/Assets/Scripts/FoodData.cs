@@ -5,4 +5,9 @@
     public virtual void OnEat(Team myTeam, PetData pet) {
         
     }
+    
+    public override string ToString()
+    {
+        return "";
+    }
 }

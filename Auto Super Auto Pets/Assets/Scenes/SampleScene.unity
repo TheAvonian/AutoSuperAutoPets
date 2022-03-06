@@ -468,7 +468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1598123257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,7 +514,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 50000
 --- !u!4 &1598123259
 Transform:
   m_ObjectHideFlags: 0

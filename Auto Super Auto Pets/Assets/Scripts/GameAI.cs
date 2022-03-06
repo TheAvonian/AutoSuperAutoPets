@@ -12,17 +12,38 @@ public class GameAI : Agent
     Team _myTeam;
     GameManager _manager;
 
-    void Update()
+    float _timer;
+
+    void FixedUpdate()
     {
-
-        if ( _myTeam.Coins == 0 )
+        _timer += Time.deltaTime;
+        if ( _timer > 2f )
         {
-            _manager.State = GameManager.GameState.TurnEnd;
-        }
+            if ( _manager.State == GameManager.GameState.Turn )
+            {
+                RequestDecision();
+            }
 
-        if ( _manager.State == GameManager.GameState.Turn )
-        {
-            RequestDecision();
+            switch ( _manager.Update() )
+            {
+                case GameManager.WinState.Loss:
+                    AddReward( -0.1f );
+                    break;
+                case GameManager.WinState.Tie:
+                    AddReward( 0.005f );
+                    break;
+                case GameManager.WinState.Win:
+                    AddReward( 0.1f );
+                    break;
+                case GameManager.WinState.Nothing:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Debug.Log( _myTeam );
+            Debug.Log( _myTeam.Shop );
+            _timer = 0;
         }
     }
 
@@ -30,6 +51,16 @@ public class GameAI : Agent
     {
         _myTeam = new Team();
         _manager = new GameManager( _myTeam );
+    }
+
+    public override void Heuristic( in ActionBuffers actionsOut )
+    {
+        ActionSegment< int > dActions = actionsOut.DiscreteActions;
+        if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
+        {
+            dActions[ 0 ] = 1;
+        }
+
     }
 
     public override void OnActionReceived( ActionBuffers actions )
@@ -76,23 +107,13 @@ public class GameAI : Agent
             _myTeam.Coins++;
         }
 
-        AddReward( -0.000025f );
-        switch ( _manager.Update() )
+        if ( _myTeam.Coins <= 0 )
         {
-            case GameManager.WinState.Loss:
-                AddReward( -0.1f );
-                break;
-            case GameManager.WinState.Tie:
-                AddReward( 0.005f );
-                break;
-            case GameManager.WinState.Win:
-                AddReward( 0.1f );
-                break;
-            case GameManager.WinState.Nothing:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            _manager.State = GameManager.GameState.TurnEnd;
         }
+
+        AddReward( -0.000025f );
+
 
         if ( _myTeam.Health <= 0 )
         {
@@ -115,15 +136,15 @@ public class GameAI : Agent
 
         foreach ( ShopItem p in _myTeam.Shop.Items )
         {
-            if ( p.Pet != null )
+            if ( p?.Pet != null )
             {
                 sensor.AddObservation( p.Pet.PetID );
                 sensor.AddObservation( p.Pet.Damage );
                 sensor.AddObservation( p.Pet.Health );
-            } //else if ( p.Food != null )
-            //{
-            //sensor.AddObservation( p.Food.stuff );
-            //}
+            } else if ( p?.Food != null )
+            {
+                //sensor.AddObservation( p.Food );
+            }
         }
 
         sensor.AddObservation( _myTeam.Shop.Items.Count );

@@ -10,7 +10,7 @@ public class Team
     public int Turn;
     public int Wins;
     public LinkedList< PetData > Pets { get; } = new();
-    public ShopData Shop { get; set; }
+    public ShopData Shop { get; set; } = new();
 
     //Attempts to add a friend to the team at given index
     //Returns true if successful false if unsuccessful
@@ -99,5 +99,17 @@ public class Team
         }
 
         Pets.Remove( node! );
+    }
+
+    public override string ToString()
+    {
+        string endString = "";
+        int i = 0;
+        foreach ( PetData p in Pets )
+        {
+            endString += $"Pet {++i}: D:{p.Damage} H:{p.Health} ID:{p.PetID}, ";
+        }
+
+        return endString;
     }
 }
