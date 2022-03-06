@@ -8,7 +8,7 @@ public class ShopData
     public List< ShopItem > Items = new();
     public int HealthModifier = 0;
     public int DamageModifier = 0;
-    public int Turn = 1;
+    public int Turn = 0;
     public int CurrentTier = 1;
     public List<FoodData.Food> FoodList = new(FoodData.TierOneFood);
     public void RerollShop()
@@ -28,7 +28,7 @@ public class ShopData
             {
                 Items.Add( new ShopItem
                 {
-                    Pet = PetData.RandomPet(CurrentTier),
+                    Pet = PetData.RandomPet(CurrentTier, tierSpecific:false),
                 } );
             }
         }

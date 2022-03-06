@@ -139,7 +139,7 @@ public class GameManager
         LinkedList< PetData > tmp = new();
         for ( int i = 0; i < Math.Clamp( _teamOne.Shop.Turn, 0, 6 ); i++ )
         {
-            tmp.AddLast( PetData.RandomPet( Math.Clamp( _teamOne.Shop.Turn, 0, 6 ) ) );
+            tmp.AddLast( PetData.RandomPet( Math.Clamp( _teamOne.Shop.Turn, 0, 6 ), true ) );
         }
         _tempTwo = new Team
         {
