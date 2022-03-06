@@ -5,6 +5,9 @@ public class ShopData
 {
     
     public List< ShopItem > Items = new(7) { null, null, null, null, null, null, null };
+
+    public int HealthModifier = 0;
+    public int DamageModifier = 0;
     public void RerollShop(int turn)
     {
         // turn 1, 1 food 3 animal

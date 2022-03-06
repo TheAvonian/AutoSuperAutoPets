@@ -656,6 +656,21 @@ public abstract class PetData
             }
 
             return;
+        } else if(food.Type == FoodData.Food.CannedFood) {
+            myTeam.Shop.DamageModifier += 2;
+            myTeam.Shop.HealthModifier += 1;
+
+            foreach(ShopItem shopItem in myTeam.Shop.Items) {
+                if(shopItem?.Pet != null) {
+                    shopItem?.Pet.AddDamage(2);
+                    shopItem?.Pet.AddHealth(1);
+                }
+            }
+
+            return;
+        } else if (food.Type == FoodData.Food.Pill) {
+            this.OnFaint(myTeam, null);
+            return;
         } else {
             this.Food = food.Type;
         }
@@ -801,7 +816,11 @@ public class DuckPet : PetData
         base.OnSell( myTeam );
 
         //Give current shop pets +1*level health
-        //myTeam.Shop(); 
+        foreach(ShopItem shopItem in myTeam.Shop.Items) {
+            if(shopItem?.Pet != null) {
+                shopItem?.Pet.AddHealth(1 * Level);
+            }
+        }
     }
 }
 
@@ -1455,6 +1474,14 @@ public class CowPet : PetData
         base.OnBuy( myTeam );
 
         //Change the last two shop slots to be FoodData.Food.Milk
+        List<ShopItem> shopItems = myTeam.Shop.Items;
+
+        FoodData milk = new FoodData(FoodData.Food.Milk);
+        milk.Damage = milk.Damage * Level;
+        milk.Health = milk.Health * Level;
+
+        shopItems[5] = new ShopItem { Food = CloneObject(milk) as FoodData };
+        shopItems[6] = new ShopItem { Food = CloneObject(milk) as FoodData };
     }
 }
 
