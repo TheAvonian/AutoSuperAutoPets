@@ -8,7 +8,6 @@ public class Team
     public string TeamName;
     public int Health = 10;
     public int Coins;
-    public int Turn = 1;
     public int Wins;
     public LinkedList< PetData > Pets { get; set; } = new();
     public ShopData Shop { get; } = new();
