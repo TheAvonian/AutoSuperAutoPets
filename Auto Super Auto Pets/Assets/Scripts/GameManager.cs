@@ -21,8 +21,9 @@ public class GameManager
         State = GameState.TurnStart;
     }
 
-    public Team GetTeam(int teamNum) {
-        return teamNum == 0 ? _tempOne : _teamTwo;
+    public Team GetTeam( int teamNum )
+    {
+        return teamNum == 0 ? _teamOne : _teamTwo;
     }
 
     public GameState State;
@@ -69,14 +70,14 @@ public class GameManager
                     if ( _tempOne.Pets.Count > 0 )
                     {
                         _teamOne.Wins++;
-                        Debug.Log( "Win" );
+                        Debug.Log( $"Win: {_teamOne.Wins}" );
                         return WinState.Win;
                     }
 
                     if ( _tempTwo.Pets.Count > 0 )
                     {
                         _teamOne.Health--;
-                        Debug.Log( "Loss" );
+                        Debug.Log( $"Loss, Health: {_teamOne.Health}" );
                         return WinState.Loss;
                     }
 
@@ -110,8 +111,8 @@ public class GameManager
         {
             return true;
         }
-        
-        PetData frontPetOne = _tempOne.Pets.First.Value; 
+
+        PetData frontPetOne = _tempOne.Pets.First.Value;
         PetData frontPetTwo = _tempTwo.Pets.First.Value;
         frontPetOne.OnAttack( _tempOne, _tempTwo );
         frontPetTwo.OnAttack( _tempTwo, _tempOne );
@@ -121,12 +122,12 @@ public class GameManager
     bool StartBattle()
     {
 
-        for ( LinkedListNode<PetData> node = _tempOne.Pets.First; node != null; node = node.Next )
+        for ( LinkedListNode< PetData > node = _tempOne.Pets.First; node != null; node = node.Next )
         {
             node.Value.OnBattleStart( _tempOne, _tempTwo );
         }
-        
-        for ( LinkedListNode<PetData> node = _tempTwo.Pets.First; node != null; node = node.Next )
+
+        for ( LinkedListNode< PetData > node = _tempTwo.Pets.First; node != null; node = node.Next )
         {
             node.Value.OnBattleStart( _tempTwo, _tempOne );
         }
@@ -149,6 +150,7 @@ public class GameManager
         {
             tmp.AddLast( PetData.RandomPet( Math.Clamp( _teamOne.Shop.Turn, 0, 6 ), true ) );
         }
+
         _tempTwo = new Team
         {
             TeamName = "Random Team",

@@ -16,7 +16,6 @@ public class PetVisualizer : MonoBehaviour
     void Start()
     {
         Sprites = Resources.LoadAll( "Pets", typeof( Sprite ) ).Cast<Sprite>().ToArray();
-        _myTeam = GameManager.Instance?.GetTeam(0);
     }
 
     void Update()
@@ -42,9 +41,5 @@ public class PetVisualizer : MonoBehaviour
         {
             _myTeam = GameManager.Instance?.GetTeam( 0 );
         }
-    }
-
-    public void SetTeam(Team myteam) {
-        _myTeam = myteam;
     }
 }
