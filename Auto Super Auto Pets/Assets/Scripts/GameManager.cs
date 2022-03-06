@@ -5,16 +5,24 @@ using UnityEngine;
 
 public class GameManager
 {
+    public static GameManager Instance;
     Team _teamOne;
     Team _teamTwo;
 
     Team _tempOne;
     Team _tempTwo;
 
+    public PetVisualizer PP;
+
     public GameManager( Team team )
     {
+        Instance = this;
         _teamOne = team;
         State = GameState.TurnStart;
+    }
+
+    public Team GetTeam(int teamNum) {
+        return teamNum == 0 ? _tempOne : _teamTwo;
     }
 
     public GameState State;

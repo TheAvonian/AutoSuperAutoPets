@@ -1251,6 +1251,7 @@ MonoBehaviour:
   - {fileID: 1661946626}
   - {fileID: 278702710}
   - {fileID: 1617196136}
+  Sprites: []
 --- !u!1 &1643932553
 GameObject:
   m_ObjectHideFlags: 0
