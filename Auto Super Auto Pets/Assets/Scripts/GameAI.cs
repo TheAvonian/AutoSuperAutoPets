@@ -17,7 +17,7 @@ public class GameAI : Agent
 
     void FixedUpdate()
     {
-        _timer += Time.deltaTime;
+        _timer += Time.fixedDeltaTime;
         if ( _timer > 2f )
         {
             if ( _manager.State == GameManager.GameState.Turn )

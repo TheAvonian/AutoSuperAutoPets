@@ -47,6 +47,7 @@ public class Team
 
     public bool TryPlaceItem( ShopItem shopItem, int targetIndex )
     {
+        if ( shopItem == null || ( shopItem.Food == null && shopItem.Pet == null ) ) return false;
         LinkedListNode< PetData > petNode = Pets.First;
         int i;
         for ( i = 0; i <= targetIndex && petNode?.Next != null; i++ )
