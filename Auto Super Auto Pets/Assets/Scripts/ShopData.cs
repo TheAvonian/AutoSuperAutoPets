@@ -78,6 +78,14 @@ public class ShopData
 
         return endString;
     }
+
+    public void RemoveItem( int index )
+    {
+        if ( index < Items.Count )
+        {
+            Items.RemoveAt(index);
+        }
+    }
 }
 
 public class ShopItem

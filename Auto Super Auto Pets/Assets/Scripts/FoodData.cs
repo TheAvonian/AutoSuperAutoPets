@@ -4,7 +4,29 @@ using System.Reflection;
 
 public class FoodData
 {
-    public enum Food {None, Garlic, Honey, Apple, Cupcake, Meatbone, Pill, Salad, CannedFood, Pear, Chili, Chocolate, Sushi, Melon, Mushroom, Pizza, Steak, Milk, Coconut, Poison}
+    public enum Food
+    {
+        None,
+        Garlic,
+        Honey,
+        Apple,
+        Cupcake,
+        Meatbone,
+        Pill,
+        Salad,
+        CannedFood,
+        Pear,
+        Chili,
+        Chocolate,
+        Sushi,
+        Melon,
+        Mushroom,
+        Pizza,
+        Steak,
+        Milk,
+        Coconut,
+        Poison
+    }
 
     public static List<Food> TierOneFood {get;} = new() {
         Food.Apple,
@@ -44,10 +66,12 @@ public class FoodData
     public int Damage;
     public Food Type;
 
-    public FoodData(Food food) {
+    public FoodData( Food food )
+    {
         this.Type = food;
 
-        switch(food) {
+        switch ( food )
+        {
             case Food.Apple:
                 Health = 1;
                 Damage = 1;
@@ -70,7 +94,7 @@ public class FoodData
                 break;
         }
     }
-    
+
     public override string ToString()
     {
         return "";
