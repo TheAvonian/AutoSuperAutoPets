@@ -140,6 +140,7 @@ public class GameManager
     {
         _teamOne.Coins = 10;
         _teamOne.Turn++;
+        _teamOne.Shop.UpdateAvailableTiers(_teamOne.Turn);
         _teamOne.Shop.RerollShop( _teamOne.Turn );
         foreach ( PetData pet in _teamOne.Pets )
         {

@@ -726,40 +726,6 @@ public abstract class PetData
 
         return true;
     }
-
-    public static PetData RandomPet( int i )
-    {
-        List< PetData > allPets = new();
-
-        allPets.AddRange( TierOnePets );
-
-        if ( i > 1 )
-        {
-            allPets.AddRange( TierTwoPets );
-        }
-
-        if ( i > 2 )
-        {
-            allPets.AddRange( TierThreePets );
-        }
-
-        if ( i > 3 )
-        {
-            allPets.AddRange( TierFourPets );
-        }
-
-        if ( i > 4 )
-        {
-            allPets.AddRange( TierFivePets );
-        }
-
-        if ( i > 5 )
-        {
-            allPets.AddRange( TierSixPets );
-        }
-
-        return allPets[ Random.Range( 0, allPets.Count ) ];
-    }
 }
 
 public class AntPet : PetData

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ShopData
 {
     public List< ShopItem > Items = new();
     public int HealthModifier = 0;
     public int DamageModifier = 0;
+
+    public List<PetData> PetsList = new List<PetData>(PetData.TierOnePets);
+    public List<FoodData.Food> FoodList = new List<FoodData.Food>(FoodData.TierOneFood);
     public void RerollShop( int turn )
     {
         // turn 1, 1 food 3 animal
@@ -17,175 +21,73 @@ public class ShopData
         // turn 11, tier 6
 
         Items.RemoveAll( x => x is {Frozen: false} );
-        switch ( turn )
+        
+        for ( int i = 0; i < 5; i++ )
         {
-            case >= 11:
+            if ( SpotFree( i ) )
             {
-                for ( int i = 0; i < 5; i++ )
+                Items.Add( new ShopItem
                 {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            Pet = PetData.RandomPet( 6 ),
-                        } );
-                    }
-                }
-
-                for ( int i = 5; i < 7; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            //Food = FoodData.RandomFood(6),
-                        } );
-                    }
-                }
-
-                break;
+                    Pet = RandomPet(),
+                } );
             }
-            case >= 9:
+        }
+
+        for ( int i = 5; i < 7; i++ )
+        {
+            if ( SpotFree( i ) )
             {
-                for ( int i = 0; i < 5; i++ )
+                Items.Add( new ShopItem
                 {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            Pet = PetData.RandomPet( 5 ),
-                        } );
-                    }
-                }
-
-                for ( int i = 5; i < 7; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            //Food = FoodData.RandomFood(5),
-                        } );
-                    }
-                }
-
-                break;
+                    Food = RandomFood(),
+                } );
             }
-            case >= 7:
-            {
-                for ( int i = 0; i < 4; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            Pet = PetData.RandomPet( 4 ),
-                        } );
-                    }
-                }
-
-                for ( int i = 4; i < 6; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            //Food = FoodData.RandomFood(4),
-                        } );
-                    }
-                }
-
-                break;
-            }
-            case >= 5:
-            {
-                for ( int i = 0; i < 4; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            Pet = PetData.RandomPet( 3 ),
-                        } );
-                    }
-                }
-
-                for ( int i = 4; i < 6; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            //Food = FoodData.RandomFood(3),
-                        } );
-                    }
-                }
-
-                break;
-            }
-            case >= 3:
-            {
-                for ( int i = 0; i < 3; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            Pet = PetData.RandomPet( 2 ),
-                        } );
-                    }
-                }
-
-                for ( int i = 3; i < 5; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            //Food = FoodData.RandomFood(2),
-                        } );
-                    }
-                }
-
-                break;
-            }
-            case >= 1:
-            {
-                for ( int i = 0; i < 3; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        ShopItem p = new()
-                        {
-                            Pet = PetData.RandomPet( 1 ),
-                        };
-                        
-                        Debug.Log( p );
-                        Items.Add( p );
-                    }
-                }
-
-                for ( int i = 3; i < 5; i++ )
-                {
-                    if ( SpotFree( i ) )
-                    {
-                        Items.Add( new ShopItem
-                        {
-                            //Food = FoodData.RandomFood(1),
-                        } );
-                    }
-                }
-
-                break;
-            }
-            default:
-                throw new ArgumentOutOfRangeException();
         }
     }
 
     bool SpotFree( int index )
     {
         return ( index < Items.Count && Items[ index ] == null ) || index >= Items.Count;
+    }
+
+    public void UpdateAvailableTiers(int turn) {
+        if ( turn > 1 )
+        {
+            PetsList.AddRange( PetData.TierTwoPets );
+            FoodList.AddRange( FoodData.TierTwoFood );
+        }
+
+        if ( turn > 2 )
+        {
+            PetsList.AddRange( PetData.TierThreePets );
+            FoodList.AddRange( FoodData.TierThreeFood );
+        }
+
+        if ( turn > 3 )
+        {
+            PetsList.AddRange( PetData.TierFourPets );
+            FoodList.AddRange( FoodData.TierFourFood );
+        }
+
+        if ( turn > 4 )
+        {
+            PetsList.AddRange( PetData.TierFivePets );
+            FoodList.AddRange( FoodData.TierFiveFood );
+        }
+
+        if ( turn > 5 )
+        {
+            PetsList.AddRange( PetData.TierSixPets );
+            FoodList.AddRange( FoodData.TierSixFood );
+        }
+    }
+
+    public PetData RandomPet() {
+        return PetData.CloneObject(PetsList[Random.Range(0, PetsList.Count)]) as PetData;
+    }
+
+    public FoodData RandomFood() {
+        return new FoodData(FoodList[Random.Range(0, FoodList.Count)]);
     }
 
     
