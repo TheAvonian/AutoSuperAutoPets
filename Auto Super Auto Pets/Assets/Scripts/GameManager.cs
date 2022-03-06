@@ -103,7 +103,6 @@ public class GameManager
             return true;
         }
 
-        // fix this 
         _tempOne.Pets.First.Value.OnAttack( _tempOne, _tempTwo );
         _tempTwo.Pets.First.Value.OnAttack( _tempTwo, _tempOne );
         return false;

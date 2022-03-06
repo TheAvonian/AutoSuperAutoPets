@@ -76,13 +76,14 @@ public class GameAI : Agent
             _myTeam.Coins++;
         }
 
+        AddReward( -0.000025f );
         switch ( _manager.Update() )
         {
             case GameManager.WinState.Loss:
                 AddReward( -0.1f );
                 break;
             case GameManager.WinState.Tie:
-                AddReward( -0.005f );
+                AddReward( 0.005f );
                 break;
             case GameManager.WinState.Win:
                 AddReward( 0.1f );
@@ -105,6 +106,7 @@ public class GameAI : Agent
         sensor.AddObservation( _myTeam.Health );
         foreach ( PetData p in _myTeam.Pets )
         {
+            sensor.AddObservation( p.PetID );
             sensor.AddObservation( p.Damage );
             sensor.AddObservation( p.Health );
             sensor.AddObservation( p.StackHeight );
@@ -115,6 +117,7 @@ public class GameAI : Agent
         {
             if ( p.Pet != null )
             {
+                sensor.AddObservation( p.Pet.PetID );
                 sensor.AddObservation( p.Pet.Damage );
                 sensor.AddObservation( p.Pet.Health );
             } //else if ( p.Food != null )

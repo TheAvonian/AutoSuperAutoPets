@@ -36,18 +36,68 @@ public class Team
         return tempNew;
     }
 
-    public bool TryPlaceItem( ShopItem shopItem, int actionsDiscreteAction )
+    public bool TryPlaceItem( ShopItem shopItem, int targetIndex )
     {
+        LinkedListNode< PetData > petNode = Pets.First;
+        int i;
+        for ( i = 0; i <= targetIndex && petNode.Next != null; i++ )
+        {
+            petNode = petNode.Next;
+        }
+
+        if ( i == targetIndex )
+        {
+            if ( petNode.Value.PetID == shopItem.Pet?.PetID )
+            {
+                petNode.Value.OnStack(this, shopItem.Pet);
+            } else
+            {
+                petNode.Value.OnEatShopFood(this, shopItem.Food);
+            }
+        } else
+        {
+            if ( Pets.Count < 5 )
+            {
+                Pets.AddAfter( petNode, shopItem.Pet );
+            }
+        }
         return true;
     }
 
-    public void MovePet( int actionsDiscreteAction, int discreteAction )
+    public void MovePet( int indexOne, int indexTwo )
     {
-        
+        LinkedListNode< PetData > nodeOne = Pets.First;
+        LinkedListNode< PetData > nodeTwo = Pets.First;
+        for ( int i = 0; i <= indexOne || i <= indexTwo; i++ )
+        {
+
+            if ( i <= indexOne )
+            {
+                nodeOne = nodeOne?.Next;
+            }
+
+            if ( i <= indexTwo )
+            {
+                nodeTwo = nodeTwo?.Next;
+            } 
+        }
+
+        // finish this
     }
 
-    public void SellPet( int actionsDiscreteAction )
+    public void SellPet( int targetIndex )
     {
-        
+        LinkedListNode< PetData > node = Pets.First;
+        for ( int i = 0; i <= targetIndex; i++ )
+        {
+            if ( i == targetIndex )
+            {
+                break;
+            }
+
+            node = node?.Next;
+        }
+
+        Pets.Remove( node! );
     }
 }
