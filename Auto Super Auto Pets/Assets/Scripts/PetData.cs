@@ -312,12 +312,17 @@ public abstract class PetData
 
     public virtual void OnFaint( Team myTeam, Team otherTeam )
     {
-        LinkedListNode<PetData> node = myTeam.Pets.Find(this)!.Previous;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
+        if(node != null) node.Value.OnPetAheadFaint(myTeam, otherTeam);
+
         myTeam.Pets.Remove( this );
+
+        myTeam.UpdatePetPositions();
 
         if ( this.Food == FoodData.Food.Honey )
         {
             myTeam.TryAddFriend( new BeePet {BaseHealth = 1, BaseDamage = 1, Health = 1, Damage = 1}, this.Position );
+            myTeam.UpdatePetPositions();
         } else if ( this.Food == FoodData.Food.Mushroom )
         {
             PetData selfCopy = PetConstructor( (AllPets) PetID );
@@ -328,8 +333,6 @@ public abstract class PetData
             selfCopy.Food = FoodData.Food.None;
             if ( myTeam.TryAddFriend( selfCopy, this.Position ) ) selfCopy.OnSummon( myTeam );
         }
-
-        node?.Value.OnPetAheadFaint(myTeam, otherTeam);
 
         foreach ( PetData friend in myTeam.Pets )
         {
@@ -436,6 +439,7 @@ public abstract class PetData
 
     public virtual void OnSummon( Team myTeam )
     {
+        myTeam.UpdatePetPositions();
         foreach ( PetData friend in myTeam.Pets )
         {
             if ( friend == this ) continue;
