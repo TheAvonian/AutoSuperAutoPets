@@ -103,7 +103,6 @@ public class GameManager
             return true;
         }
 
-        // fix this 
         _tempOne.Pets.First.Value.OnAttack( _tempOne, _tempTwo );
         _tempTwo.Pets.First.Value.OnAttack( _tempTwo, _tempOne );
         return false;
@@ -139,8 +138,8 @@ public class GameManager
 
     bool TurnStart()
     {
-        _teamOne = _tempOne.CloneTeam();
-        _teamTwo = _tempTwo.CloneTeam();
+        _teamOne = _tempOne?.CloneTeam() ?? new Team();
+        _teamTwo = _tempTwo?.CloneTeam() ?? new Team();
         _teamOne.Coins = 10;
         _teamOne.Turn++;
         _teamOne.Shop.RerollShop( _teamOne.Turn );

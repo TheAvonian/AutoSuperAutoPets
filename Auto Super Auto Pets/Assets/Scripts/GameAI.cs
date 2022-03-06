@@ -12,17 +12,39 @@ public class GameAI : Agent
     Team _myTeam;
     GameManager _manager;
 
-    void Update()
+    float _timer;
+
+    void FixedUpdate()
     {
-
-        if ( _myTeam.Coins == 0 )
+        _timer += Time.deltaTime;
+        if ( _timer > 2f )
         {
-            _manager.State = GameManager.GameState.TurnEnd;
-        }
+            if ( _manager.State == GameManager.GameState.Turn )
+            {
+                Debug.Log("getting decision"  );
+                RequestDecision();
+            }
 
-        if ( _manager.State == GameManager.GameState.Turn )
-        {
-            RequestDecision();
+            switch ( _manager.Update() )
+            {
+                case GameManager.WinState.Loss:
+                    AddReward( -0.1f );
+                    break;
+                case GameManager.WinState.Tie:
+                    AddReward( 0.005f );
+                    break;
+                case GameManager.WinState.Win:
+                    AddReward( 0.1f );
+                    break;
+                case GameManager.WinState.Nothing:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Debug.Log( _myTeam );
+            Debug.Log( _myTeam.Shop );
+            _timer = 0;
         }
     }
 
@@ -32,13 +54,124 @@ public class GameAI : Agent
         _manager = new GameManager( _myTeam );
     }
 
+    public override void Heuristic( in ActionBuffers actionsOut )
+    {
+        ActionSegment< int > dActions = actionsOut.DiscreteActions;
+        if ( Input.GetKeyDown( KeyCode.Alpha1 ) )
+        {
+            dActions[ 0 ] = 0;
+        }
+        if ( Input.GetKeyDown( KeyCode.Alpha2 ) )
+        {
+            dActions[ 0 ] = 1;
+        }
+        if ( Input.GetKeyDown( KeyCode.Alpha3 ) )
+        {
+            dActions[ 0 ] = 2;
+        }
+        if ( Input.GetKeyDown( KeyCode.Alpha4 ) )
+        {
+            dActions[ 0 ] = 3;
+        }
+        if ( Input.GetKeyDown( KeyCode.Alpha5 ) )
+        {
+            dActions[ 0 ] = 4;
+        }
+        if ( Input.GetKeyDown( KeyCode.Alpha6 ) )
+        {
+            dActions[ 0 ] = 5;
+        }
+        if ( Input.GetKeyDown( KeyCode.Alpha7 ) )
+        {
+            dActions[ 0 ] = 6;
+        }
+        if ( Input.GetKeyDown( KeyCode.Alpha8 ) )
+        {
+            dActions[ 0 ] = 7;
+        }
+        
+        if ( Input.GetKeyDown( KeyCode.Q ) )
+        {
+            dActions[ 1 ] = 0;
+        }
+        if ( Input.GetKeyDown( KeyCode.W ) )
+        {
+            dActions[ 1 ] = 1;
+        }
+        if ( Input.GetKeyDown( KeyCode.E ) )
+        {
+            dActions[ 1 ] = 2;
+        }
+        if ( Input.GetKeyDown( KeyCode.R ) )
+        {
+            dActions[ 1 ] = 3;
+        }
+        if ( Input.GetKeyDown( KeyCode.T ) )
+        {
+            dActions[ 1 ] = 4;
+        }
+        if ( Input.GetKeyDown( KeyCode.Y ) )
+        {
+            dActions[ 1 ] = 5;
+        }
+        
+        if ( Input.GetKeyDown( KeyCode.A ) )
+        {
+            dActions[ 2 ] = 0;
+        }
+        if ( Input.GetKeyDown( KeyCode.S ) )
+        {
+            dActions[ 2 ] = 1;
+        }
+        if ( Input.GetKeyDown( KeyCode.D ) )
+        {
+            dActions[ 2 ] = 2;
+        }
+        if ( Input.GetKeyDown( KeyCode.F ) )
+        {
+            dActions[ 2 ] = 3;
+        }
+        if ( Input.GetKeyDown( KeyCode.G ) )
+        {
+            dActions[ 2 ] = 4;
+        }
+        if ( Input.GetKeyDown( KeyCode.H ) )
+        {
+            dActions[ 2 ] = 5;
+        }
+        if ( Input.GetKeyDown( KeyCode.Z ) )
+        {
+            dActions[ 3 ] = 0;
+        }
+        if ( Input.GetKeyDown( KeyCode.X ) )
+        {
+            dActions[ 3 ] = 1;
+        }
+        if ( Input.GetKeyDown( KeyCode.C ) )
+        {
+            dActions[ 3 ] = 2;
+        }
+        if ( Input.GetKeyDown( KeyCode.V ) )
+        {
+            dActions[ 3 ] = 3;
+        }
+        if ( Input.GetKeyDown( KeyCode.B ) )
+        {
+            dActions[ 3 ] = 4;
+        }
+    }
+
     public override void OnActionReceived( ActionBuffers actions )
     {
         // Handle turn here
-
+        Debug.Log($"Shop Selection: {actions.DiscreteActions[0]}"  );
+        Debug.Log($"Target Selection: {actions.DiscreteActions[1]}"  );
+        Debug.Log($"Move Selection: {actions.DiscreteActions[2]}"  );
+        Debug.Log($"Sell Selection if Move 5: {actions.DiscreteActions[3]}"  );
         if ( actions.DiscreteActions[ 0 ] != 7 && _myTeam.Coins >= 3 )
         {
             ShopItem p = _myTeam.Shop.TryGetItem( actions.DiscreteActions[ 0 ] );
+            Debug.Log("Grabbing shop guy"  );
             if ( p != null )
             {
                 if ( actions.DiscreteActions[ 1 ] == 5 )
@@ -55,12 +188,14 @@ public class GameAI : Agent
 
         if ( actions.DiscreteActions[ 0 ] == 7 && _myTeam.Coins >= 1 )
         {
+            Debug.Log("Rerolling"  );
             _myTeam.Shop.RerollShop( _myTeam.Turn );
             _myTeam.Coins--;
         }
 
         if ( actions.DiscreteActions[ 2 ] != 5 )
         {
+            Debug.Log("Moving Pet"  );
             int position = actions.DiscreteActions[ 3 ];
             if ( position == actions.DiscreteActions[ 2 ] )
             {
@@ -71,27 +206,20 @@ public class GameAI : Agent
             }
         } else if ( actions.DiscreteActions[ 2 ] == 5 )
         {
+            Debug.Log("Selling Pet"  );
             AddReward( 0.00025f );
             _myTeam.SellPet( actions.DiscreteActions[ 3 ] );
             _myTeam.Coins++;
         }
 
-        switch ( _manager.Update() )
+        if ( _myTeam.Coins <= 0 )
         {
-            case GameManager.WinState.Loss:
-                AddReward( -0.1f );
-                break;
-            case GameManager.WinState.Tie:
-                AddReward( -0.005f );
-                break;
-            case GameManager.WinState.Win:
-                AddReward( 0.1f );
-                break;
-            case GameManager.WinState.Nothing:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            Debug.Log("Ending turn"  );
+            _manager.State = GameManager.GameState.TurnEnd;
         }
+
+        AddReward( -0.000025f );
+
 
         if ( _myTeam.Health <= 0 )
         {
@@ -103,24 +231,46 @@ public class GameAI : Agent
     {
         sensor.AddObservation( _myTeam.Coins );
         sensor.AddObservation( _myTeam.Health );
-        foreach ( PetData p in _myTeam.Pets )
-        {
-            sensor.AddObservation( p.Damage );
-            sensor.AddObservation( p.Health );
-            sensor.AddObservation( p.StackHeight );
-            sensor.AddObservation( p.Level );
-        }
 
+        LinkedListNode< PetData > node = _myTeam.Pets.First;
+        for ( int i = 0; i < 5; i++ )
+        {
+            if ( node != null )
+            {
+                sensor.AddObservation( node.Value.PetID );
+                sensor.AddObservation( node.Value.Damage );
+                sensor.AddObservation( node.Value.Health );
+                sensor.AddObservation( node.Value.StackHeight );
+                sensor.AddObservation( node.Value.Level );
+            } else
+            {
+                sensor.AddObservation( -1 );
+                sensor.AddObservation( -1 );
+                sensor.AddObservation( -1 );
+                sensor.AddObservation( -1 );
+                sensor.AddObservation( -1 );
+            }
+            node = node?.Next;
+        }
+        
         foreach ( ShopItem p in _myTeam.Shop.Items )
         {
-            if ( p.Pet != null )
+            if ( p?.Pet != null )
             {
+                sensor.AddObservation( p.Pet.PetID );
                 sensor.AddObservation( p.Pet.Damage );
                 sensor.AddObservation( p.Pet.Health );
-            } //else if ( p.Food != null )
-            //{
-            //sensor.AddObservation( p.Food.stuff );
-            //}
+            } else if ( p?.Food != null )
+            {
+                //sensor.AddObservation( p.Food );
+                //sensor.AddObservation(p.SomethingElse);
+                //sensor.AddObservation(p.SomethingElse);
+            } else
+            {
+                sensor.AddObservation(-1);
+                sensor.AddObservation(-1);
+                sensor.AddObservation(-1);
+            }
         }
 
         sensor.AddObservation( _myTeam.Shop.Items.Count );
