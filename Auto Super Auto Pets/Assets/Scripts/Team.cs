@@ -41,6 +41,7 @@ public class Team
             tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.PetConstructor((PetData.AllPets)p.PetID) ) );
         }
 
+        tempNew.TeamName = TeamName;
         return tempNew;
     }
 
