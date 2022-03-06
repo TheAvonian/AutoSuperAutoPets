@@ -39,7 +39,7 @@ public class Team
         Team tempNew = new();
         foreach ( PetData p in Pets )
         {
-            tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.CloneObject( p ) as PetData ) );
+            tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.PetConstructor((PetData.AllPets)p.PetID) ) );
         }
 
         return tempNew;
