@@ -28,7 +28,6 @@ public class PetVisualizer : MonoBehaviour
 
             while ( node != null )
             {
-                Debug.Log( ( (PetData.AllPets) node.Value.PetID ).ToString() );
                 TeamTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
                 node = node.Next;
                 index++;
