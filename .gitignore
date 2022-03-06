@@ -10,7 +10,7 @@
 **/[Ll]ogs/
 **/[Mm]emoryCaptures/
 
-**/Timers/
+**/Timers/**
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
