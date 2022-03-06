@@ -34,8 +34,13 @@ public class PetVisualizer : MonoBehaviour
 
             index = 0;
             foreach(ShopItem item in _myTeam.Shop.Items) {
-                ShopTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) item.Pet.PetID ).ToString() ) );
+                ShopTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( item.Pet != null ? ((PetData.AllPets) item.Pet.PetID ).ToString() : item.Food?.Type.ToString()));
                 index++;
+            }
+
+            for ( int i = index; i < ShopTiles.Length; i++ )
+            {
+                ShopTiles[ index ].GetComponent< Image >().sprite = null;
             }
         } else
         {

@@ -68,7 +68,7 @@ public class FoodData
 
     public FoodData( Food food )
     {
-        this.Type = food;
+        Type = food;
 
         switch ( food )
         {
