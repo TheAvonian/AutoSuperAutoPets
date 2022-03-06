@@ -8,10 +8,10 @@ public class ShopData
     public List< ShopItem > Items = new();
     public int HealthModifier = 0;
     public int DamageModifier = 0;
-
-    public List<PetData> PetsList = new List<PetData>(PetData.TierOnePets);
+    public int turn = 1;
+    public int currentTier = 1;
     public List<FoodData.Food> FoodList = new List<FoodData.Food>(FoodData.TierOneFood);
-    public void RerollShop( int turn )
+    public void RerollShop()
     {
         // turn 1, 1 food 3 animal
         // turn 3, tier 2, 2 food
@@ -28,7 +28,7 @@ public class ShopData
             {
                 Items.Add( new ShopItem
                 {
-                    Pet = RandomPet(),
+                    Pet = PetData.RandomPet(currentTier),
                 } );
             }
         }
@@ -45,45 +45,15 @@ public class ShopData
         }
     }
 
+    public void IncrementTurn() {
+        this.turn += 1;
+
+        if(turn == 3 || turn == 5 || turn == 7 || turn == 9 || turn == 11) this.currentTier += 1;
+    }
+
     bool SpotFree( int index )
     {
         return ( index < Items.Count && Items[ index ] == null ) || index >= Items.Count;
-    }
-
-    public void UpdateAvailableTiers(int turn) {
-        if ( turn > 1 )
-        {
-            PetsList.AddRange( PetData.TierTwoPets );
-            FoodList.AddRange( FoodData.TierTwoFood );
-        }
-
-        if ( turn > 2 )
-        {
-            PetsList.AddRange( PetData.TierThreePets );
-            FoodList.AddRange( FoodData.TierThreeFood );
-        }
-
-        if ( turn > 3 )
-        {
-            PetsList.AddRange( PetData.TierFourPets );
-            FoodList.AddRange( FoodData.TierFourFood );
-        }
-
-        if ( turn > 4 )
-        {
-            PetsList.AddRange( PetData.TierFivePets );
-            FoodList.AddRange( FoodData.TierFiveFood );
-        }
-
-        if ( turn > 5 )
-        {
-            PetsList.AddRange( PetData.TierSixPets );
-            FoodList.AddRange( FoodData.TierSixFood );
-        }
-    }
-
-    public PetData RandomPet() {
-        return PetData.CloneObject(PetsList[Random.Range(0, PetsList.Count)]) as PetData;
     }
 
     public FoodData RandomFood() {
