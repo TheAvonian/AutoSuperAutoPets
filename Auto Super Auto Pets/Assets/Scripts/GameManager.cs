@@ -136,7 +136,7 @@ public class GameManager
         LinkedList< PetData > tmp = new();
         tmp.AddFirst( _teamOne.Shop.RandomPet() );
         tmp.AddLast( _teamOne.Shop.RandomPet() );
-        _tempTwo = new Team()
+        _tempTwo = new Team
         {
             TeamName = "Random Team",
             Pets = tmp,
