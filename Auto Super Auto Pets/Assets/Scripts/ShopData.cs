@@ -2,6 +2,7 @@
 
 public class ShopData
 {
+    
     public List< ShopItem > Items = new();
     public void RerollShop(int turn)
     {

@@ -31,14 +31,14 @@ public class GameManager
 
                 break;
             case GameState.Turn:
-                
+
                 break;
             case GameState.TurnEnd:
                 if ( EndTurn() )
                 {
                     State = GameState.BattleStart;
                 }
-                
+
                 break;
             case GameState.BattleStart:
                 if ( StartBattle() )
@@ -58,14 +58,14 @@ public class GameManager
                 if ( EndBattle() )
                 {
                     State = GameState.TurnStart;
-                    if(_teamOne.Pets.Count > 0)
+                    if ( _tempTwo.Pets.Count > 0 )
                     {
                         _teamOne.Wins++;
                         Debug.Log( "Win" );
                         return WinState.Win;
                     }
 
-                    if ( _teamTwo.Pets.Count > 0 )
+                    if ( _tempTwo.Pets.Count > 0 )
                     {
                         _teamOne.Health--;
                         Debug.Log( "Loss" );
@@ -90,6 +90,7 @@ public class GameManager
         Loss,
         Win,
     }
+
     bool EndBattle()
     {
         return true;
@@ -97,15 +98,33 @@ public class GameManager
 
     bool BattlePhase()
     {
-        return true;
+        if ( _tempOne.Pets.Count <= 0 || _tempTwo.Pets.Count <= 0 )
+        {
+            return true;
+        }
+
+        // fix this 
+        _tempOne.Pets.First.Value.DamagePet( _tempTwo.Pets.First.Value );
+        _tempTwo.Pets.First.Value.DamagePet( _tempOne.Pets.First.Value );
+        
+        _tempOne.Pets.First.Next?.Value.OnPetAheadAttack(_tempOne, _tempTwo);
+        _tempTwo.Pets.First.Next?.Value.OnPetAheadAttack(_tempTwo, _tempOne);
+        
+
     }
 
     bool StartBattle()
     {
-        foreach ( PetData pet in _teamOne.Pets )
+        foreach ( PetData pet in _tempOne.Pets )
         {
-            pet?.OnBattleStart(_teamOne, _teamTwo);
+            pet?.OnBattleStart( _tempOne, _tempTwo );
         }
+
+        foreach ( PetData pet in _tempTwo.Pets )
+        {
+            pet?.OnBattleStart( _tempTwo, _tempOne );
+        }
+
         return true;
     }
 
@@ -113,7 +132,7 @@ public class GameManager
     {
         foreach ( PetData pet in _teamOne.Pets )
         {
-            pet?.OnTurnEnd(_teamOne);
+            pet?.OnTurnEnd( _teamOne );
         }
 
         _tempOne = _teamOne.CloneTeam();
@@ -128,11 +147,12 @@ public class GameManager
         _teamTwo = _tempTwo.CloneTeam();
         _teamOne.Coins = 10;
         _teamOne.Turn++;
-        _teamOne.Shop.RerollShop(_teamOne.Turn);
+        _teamOne.Shop.RerollShop( _teamOne.Turn );
         foreach ( PetData pet in _teamOne.Pets )
         {
-            pet?.OnTurnStart(_teamOne);
+            pet?.OnTurnStart( _teamOne );
         }
+
         return true;
     }
 
