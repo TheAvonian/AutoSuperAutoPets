@@ -110,6 +110,8 @@ public abstract class PetData
     }
 
     public virtual void OnAttack(Team myTeam, Team otherTeam) {
+        this.OnBeforeAttack(myTeam, otherTeam);
+
         int attack = this.Damage;
         if(this.Food == FoodData.Food.Meatbone) attack += 5;
         else if(this.Food == FoodData.Food.Steak) attack += 20;
@@ -210,8 +212,10 @@ public abstract class PetData
         this.Health = Math.Max(pet.Health, this.Health) + 1;
         this.Damage = Math.Max(pet.Damage, this.Damage) + 1;
 
-        if(StackHeight == 3 || StackHeight == 6) {
-            Level += 1;
+        if(StackHeight == 3) {
+            Level = 2;
+        } else if (StackHeight == 6) {
+            Level = 3;
         }
 
         return true;
@@ -717,22 +721,46 @@ public class DolphinPet : PetData {
 }
 
 public class HippoPet : PetData {
-    public override void OnAttack(Team myTeam, Team otherTeam)
+    public override void OnFaintEnemy(Team myTeam, Team otherTeam)
     {
-        base.OnAttack(myTeam, otherTeam);
+        base.OnFaintEnemy(myTeam, otherTeam);
+
+        this.AddDamage(2 * Level);
+        this.AddHealth(2 * Level);
     }
 }
 
 public class PenguinPet : PetData {
-    
+    public override void OnTurnEnd(Team myTeam) 
+    {
+        base.OnTurnEnd(myTeam);
+
+        foreach(PetData friend in myTeam.Pets) {
+            if(friend.Level == 3 || friend.Level == 2) {
+                friend.AddDamage(1 * Level);
+                friend.AddHealth(1 * Level);
+                break;
+            }
+        }
+    }
 }
 
 public class RoosterPet : PetData {
-    
+    public override void OnFaint(Team myTeam, Team otherTeam)
+    {
+        base.OnFaint(myTeam, otherTeam);
+
+        //Create 1 * Level chicks with 0.5 * this.Damage
+
+        //Add each chick to the team
+    }
 }
 
 public class SkunkPet : PetData {
-    
+    public override void OnBeforeAttack(Team myTeam, Team otherTeam)
+    {
+        base.OnBeforeAttack(myTeam, otherTeam);
+    }
 }
 
 public class SquirrelPet : PetData {
