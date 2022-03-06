@@ -389,7 +389,9 @@ public abstract class PetData
     };
         
     public int Health;
+    public int baseHealth;
     public int Damage;
+    public int baseDamage;
     public int Level = 1;
     public int StackHeight = 1;
     public int Position = -1;
@@ -424,17 +426,25 @@ public abstract class PetData
         return objTarget;
     }
 
-    public void AddHealth(int amountGiven) {
+    public void AddHealth(int amountGiven, bool temp = false) {
+        if(!temp) this.baseHealth += amountGiven;
         this.Health += amountGiven;
         if(this.Health > 50) {
             this.Health = 50;
         }
+        if(this.baseHealth > 50) {
+            this.baseHealth = 50;
+        }
     }
 
-    public void AddDamage(int amountGiven) {
+    public void AddDamage(int amountGiven, bool temp = false) {
+        if(!temp) this.baseDamage += amountGiven;
         this.Damage += amountGiven;
         if(this.Health > 50) {
             this.Damage = 50;
+        }
+        if(this.baseDamage > 50) {
+            this.baseDamage = 50;
         }
     }
 
@@ -463,6 +473,19 @@ public abstract class PetData
     public virtual void OnFaint( Team myTeam, Team otherTeam )
     {
         myTeam.Pets.Remove(this);
+
+        if(this.Food == FoodData.Food.Honey) {
+            myTeam.TryAddFriend(new BeePet { baseHealth = 1, baseDamage = 1, Health = 1, Damage = 1 }, this.Position);
+        } else if (this.Food == FoodData.Food.Mushroom) {
+            PetData selfCopy = CloneObject(this) as PetData;
+            selfCopy.Health = 1;
+            selfCopy.baseHealth = 1;
+            selfCopy.Damage = 1;
+            selfCopy.baseDamage = 1;
+            selfCopy.Food = FoodData.Food.None;
+            myTeam.TryAddFriend(selfCopy, this.Position);
+        }
+
         foreach(PetData friend in myTeam.Pets) {
             friend.OnFriendFaints(myTeam, otherTeam, this);
         }
@@ -499,9 +522,10 @@ public abstract class PetData
 
         int attack = this.Damage;
         if(this.Food == FoodData.Food.Meatbone) attack += 5;
-        else if(this.Food == FoodData.Food.Steak) attack += 20;
-
-        if(attack > 50) attack = 50;
+        else if(this.Food == FoodData.Food.Steak) {
+            attack += 20;
+            this.Food = FoodData.Food.None;
+        }
 
         LinkedListNode<PetData> node = otherTeam.Pets.First;
         if(node != null) {
@@ -567,6 +591,48 @@ public abstract class PetData
 
     public virtual void OnEatShopFood(Team myTeam, FoodData food)
     {
+        if(food.Type == FoodData.Food.Cupcake) {
+            this.AddDamage(food.Damage, temp:true);
+            this.AddHealth(food.Health, temp:true);
+        } else if(food.Health > 0 || food.Damage > 0) {
+            this.AddDamage(food.Damage);
+            this.AddHealth(food.Health);
+        } else if(food.Type == FoodData.Food.Chocolate) {
+            PetData newPet = CloneObject(this) as PetData;
+            newPet.Health = 1;
+            newPet.Damage = 1;
+            newPet.StackHeight = 1;
+            this.OnStack(myTeam, newPet);
+        } else if(food.Type == FoodData.Food.Salad || food.Type == FoodData.Food.Pizza || food.Type == FoodData.Food.Sushi) {
+            FoodData.Food foodType = (food.Type == FoodData.Food.Pizza) ? FoodData.Food.Pear : FoodData.Food.Apple;
+            List<PetData> friends = new List<PetData>(myTeam.Pets);
+
+            if(friends.Count >= 3 && food.Type == FoodData.Food.Sushi) {
+                PetData friend1 = friends[Random.Range(0, friends.Count)];
+                friends.Remove(friend1);
+                PetData friend2 = friends[Random.Range(0, friends.Count)];
+                friends.Remove(friend2);
+                PetData friend3 = friends[Random.Range(0, friends.Count)];
+
+                friend1.OnEatShopFood(myTeam, new FoodData(foodType));
+                friend2.OnEatShopFood(myTeam, new FoodData(foodType));
+                friend3.OnEatShopFood(myTeam, new FoodData(foodType));
+            } else if(friends.Count >= 2) {
+                PetData friend1 = friends[Random.Range(0, friends.Count)];
+                friends.Remove(friend1);
+                PetData friend2 = friends[Random.Range(0, friends.Count)];
+
+                friend1.OnEatShopFood(myTeam, new FoodData(foodType));
+                friend2.OnEatShopFood(myTeam, new FoodData(foodType));
+            } else if (friends.Count == 1) {
+                friends[0].OnEatShopFood(myTeam, new FoodData(foodType));
+            }
+
+            return;
+        } else {
+            this.Food = food.Type;
+        }
+
         foreach(PetData friend in myTeam.Pets) {
             friend.OnFriendEatsShopFood(myTeam, this, food);
         }
@@ -579,12 +645,13 @@ public abstract class PetData
 
     public virtual void OnTurnStart( Team myTeam )
     {
-        
+        this.Health = baseHealth;
+        this.Damage = baseDamage;
     }
 
     public virtual void OnTurnEnd( Team myTeam )
     {
-        
+
     }
 
     public virtual void OnFriendSold(Team myTeam) {
@@ -657,8 +724,8 @@ public class AntPet : PetData
         base.OnFaint(myTeam, otherTeam);
 
         PetData randomFriend = myTeam.Pets.ElementAt( Random.Range( 0, myTeam.Pets.Count ) );
-        randomFriend.Damage += 2 * Level;
-        randomFriend.Health += 1 * Level;
+        randomFriend.AddDamage(2 * Level);
+        randomFriend.AddHealth(1 * Level);
     }
 }
 
@@ -674,8 +741,8 @@ public class BeaverPet : PetData {
             friends.Remove(friend1);
             PetData friend2 = friends[Random.Range(0, friends.Count)];
 
-            friend1.Health += 1 * Level;
-            friend2.Health += 1 * Level;
+            friend1.AddHealth(1 * Level);
+            friend2.AddHealth(1 * Level);
         } else if (friends.Count == 1) {
             friends[0].Health += 1 * Level;
         }
@@ -688,8 +755,9 @@ public class CricketPet : PetData {
         base.OnFaint(myTeam, otherTeam);
 
         //Create zombie cricket and add it to the team
+        PetData zombie = new ZombieCricketPet { baseHealth = 1 * Level, baseDamage = 1 * Level, Health = 1 * Level, Damage = 1 * Level};
 
-        //myTeam.TryAddFriend();
+        myTeam.TryAddFriend(zombie, this.Position);
     }
 }
 
@@ -713,8 +781,8 @@ public class FishPet : PetData {
 
                 foreach(PetData friend in friends)
                 {
-                    friend.Health += 1 * Level;
-                    friend.Damage += 1 * Level;
+                    friend.AddHealth(1 * Level);
+                    friend.AddDamage(1 * Level);
                 }
             }
 
@@ -730,7 +798,7 @@ public class HorsePet : PetData {
     {
         base.OnFriendSummoned(myTeam, summonedFriend);
 
-        summonedFriend.Damage += 1 * Level;
+        summonedFriend.AddDamage(1 * Level, temp:true);
     }
 }
 
@@ -853,6 +921,13 @@ public class PeacockPet : PetData {
 
     int charges = 1;
 
+    public override void OnTurnStart(Team myTeam)
+    {
+        base.OnTurnStart(myTeam);
+
+        charges = Level;
+    }
+
     public override bool OnStack(Team myTeam, PetData pet)
     {
         if(base.OnStack(myTeam, pet)) {
@@ -883,9 +958,11 @@ public class RatPet : PetData {
     {
         base.OnFaint(myTeam, otherTeam);
 
-        //Summon Level * 1 dirty rats on opponents team
+        if(otherTeam != null) {
+            PetData dirtyRat = new DirtyRatPet { baseHealth = 1, baseDamage = 1, Health = 1, Damage = 1 };
 
-        //otherTeam.TryAddFriend(dirtyRat, 1);
+            otherTeam.TryAddFriend(dirtyRat, 1);
+        }
     }
 }
 
@@ -909,8 +986,15 @@ public class SpiderPet : PetData {
         base.OnFaint(myTeam, otherTeam);
 
         //Create random tier 2 pet at level this.Level
+        PetData randomTier2 = TierTwoPets[Random.Range(0, TierTwoPets.Count)];
+        PetData summonPet = CloneObject(randomTier2) as PetData;
 
-        //myTeam.TryAddFriend(friend, this.Position);
+        summonPet.Level = this.Level;
+        summonPet.baseDamage = 2;
+        summonPet.Damage = 2;
+        summonPet.Health = 2;
+        summonPet.baseHealth = 2;
+        myTeam.TryAddFriend(summonPet, this.Position);
     }
 }
 
@@ -1023,7 +1107,7 @@ public class OxPet : PetData {
         base.OnPetAheadFaint(myTeam, otherTeam);
 
         this.AddDamage(2 * Level);
-        //Gain melon armor
+        this.Food = FoodData.Food.Melon;
     }
     
 }
@@ -1043,9 +1127,11 @@ public class SheepPet : PetData {
         base.OnFaint(myTeam, otherTeam);
 
         //Create two rams at health and attack 2 * Level
+        PetData ram1 = new RamPet { baseHealth = 2 * Level, baseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level };
+        PetData ram2 = CloneObject(ram1) as PetData;
 
-        //myTeam.TryAddFriend(ram1, this.Position);
-        //myTeam.TryAddFriend(ram2, this.Position);
+        myTeam.TryAddFriend(ram1, this.Position);
+        myTeam.TryAddFriend(ram2, this.Position);
     }
 }
 
@@ -1090,7 +1176,12 @@ public class WhalePet : PetData {
         LinkedListNode<PetData> friendAhead = myTeam.Pets.Find(this).Next;
         if(friendAhead != null) {
             swallowedFriend = friendAhead.Value;
+
             //Change stats to be base * Level
+            swallowedFriend.baseDamage = 1 * Level;
+            swallowedFriend.Damage = 1 * Level;
+            swallowedFriend.baseHealth = 1 * Level;
+            swallowedFriend.Health = 1 * Level;
 
             swallowedFriend.OnFaint(myTeam, otherTeam);
         }
@@ -1125,8 +1216,10 @@ public class DeerPet : PetData {
         base.OnFaint(myTeam, otherTeam);
 
         //Create new bus with health 5 * Level and damage
+        PetData bus = new BusPet { baseDamage = 5 * Level, Damage = 5 * Level, baseHealth = 5 * Level, Health = 5 * Level };
+        bus.Food = FoodData.Food.Chili;
 
-        //myTeam.TryAddFriend(bus, this.Position);
+        myTeam.TryAddFriend(bus, this.Position);
     }
 }
 
@@ -1178,9 +1271,10 @@ public class RoosterPet : PetData {
     {
         base.OnFaint(myTeam, otherTeam);
 
-        //Create 1 * Level chicks with 0.5 * this.Damage
-
-        //Add each chick to the team
+        for(int i = 0; i < Level; i++) {
+            PetData chick = new ChickPet { baseHealth = 1, Health = 1, baseDamage = (int) (0.5 * this.Damage), Damage = (int) (0.5 * Damage) };
+            myTeam.TryAddFriend(chick, this.Position);
+        }
     }
 }
 
@@ -1224,11 +1318,16 @@ public class ParrotPet : PetData {
         if(node != null) {
             PetData friendAhead = node.Value;
 
-            //Make new friend based on petID of friendAhead
-            PetData newParrot = null;
+            PetData newParrot = CloneObject(friendAhead) as PetData;
 
+            newParrot.baseDamage = this.baseDamage;
+            newParrot.baseHealth = this.baseHealth;
             newParrot.Damage = this.Damage;
             newParrot.Health = this.Health;
+            newParrot.Food = this.Food;
+
+            myTeam.Pets.Remove(this);
+            myTeam.TryAddFriend(newParrot, this.Position);
         }
     }
 }
@@ -1302,6 +1401,13 @@ public class ScorpionPet : PetData {
             node.Value.OnFaint(otherTeam, myTeam);
         }
     }
+
+    public override void OnBuy(Team myTeam)
+    {
+        base.OnBuy(myTeam);
+
+        this.Food = FoodData.Food.Poison;
+    }
 }
 
 public class SealPet : PetData {
@@ -1355,6 +1461,10 @@ public class CatPet : PetData {
         base.OnFriendEatsShopFood(myTeam, friend, food);
 
         //Give pet base food stats {Level} more times
+        for(int i = 0; i < Level; i++) {
+            friend.AddDamage(food.Damage);
+            friend.AddHealth(food.Health);
+        }
     }
 }
 
@@ -1393,8 +1503,9 @@ public class FlyPet : PetData {
 
         if(charges > 0) {
             //Create zombie fly with stats 5 * Level
-
+            PetData zombieFly = new ZombieFlyPet { baseDamage = 5 * Level, Damage = 5 * Level, baseHealth = 5 * Level, Health = 5 * Level };
             //Try add zombie fly at friend.Position
+            myTeam.TryAddFriend(zombieFly, friend.Position);
         }
     }
 }
@@ -1452,4 +1563,32 @@ public class SnakePet : PetData {
 
 public class TigerPet : PetData {
     
+}
+
+public class BeePet : PetData {
+
+}
+
+public class ZombieCricketPet : PetData {
+
+}
+
+public class RamPet : PetData {
+
+}
+
+public class DirtyRatPet : PetData {
+
+}
+
+public class BusPet : PetData {
+
+}
+
+public class ZombieFlyPet : PetData {
+
+}
+
+public class ChickPet : PetData { 
+
 }
