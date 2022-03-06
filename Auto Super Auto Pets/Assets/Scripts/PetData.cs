@@ -275,8 +275,8 @@ public class FishPet : PetData {
     public override bool OnStack(Team myTeam, PetData pet)
     {
         if(base.OnStack(myTeam, pet)) {
-            if(this.StackHeight == 3 || this.StackHeight == 6) {
-                List<PetData> friends = new List<PetData>(myTeam.Pets);
+            if(StackHeight == 3 || StackHeight == 6) {
+                List<PetData> friends = new(myTeam.Pets);
                 friends.Remove(this);
 
                 foreach(PetData friend in friends)
@@ -358,7 +358,7 @@ public class DodoPet : PetData {
     {
         base.OnBattleStart(myTeam, otherTeam);
 
-        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Next;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this)!.Next;
         if(node != null) {
             PetData friendAhead = node.Value;
             int attackGiven = (int) (this.Damage * 0.5 * this.Level);
@@ -373,7 +373,7 @@ public class ElephantPet : PetData {
         base.OnBeforeAttack(myTeam, otherTeam);
 
         int numFriendsTargeted = Level;
-        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this)!.Previous;
 
         while(numFriendsTargeted > 0 && node != null) {
             node.Value.OnHurt(myTeam, otherTeam, 1);
@@ -389,7 +389,7 @@ public class FlamingoPet : PetData {
         base.OnFaint(myTeam, otherTeam);
 
         int numFriendsTargeted = 2;
-        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this)!.Previous;
 
         while(numFriendsTargeted > 0 && node != null) {
             PetData friend = node.Value;
@@ -462,7 +462,7 @@ public class ShrimpPet : PetData {
     {
         base.OnFriendSold(myTeam);
 
-        List<PetData> friends = new List<PetData>(myTeam.Pets);
+        List<PetData> friends = new(myTeam.Pets);
 
         if(friends.Count > 0) {
             PetData friend = friends.ElementAt(Random.Range(0, friends.Count));
@@ -561,7 +561,7 @@ public class GiraffePet : PetData {
         base.OnTurnEnd(myTeam);
 
         int numFriendsTargeted = Level;
-        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Next;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this)!.Next;
 
         while(numFriendsTargeted > 0 && node != null) {
             PetData friend = node.Value;
@@ -635,7 +635,7 @@ public class TurtlePet : PetData {
         base.OnFaint(myTeam, otherTeam);
 
         int numFriendsTargeted = Level;
-        LinkedListNode<PetData> node = myTeam.Pets.Find(this).Previous;
+        LinkedListNode<PetData> node = myTeam.Pets.Find(this)!.Previous;
 
         while(numFriendsTargeted > 0 && node != null) {
             PetData friend = node.Value;
