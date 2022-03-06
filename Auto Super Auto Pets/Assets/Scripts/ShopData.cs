@@ -8,9 +8,9 @@ public class ShopData
     public List< ShopItem > Items = new();
     public int HealthModifier = 0;
     public int DamageModifier = 0;
-    public int turn = 1;
-    public int currentTier = 1;
-    public List<FoodData.Food> FoodList = new List<FoodData.Food>(FoodData.TierOneFood);
+    public int Turn = 1;
+    public int CurrentTier = 1;
+    public List<FoodData.Food> FoodList = new(FoodData.TierOneFood);
     public void RerollShop()
     {
         // turn 1, 1 food 3 animal
@@ -28,7 +28,7 @@ public class ShopData
             {
                 Items.Add( new ShopItem
                 {
-                    Pet = PetData.RandomPet(currentTier),
+                    Pet = PetData.RandomPet(CurrentTier),
                 } );
             }
         }
@@ -46,9 +46,9 @@ public class ShopData
     }
 
     public void IncrementTurn() {
-        this.turn += 1;
+        this.Turn += 1;
 
-        if(turn == 3 || turn == 5 || turn == 7 || turn == 9 || turn == 11) this.currentTier += 1;
+        if(Turn == 3 || Turn == 5 || Turn == 7 || Turn == 9 || Turn == 11) this.CurrentTier += 1;
     }
 
     bool SpotFree( int index )
