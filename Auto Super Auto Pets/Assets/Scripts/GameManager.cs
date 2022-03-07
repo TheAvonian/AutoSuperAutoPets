@@ -18,6 +18,7 @@ public class GameManager
     {
         Instance = this;
         _teamOne = team;
+        _teamTwo = new Team();
         State = GameState.TurnStart;
     }
 

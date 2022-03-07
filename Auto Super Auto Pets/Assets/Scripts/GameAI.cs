@@ -215,6 +215,7 @@ public class GameAI : Agent
             Debug.Log( "Rerolling" );
             _myTeam.Shop.RerollShop();
             _myTeam.Coins--;
+            AddReward(-0.0000025f);
         }
 
         if ( actions.DiscreteActions[ 2 ] != 5 )
@@ -235,7 +236,7 @@ public class GameAI : Agent
             {
                 Debug.Log( "Sold Pet" );
                 _myTeam.Coins++;
-                AddReward( 0.00025f );
+                AddReward( -0.00025f );
             }
         }
 
@@ -245,19 +246,8 @@ public class GameAI : Agent
             _manager.State = GameManager.GameState.TurnEnd;
         }
 
-        AddReward( -0.000025f );
-
-
-        if ( _myTeam.Health <= 0 )
-        {
-            EndEpisode();
-        }
-
-        if ( _myTeam.Wins >= 10 )
-        {
-            SetReward( 1.0f );
-            EndEpisode();
-        }
+        AddReward( -0.0000025f );
+        
     }
 
     public override void CollectObservations( VectorSensor sensor )

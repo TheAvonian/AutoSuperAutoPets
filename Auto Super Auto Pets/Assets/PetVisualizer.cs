@@ -20,9 +20,9 @@ public class PetVisualizer : MonoBehaviour
 
     void Update()
     {
-        if ( _myTeam != null )
+        if ( _myTeam is {Health: > 0} )
         {
-            LinkedListNode< PetData > node = _myTeam.Pets.Last;
+            LinkedListNode< PetData > node = _myTeam.Pets.First;
             int index = 0;
 
             while ( node != null )
@@ -42,7 +42,7 @@ public class PetVisualizer : MonoBehaviour
                     TeamTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
                 }
 
-                node = node.Previous;
+                node = node.Next;
                 index++;
             }
 
