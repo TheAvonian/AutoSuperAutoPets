@@ -81,6 +81,7 @@ public class Team
                     Pets.AddFirst( shopItem.Pet );
                 }
                 shopItem.Pet.OnSummon(this);
+                shopItem.Pet.OnBuy(this);
             } else
             {
                 return false;

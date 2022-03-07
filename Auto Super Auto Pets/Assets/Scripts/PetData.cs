@@ -910,7 +910,7 @@ public class OtterPet : PetData
     {
         base.OnBuy( myTeam );
 
-        List< PetData > friends = new( myTeam.Pets );
+        List< PetData > friends = new List<PetData>( myTeam.Pets );
         friends.Remove( this );
 
         PetData friend = friends.ElementAt( Random.Range( 0, friends.Count ) );
