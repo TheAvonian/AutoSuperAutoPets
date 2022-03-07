@@ -72,7 +72,6 @@ public abstract class PetData
         Mammoth,
         Snake,
         Tiger,
-        None
     }
 
     public enum TierOnePets
@@ -519,9 +518,9 @@ public abstract class PetData
             }
         }
 
-        foreach ( PetData friend in myTeam.Pets )
+        for ( LinkedListNode<PetData> friendNode = myTeam.Pets.Last; friendNode != null; friendNode = friendNode.Previous )
         {
-            friend.OnFriendFaints( myTeam, otherTeam, this );
+            friendNode.Value.OnFriendFaints( myTeam, otherTeam, this );
         }
     }
 

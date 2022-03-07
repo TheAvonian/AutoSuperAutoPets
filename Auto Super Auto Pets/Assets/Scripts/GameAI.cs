@@ -37,12 +37,23 @@ public class GameAI : Agent
             {
                 case GameManager.WinState.Loss:
                     AddReward( -0.1f );
+                    if ( _myTeam.Health <= 0 )
+                    {
+                        EndEpisode();
+                    }
+
                     break;
                 case GameManager.WinState.Tie:
                     AddReward( 0.005f );
                     break;
                 case GameManager.WinState.Win:
                     AddReward( 0.1f );
+                    if ( _myTeam.Wins >= 10 )
+                    {
+                        SetReward( 1.0f );
+                        EndEpisode();
+                    }
+
                     break;
                 case GameManager.WinState.Nothing:
                     break;
@@ -288,7 +299,7 @@ public class GameAI : Agent
             {
                 sensor.AddObservation( p.Food.Damage );
                 sensor.AddObservation( p.Food.Health );
-                sensor.AddObservation( (int)p.Food.Type );
+                sensor.AddObservation( (int) p.Food.Type );
             } else
             {
                 sensor.AddObservation( -1 );
