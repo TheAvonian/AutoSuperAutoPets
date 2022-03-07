@@ -23,7 +23,7 @@ public class GameAI : Agent
     void FixedUpdate()
     {
         _timer += Time.fixedDeltaTime;
-        if ( _timer > .1f )
+        if ( _timer > 1f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {

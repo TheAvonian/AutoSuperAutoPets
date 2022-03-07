@@ -185,4 +185,9 @@ public class GameManager
         Battle,
         BattleEnd,
     }
+
+    public Team GetBattleTeam( int battleteam )
+    {
+        return battleteam == 0 ? _tempOne : _tempTwo;
+    }
 }
