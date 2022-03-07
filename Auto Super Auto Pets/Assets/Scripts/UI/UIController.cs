@@ -16,9 +16,24 @@ public class UIController : MonoBehaviour
     {
         _document = GetComponent< UIDocument >();
     }
+
+    void Start()
+    {
+        _healthElement = _document.rootVisualElement.Q< Label >( "TeamHealth" );
+        _coinsElement = _document.rootVisualElement.Q< Label >( "TeamCoins" );
+        _turnsElement = _document.rootVisualElement.Q< Label >( "TeamTurns" );
+        _winsElement = _document.rootVisualElement.Q< Label >( "TeamWins" );
+    }
+
+    Label _healthElement;
+    Label _coinsElement;
+    Label _turnsElement;
+    Label _winsElement;
     void LateUpdate()
     {
-        _document.rootVisualElement.Q< Label >( "TeamHealth" ).text = GameManager.TeamOne.Health.ToString();
-        _document.rootVisualElement.Q< Label >( "TeamCoins" ).text = GameManager.TeamOne.Coins.ToString();
+        _healthElement.text = GameManager.TeamOne.Health.ToString();
+        _coinsElement.text = GameManager.TeamOne.Coins.ToString();
+        _turnsElement.text = GameManager.TeamOne.Shop.Turn.ToString();
+        _winsElement.text = GameManager.TeamOne.Wins.ToString();
     }
 }
