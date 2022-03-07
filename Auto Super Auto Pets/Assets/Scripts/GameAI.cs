@@ -205,6 +205,7 @@ public class GameAI : Agent
                     _myTeam.Shop.RemoveItem( actions.DiscreteActions[ 0 ] );
                 } else
                 {
+                    AddReward( -0.0005f );
                     Debug.Log( "Did nothing with selection." );
                 }
             }
@@ -215,7 +216,6 @@ public class GameAI : Agent
             Debug.Log( "Rerolling" );
             _myTeam.Shop.RerollShop();
             _myTeam.Coins--;
-            AddReward(-0.0000025f);
         }
 
         if ( actions.DiscreteActions[ 2 ] != 5 )
@@ -247,7 +247,7 @@ public class GameAI : Agent
         }
 
         AddReward( -0.0000025f );
-        
+
     }
 
     public override void CollectObservations( VectorSensor sensor )
