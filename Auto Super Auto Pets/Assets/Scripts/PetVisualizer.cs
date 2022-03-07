@@ -6,15 +6,17 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
+[RequireComponent(typeof(GameManager))]
 public class PetVisualizer : MonoBehaviour
 {
     public GameObject TeamOneParent;
     public GameObject TeamTwoParent;
     public GameObject ShopParent;
-    
-    List<Transform> _teamOneTiles = new();
-    List<Transform> _teamTwoTiles = new();
-    List<Transform> _shopTiles = new();
+    GameManager _gameManager;
+
+    readonly List<Transform> _teamOneTiles = new();
+    readonly List<Transform> _teamTwoTiles = new();
+    readonly List<Transform> _shopTiles = new();
     Sprite[] _sprites;
 
     Team _myTeam;
@@ -23,6 +25,7 @@ public class PetVisualizer : MonoBehaviour
     
     void Start()
     {
+        _gameManager = GetComponent< GameManager >();
         for ( int i = 0; i < TeamOneParent.transform.childCount; i++ )
         {
             _teamOneTiles.Add( TeamOneParent.transform.GetChild(i) );
@@ -56,13 +59,13 @@ public class PetVisualizer : MonoBehaviour
 
     void Update()
     {
-        switch ( GameManager.Instance?.State )
+        switch ( _gameManager.State )
         {
             case GameManager.GameState.TurnEnd:
             case GameManager.GameState.Battle:
             case GameManager.GameState.BattleStart:
-                _myTeam = GameManager.Instance.GetBattleTeam( 0 );
-                _enemyTeam = GameManager.Instance.GetBattleTeam( 1 );
+                _myTeam = _gameManager.BattleTeamOne;
+                _enemyTeam = _gameManager.BattleTeamTwo;
                 //TeamOneParent.transform.localScale = new Vector3( -0.75f, 0.75f, 1 );
                 foreach ( Transform go in _shopTiles )
                 {
@@ -72,7 +75,7 @@ public class PetVisualizer : MonoBehaviour
             case GameManager.GameState.Turn:
             case GameManager.GameState.TurnStart:
             case GameManager.GameState.BattleEnd:
-                _myTeam = GameManager.Instance.GetTeam( 0 );
+                _myTeam = _gameManager.TeamOne;
                 _enemyTeam = null;
                 //TeamOneParent.transform.localScale = new Vector3( -1, 1, 1 );
                 foreach ( Transform go in _teamTwoTiles )

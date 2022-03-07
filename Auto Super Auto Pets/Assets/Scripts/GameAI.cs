@@ -7,6 +7,7 @@ using Unity.MLAgents.Sensors;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(GameManager))]
 public class GameAI : Agent
 {
 
@@ -17,13 +18,19 @@ public class GameAI : Agent
 
     void Awake()
     {
-        _manager = new GameManager( _myTeam );
+        _manager = GetComponent< GameManager >();
+        _manager.ResetGame();
+    }
+
+    void Start()
+    {
     }
 
     void FixedUpdate()
     {
+        _myTeam = _manager.TeamOne;
         _timer += Time.fixedDeltaTime;
-        if ( _timer > 1f )
+        if ( _timer > .1f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
@@ -33,7 +40,7 @@ public class GameAI : Agent
                 RequestDecision();
             }
 
-            switch ( _manager.Update() )
+            switch ( _manager.GameUpdate() )
             {
                 case GameManager.WinState.Loss:
                     AddReward( -0.1f );
@@ -67,8 +74,7 @@ public class GameAI : Agent
 
     public override void OnEpisodeBegin()
     {
-        _myTeam = new Team();
-        _manager = new GameManager( _myTeam );
+        _manager.ResetGame();
     }
 
     public override void Heuristic( in ActionBuffers actionsOut )

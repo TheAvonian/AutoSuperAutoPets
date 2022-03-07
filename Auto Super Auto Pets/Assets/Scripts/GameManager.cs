@@ -3,33 +3,17 @@ using System.Collections.Generic;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
 
-public class GameManager
+public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
-    Team _teamOne;
-    Team _teamTwo;
+    public Team TeamOne;
+    public Team TeamTwo;
 
-    Team _tempOne;
-    Team _tempTwo;
-
-    public PetVisualizer PP;
-
-    public GameManager( Team team )
-    {
-        Instance = this;
-        _teamOne = team;
-        _teamTwo = new Team();
-        State = GameState.TurnStart;
-    }
-
-    public Team GetTeam( int teamNum )
-    {
-        return teamNum == 0 ? _teamOne : _teamTwo;
-    }
+    public Team BattleTeamOne;
+    public Team BattleTeamTwo;
 
     public GameState State;
 
-    public WinState Update()
+    public WinState GameUpdate()
     {
         switch ( State )
         {
@@ -68,17 +52,17 @@ public class GameManager
                 if ( EndBattle() )
                 {
                     State = GameState.TurnStart;
-                    if ( _tempOne.Pets.Count > 0 )
+                    if ( BattleTeamOne.Pets.Count > 0 )
                     {
-                        _teamOne.Wins++;
-                        Debug.Log( $"Win: {_teamOne.Wins}" );
+                        TeamOne.Wins++;
+                        Debug.Log( $"Win: {TeamOne.Wins}" );
                         return WinState.Win;
                     }
 
-                    if ( _tempTwo.Pets.Count > 0 )
+                    if ( BattleTeamTwo.Pets.Count > 0 )
                     {
-                        _teamOne.Health--;
-                        Debug.Log( $"Loss, Health: {_teamOne.Health}" );
+                        TeamOne.Health--;
+                        Debug.Log( $"Loss, Health: {TeamOne.Health}" );
                         return WinState.Loss;
                     }
 
@@ -108,29 +92,29 @@ public class GameManager
 
     bool BattlePhase()
     {
-        if ( _tempOne.Pets.Count <= 0 || _tempTwo.Pets.Count <= 0 )
+        if ( BattleTeamOne.Pets.Count <= 0 || BattleTeamTwo.Pets.Count <= 0 )
         {
             return true;
         }
 
-        PetData frontPetOne = _tempOne.Pets.First.Value;
-        PetData frontPetTwo = _tempTwo.Pets.First.Value;
-        frontPetOne.OnAttack( _tempOne, _tempTwo );
-        frontPetTwo.OnAttack( _tempTwo, _tempOne );
+        PetData frontPetOne = BattleTeamOne.Pets.First.Value;
+        PetData frontPetTwo = BattleTeamTwo.Pets.First.Value;
+        frontPetOne.OnAttack( BattleTeamOne, BattleTeamTwo );
+        frontPetTwo.OnAttack( BattleTeamTwo, BattleTeamOne );
         return false;
     }
 
     bool StartBattle()
     {
 
-        for ( LinkedListNode< PetData > node = _tempOne.Pets.First; node != null; node = node.Next )
+        for ( LinkedListNode< PetData > node = BattleTeamOne.Pets.First; node != null; node = node.Next )
         {
-            node.Value.OnBattleStart( _tempOne, _tempTwo );
+            node.Value.OnBattleStart( BattleTeamOne, BattleTeamTwo );
         }
 
-        for ( LinkedListNode< PetData > node = _tempTwo.Pets.First; node != null; node = node.Next )
+        for ( LinkedListNode< PetData > node = BattleTeamTwo.Pets.First; node != null; node = node.Next )
         {
-            node.Value.OnBattleStart( _tempTwo, _tempOne );
+            node.Value.OnBattleStart( BattleTeamTwo, BattleTeamOne );
         }
 
         return true;
@@ -138,27 +122,27 @@ public class GameManager
 
     bool EndTurn()
     {
-        foreach ( PetData pet in _teamOne.Pets )
+        foreach ( PetData pet in TeamOne.Pets )
         {
-            pet?.OnTurnEnd( _teamOne );
+            pet?.OnTurnEnd( TeamOne );
         }
 
-        _tempOne = _teamOne.CloneTeam();
+        BattleTeamOne = TeamOne.CloneTeam();
         // CHANGE RANDOM ENEMIES
 
         LinkedList< PetData > tmp = new();
-        for ( int i = 0; i < Math.Clamp( _teamOne.Shop.Turn, 0, 5 ); i++ )
+        for ( int i = 0; i < Math.Clamp( TeamOne.Shop.Turn, 0, 5 ); i++ )
         {
-            tmp.AddLast( PetData.RandomPet( Math.Clamp( _teamOne.Shop.Turn, 0, 6 ), true ) );
+            tmp.AddLast( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn, 0, 6 ), true ) );
         }
 
-        _tempTwo = new Team
+        BattleTeamTwo = new Team
         {
             TeamName = "Random Team",
             Pets = tmp,
         };
         
-        Debug.Log( $"Enemy Team: {_tempTwo}" );
+        Debug.Log( $"Enemy Team: {BattleTeamTwo}" );
         return true;
     }
 
@@ -166,13 +150,13 @@ public class GameManager
     bool TurnStart()
     {
         Debug.Log( "start turn" );
-        _teamOne.TeamName = "AI";
-        _teamOne.Coins = 10;
-        _teamOne.Shop.IncrementTurn();
-        _teamOne.Shop.RerollShop();
-        for(LinkedListNode<PetData> petNode = _teamOne.Pets.Last; petNode != null; petNode = petNode.Previous)
+        TeamOne.TeamName = "AI";
+        TeamOne.Coins = 10;
+        TeamOne.Shop.IncrementTurn();
+        TeamOne.Shop.RerollShop();
+        for(LinkedListNode<PetData> petNode = TeamOne.Pets.Last; petNode != null; petNode = petNode.Previous)
         {
-            petNode.Value?.OnTurnStart( _teamOne );
+            petNode.Value?.OnTurnStart( TeamOne );
         }
 
         return true;
@@ -188,8 +172,11 @@ public class GameManager
         BattleEnd,
     }
 
-    public Team GetBattleTeam( int battleteam )
+
+    public void ResetGame()
     {
-        return battleteam == 0 ? _tempOne : _tempTwo;
+        TeamOne = new Team();
+        TeamTwo = new Team();
+        State = GameState.TurnStart;
     }
 }
