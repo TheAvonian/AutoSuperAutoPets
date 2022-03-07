@@ -1208,8 +1208,8 @@ public class BadgerPet : PetData
 
         if ( node?.Next == null )
         {
-            PetData enemy = otherTeam.Pets.First.Value;
-            enemy.OnHurt( otherTeam, myTeam, Damage );
+            PetData enemy = otherTeam.Pets.First?.Value;
+            enemy?.OnHurt( otherTeam, myTeam, Damage );
         } else
         {
             PetData friendAhead = node.Next.Value;
