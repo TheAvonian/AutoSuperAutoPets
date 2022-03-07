@@ -131,9 +131,9 @@ public class GameManager : MonoBehaviour
         // CHANGE RANDOM ENEMIES
 
         LinkedList< PetData > tmp = new();
-        for ( int i = 0; i < Math.Clamp( TeamOne.Shop.Turn, 0, 5 ); i++ )
+        for ( int i = 0; i < Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 5 ); i++ )
         {
-            tmp.AddLast( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn, 0, 6 ), true ) );
+            tmp.AddLast( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 6 ), true ) );
         }
 
         BattleTeamTwo = new Team

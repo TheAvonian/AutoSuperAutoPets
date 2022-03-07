@@ -80,6 +80,7 @@ public abstract class PetData
         Ram,
         Bee,
     }
+
     public enum TierOnePets
     {
         Ant = AllPets.Ant,
@@ -92,6 +93,7 @@ public abstract class PetData
         Otter = AllPets.Otter,
         Pig = AllPets.Pig
     }
+
     public enum TierTwoPets
     {
         Crab = AllPets.Crab,
@@ -105,6 +107,7 @@ public abstract class PetData
         Spider = AllPets.Spider,
         Swan = AllPets.Swan
     }
+
     public enum TierThreePets
     {
         Dog = AllPets.Dog,
@@ -119,6 +122,7 @@ public abstract class PetData
         Snail = AllPets.Snail,
         Turtle = AllPets.Turtle
     }
+
     public enum TierFourPets
     {
         Whale = AllPets.Whale,
@@ -133,6 +137,7 @@ public abstract class PetData
         Worm = AllPets.Worm,
         Parrot = AllPets.Parrot,
     }
+
     public enum TierFivePets
     {
         Monkey = AllPets.Monkey,
@@ -144,6 +149,7 @@ public abstract class PetData
         Shark = AllPets.Shark,
         Turkey = AllPets.Turkey,
     }
+
     public enum TierSixPets
     {
         Cat = AllPets.Cat,
@@ -156,7 +162,9 @@ public abstract class PetData
         Snake = AllPets.Snake,
         Tiger = AllPets.Tiger,
     }
-    public enum SummonedPets {
+
+    public enum SummonedPets
+    {
         ZombieCricket = AllPets.ZombieCricket,
         Bus = AllPets.Bus,
         ZombieFly = AllPets.ZombieFly,
@@ -165,7 +173,7 @@ public abstract class PetData
         Ram = AllPets.Ram,
         Bee = AllPets.Bee,
     }
-    
+
     public enum TierTwoShop
     {
         Ant = AllPets.Ant,
@@ -188,7 +196,8 @@ public abstract class PetData
         Spider = AllPets.Spider,
         Swan = AllPets.Swan
     }
-    public enum TierThreeShop 
+
+    public enum TierThreeShop
     {
         Ant = AllPets.Ant,
         Beaver = AllPets.Beaver,
@@ -221,7 +230,8 @@ public abstract class PetData
         Snail = AllPets.Snail,
         Turtle = AllPets.Turtle,
     }
-    public enum TierFourShop 
+
+    public enum TierFourShop
     {
         Ant = AllPets.Ant,
         Beaver = AllPets.Beaver,
@@ -265,6 +275,7 @@ public abstract class PetData
         Worm = AllPets.Worm,
         Parrot = AllPets.Parrot,
     }
+
     public enum TierFiveShop
     {
         Ant = AllPets.Ant,
@@ -317,6 +328,7 @@ public abstract class PetData
         Shark = AllPets.Shark,
         Turkey = AllPets.Turkey,
     }
+
     public enum TierSixShop
     {
         Ant = AllPets.Ant,
@@ -378,6 +390,7 @@ public abstract class PetData
         Snake = AllPets.Snake,
         Tiger = AllPets.Tiger,
     }
+
     public static PetData PetConstructor( AllPets petType )
     {
         PetData newPet = petType switch
@@ -396,7 +409,7 @@ public abstract class PetData
             AllPets.Elephant => new ElephantPet {PetID = 11, Damage = 3, Health = 5,},
             AllPets.Flamingo => new FlamingoPet {PetID = 12, Damage = 3, Health = 1,},
             AllPets.Hedgehog => new HedgehogPet {PetID = 13, Damage = 3, Health = 2,},
-            AllPets.Peacock => new PeacockPet {PetID = 14, Damage = 1, Health = 5,},
+            AllPets.Peacock => new PeacockPet {PetID = 14, Damage = 2, Health = 5,},
             AllPets.Rat => new RatPet {PetID = 15, Damage = 4, Health = 5,},
             AllPets.Shrimp => new ShrimpPet {PetID = 16, Damage = 2, Health = 5,},
             AllPets.Spider => new SpiderPet {PetID = 17, Damage = 2, Health = 2,},
@@ -450,7 +463,8 @@ public abstract class PetData
     public static PetData RandomPet( int tier, bool tierSpecific )
     {
         Array list;
-        if(tierSpecific) {
+        if ( tierSpecific )
+        {
             list = tier switch
             {
                 1 => Enum.GetValues( typeof( TierOnePets ) ),
@@ -461,7 +475,8 @@ public abstract class PetData
                 6 => Enum.GetValues( typeof( TierSixPets ) ),
                 _ => throw new ArgumentOutOfRangeException(),
             };
-        } else {
+        } else
+        {
             list = tier switch
             {
                 1 => Enum.GetValues( typeof( TierOnePets ) ),
@@ -473,7 +488,7 @@ public abstract class PetData
                 _ => throw new ArgumentOutOfRangeException(),
             };
         }
-        
+
         AllPets randomPet = (AllPets) list.GetValue( Random.Range( 0, list.Length ) );
         return PetConstructor( randomPet );
     }
@@ -585,7 +600,7 @@ public abstract class PetData
             }
         }
 
-        for ( LinkedListNode<PetData> friendNode = myTeam.Pets.Last; friendNode != null; friendNode = friendNode.Previous )
+        for ( LinkedListNode< PetData > friendNode = myTeam.Pets.Last; friendNode != null; friendNode = friendNode.Previous )
         {
             friendNode.Value.OnFriendFaints( myTeam, otherTeam, this );
         }
@@ -978,10 +993,11 @@ public class OtterPet : PetData
     {
         base.OnBuy( myTeam );
 
-        List< PetData > friends = new List<PetData>( myTeam.Pets );
+        List< PetData > friends = new List< PetData >( myTeam.Pets );
         friends.Remove( this );
 
-        if(friends.Count > 0) {
+        if ( friends.Count > 0 )
+        {
             PetData friend = friends.ElementAt( Random.Range( 0, friends.Count ) );
             friend.AddDamage( 1 * Level );
             friend.AddHealth( 1 * Level );
@@ -1079,11 +1095,12 @@ public class HedgehogPet : PetData
 
         LinkedListNode< PetData > petNode;
 
-        for (petNode = otherTeam.Pets.Last; petNode != null; petNode = petNode.Previous )
+        for ( petNode = otherTeam?.Pets.Last; petNode != null; petNode = petNode.Previous )
         {
-            petNode.Value.OnHurt( otherTeam, myTeam, 2 * Level );
+            petNode.Value?.OnHurt( otherTeam, myTeam, 2 * Level );
         }
-        for (petNode = myTeam.Pets.Last; petNode != null; petNode = petNode.Previous )
+
+        for ( petNode = myTeam.Pets.Last; petNode != null; petNode = petNode.Previous )
         {
             petNode.Value.OnHurt( myTeam, otherTeam, 2 * Level );
         }
@@ -1168,7 +1185,7 @@ public class SpiderPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create random tier 2 pet at level this.Level
-        PetData summonPet = RandomPet( 2 , tierSpecific:true);
+        PetData summonPet = RandomPet( 2, true );
 
         summonPet.Level = Level;
         summonPet.BaseDamage = 2;
@@ -1208,7 +1225,7 @@ public class BadgerPet : PetData
 
         if ( node?.Next == null )
         {
-            PetData enemy = otherTeam.Pets.First?.Value;
+            PetData enemy = otherTeam?.Pets.First?.Value;
             enemy?.OnHurt( otherTeam, myTeam, Damage );
         } else
         {
@@ -1583,8 +1600,21 @@ public class CowPet : PetData
         FoodData milk2 = new( FoodData.Food.Milk );
         milk2.Damage *= Level;
         milk2.Health *= Level;
-        shopItems[ 5 ] = new ShopItem {Food = milk1};
-        shopItems[ 6 ] = new ShopItem {Food = milk2};
+        if ( shopItems.Count > 5 )
+        {
+            shopItems[ 5 ] = new ShopItem {Food = milk1};
+        } else
+        {
+            shopItems.Add( new ShopItem {Food = milk1} );
+        }
+
+        if ( shopItems.Count > 6 )
+        {
+            shopItems[ 6 ] = new ShopItem {Food = milk2};
+        } else
+        {
+            shopItems.Add( new ShopItem {Food = milk2} );
+        }
     }
 }
 
