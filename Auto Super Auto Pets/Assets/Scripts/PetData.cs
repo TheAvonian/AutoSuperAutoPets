@@ -72,8 +72,14 @@ public abstract class PetData
         Mammoth,
         Snake,
         Tiger,
+        ZombieCricket,
+        Bus,
+        ZombieFly,
+        DirtyRat,
+        Chick,
+        Ram,
+        Bee,
     }
-
     public enum TierOnePets
     {
         Ant = AllPets.Ant,
@@ -86,7 +92,6 @@ public abstract class PetData
         Otter = AllPets.Otter,
         Pig = AllPets.Pig
     }
-
     public enum TierTwoPets
     {
         Crab = AllPets.Crab,
@@ -100,7 +105,6 @@ public abstract class PetData
         Spider = AllPets.Spider,
         Swan = AllPets.Swan
     }
-
     public enum TierThreePets
     {
         Dog = AllPets.Dog,
@@ -115,7 +119,6 @@ public abstract class PetData
         Snail = AllPets.Snail,
         Turtle = AllPets.Turtle
     }
-
     public enum TierFourPets
     {
         Whale = AllPets.Whale,
@@ -130,7 +133,6 @@ public abstract class PetData
         Worm = AllPets.Worm,
         Parrot = AllPets.Parrot,
     }
-
     public enum TierFivePets
     {
         Monkey = AllPets.Monkey,
@@ -142,7 +144,6 @@ public abstract class PetData
         Shark = AllPets.Shark,
         Turkey = AllPets.Turkey,
     }
-
     public enum TierSixPets
     {
         Cat = AllPets.Cat,
@@ -155,7 +156,16 @@ public abstract class PetData
         Snake = AllPets.Snake,
         Tiger = AllPets.Tiger,
     }
-
+    public enum SummonedPets {
+        ZombieCricket = AllPets.ZombieCricket,
+        Bus = AllPets.Bus,
+        ZombieFly = AllPets.ZombieFly,
+        DirtyRat = AllPets.DirtyRat,
+        Chick = AllPets.Chick,
+        Ram = AllPets.Ram,
+        Bee = AllPets.Bee,
+    }
+    
     public enum TierTwoShop
     {
         Ant = AllPets.Ant,
@@ -178,7 +188,6 @@ public abstract class PetData
         Spider = AllPets.Spider,
         Swan = AllPets.Swan
     }
-
     public enum TierThreeShop 
     {
         Ant = AllPets.Ant,
@@ -212,7 +221,6 @@ public abstract class PetData
         Snail = AllPets.Snail,
         Turtle = AllPets.Turtle,
     }
-
     public enum TierFourShop 
     {
         Ant = AllPets.Ant,
@@ -257,7 +265,6 @@ public abstract class PetData
         Worm = AllPets.Worm,
         Parrot = AllPets.Parrot,
     }
-
     public enum TierFiveShop
     {
         Ant = AllPets.Ant,
@@ -310,7 +317,67 @@ public abstract class PetData
         Shark = AllPets.Shark,
         Turkey = AllPets.Turkey,
     }
-
+    public enum TierSixShop
+    {
+        Ant = AllPets.Ant,
+        Beaver = AllPets.Beaver,
+        Cricket = AllPets.Cricket,
+        Duck = AllPets.Duck,
+        Fish = AllPets.Fish,
+        Horse = AllPets.Horse,
+        Mosquito = AllPets.Mosquito,
+        Otter = AllPets.Otter,
+        Pig = AllPets.Pig,
+        Crab = AllPets.Crab,
+        Dodo = AllPets.Dodo,
+        Elephant = AllPets.Elephant,
+        Flamingo = AllPets.Flamingo,
+        Hedgehog = AllPets.Hedgehog,
+        Peacock = AllPets.Peacock,
+        Rat = AllPets.Rat,
+        Shrimp = AllPets.Shrimp,
+        Spider = AllPets.Spider,
+        Swan = AllPets.Swan,
+        Dog = AllPets.Dog,
+        Badger = AllPets.Badger,
+        Blowfish = AllPets.Blowfish,
+        Camel = AllPets.Camel,
+        Giraffe = AllPets.Giraffe,
+        Kangaroo = AllPets.Kangaroo,
+        Ox = AllPets.Ox,
+        Rabbit = AllPets.Rabbit,
+        Sheep = AllPets.Sheep,
+        Snail = AllPets.Snail,
+        Turtle = AllPets.Turtle,
+        Whale = AllPets.Whale,
+        Bison = AllPets.Bison,
+        Deer = AllPets.Deer,
+        Dolphin = AllPets.Dolphin,
+        Hippo = AllPets.Hippo,
+        Penguin = AllPets.Penguin,
+        Rooster = AllPets.Rooster,
+        Skunk = AllPets.Skunk,
+        Squirrel = AllPets.Squirrel,
+        Worm = AllPets.Worm,
+        Parrot = AllPets.Parrot,
+        Monkey = AllPets.Monkey,
+        Cow = AllPets.Cow,
+        Crocodile = AllPets.Crocodile,
+        Rhino = AllPets.Rhino,
+        Scorpion = AllPets.Scorpion,
+        Seal = AllPets.Seal,
+        Shark = AllPets.Shark,
+        Turkey = AllPets.Turkey,
+        Cat = AllPets.Cat,
+        Boar = AllPets.Boar,
+        Dragon = AllPets.Dragon,
+        Fly = AllPets.Fly,
+        Gorilla = AllPets.Gorilla,
+        Leopard = AllPets.Leopard,
+        Mammoth = AllPets.Mammoth,
+        Snake = AllPets.Snake,
+        Tiger = AllPets.Tiger,
+    }
     public static PetData PetConstructor( AllPets petType )
     {
         PetData newPet = petType switch
@@ -402,7 +469,7 @@ public abstract class PetData
                 3 => Enum.GetValues( typeof( TierThreeShop ) ),
                 4 => Enum.GetValues( typeof( TierFourShop ) ),
                 5 => Enum.GetValues( typeof( TierFiveShop ) ),
-                6 => Enum.GetValues( typeof( AllPets ) ),
+                6 => Enum.GetValues( typeof( TierSixShop ) ),
                 _ => throw new ArgumentOutOfRangeException(),
             };
         }
@@ -502,7 +569,7 @@ public abstract class PetData
 
         if ( Food == FoodData.Food.Honey )
         {
-            myTeam.TryAddFriend( new BeePet {BaseHealth = 1, BaseDamage = 1, Health = 1, Damage = 1}, Position );
+            myTeam.TryAddFriend( new BeePet {BaseHealth = 1, BaseDamage = 1, Health = 1, Damage = 1, PetID = 64}, Position );
             myTeam.UpdatePetPositions();
         } else if ( Food == FoodData.Food.Mushroom )
         {
@@ -832,7 +899,7 @@ public class CricketPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create zombie cricket and add it to the team
-        PetData zombie = new ZombieCricketPet {BaseHealth = 1 * Level, BaseDamage = 1 * Level, Health = 1 * Level, Damage = 1 * Level};
+        PetData zombie = new ZombieCricketPet {BaseHealth = 1 * Level, BaseDamage = 1 * Level, Health = 1 * Level, Damage = 1 * Level, PetID = 58};
 
         if ( myTeam.TryAddFriend( zombie, Position ) ) zombie.OnSummon( myTeam );
     }
@@ -1068,7 +1135,7 @@ public class RatPet : PetData
 
         if ( otherTeam != null )
         {
-            PetData dirtyRat = new DirtyRatPet {BaseHealth = 1, BaseDamage = 1, Health = 1, Damage = 1};
+            PetData dirtyRat = new DirtyRatPet {BaseHealth = 1, BaseDamage = 1, Health = 1, Damage = 1, PetID = 61};
 
             if ( otherTeam.TryAddFriend( dirtyRat, 1 ) ) dirtyRat.OnSummon( otherTeam );
         }
@@ -1254,8 +1321,8 @@ public class SheepPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create two rams at health and attack 2 * Level
-        PetData ram1 = new RamPet {BaseHealth = 2 * Level, BaseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level};
-        PetData ram2 = new RamPet {BaseHealth = 2 * Level, BaseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level};
+        PetData ram1 = new RamPet {BaseHealth = 2 * Level, BaseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level, PetID = 63};
+        PetData ram2 = new RamPet {BaseHealth = 2 * Level, BaseDamage = 2 * Level, Health = 2 * Level, Damage = 2 * Level, PetID = 63};
 
         if ( myTeam.TryAddFriend( ram1, Position ) ) ram1.OnSummon( myTeam );
         if ( myTeam.TryAddFriend( ram2, Position ) ) ram2.OnSummon( myTeam );
@@ -1311,10 +1378,11 @@ public class WhalePet : PetData
             swallowedFriend = friendAhead.Value;
 
             //Change stats to be base * Level
-            swallowedFriend.BaseDamage = 1 * Level;
-            swallowedFriend.Damage = 1 * Level;
-            swallowedFriend.BaseHealth = 1 * Level;
-            swallowedFriend.Health = 1 * Level;
+            swallowedFriend.Level = Level;
+            swallowedFriend.BaseDamage *= Level;
+            swallowedFriend.Damage *= Level;
+            swallowedFriend.BaseHealth *= Level;
+            swallowedFriend.Health *= Level;
 
             swallowedFriend.OnFaint( myTeam, otherTeam );
         }
@@ -1324,7 +1392,7 @@ public class WhalePet : PetData
     {
         base.OnFaint( myTeam, otherTeam );
 
-        if ( myTeam.TryAddFriend( swallowedFriend, Position ) ) swallowedFriend.OnSummon( myTeam );
+        if ( swallowedFriend != null && myTeam.TryAddFriend( swallowedFriend, Position ) ) swallowedFriend.OnSummon( myTeam );
     }
 }
 
@@ -1353,7 +1421,7 @@ public class DeerPet : PetData
         base.OnFaint( myTeam, otherTeam );
 
         //Create new bus with health 5 * Level and damage
-        PetData bus = new BusPet {BaseDamage = 5 * Level, Damage = 5 * Level, BaseHealth = 5 * Level, Health = 5 * Level};
+        PetData bus = new BusPet {BaseDamage = 5 * Level, Damage = 5 * Level, BaseHealth = 5 * Level, Health = 5 * Level, PetID = 59};
         bus.Food = FoodData.Food.Chili;
 
         if ( myTeam.TryAddFriend( bus, Position ) ) bus.OnSummon( myTeam );
@@ -1688,7 +1756,7 @@ public class FlyPet : PetData
         if ( charges > 0 )
         {
             //Create zombie fly with stats 5 * Level
-            PetData zombieFly = new ZombieFlyPet {BaseDamage = 5 * Level, Damage = 5 * Level, BaseHealth = 5 * Level, Health = 5 * Level};
+            PetData zombieFly = new ZombieFlyPet {BaseDamage = 5 * Level, Damage = 5 * Level, BaseHealth = 5 * Level, Health = 5 * Level, PetID = 60};
             //Try add zombie fly at friend.Position
             if ( myTeam.TryAddFriend( zombieFly, friend.Position ) ) zombieFly.OnSummon( myTeam );
         }

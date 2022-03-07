@@ -30,7 +30,7 @@ public class GameAI : Agent
     {
         _myTeam = _manager.TeamOne;
         _timer += Time.fixedDeltaTime;
-        if ( _timer > .1f )
+        if ( _timer > 1f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
