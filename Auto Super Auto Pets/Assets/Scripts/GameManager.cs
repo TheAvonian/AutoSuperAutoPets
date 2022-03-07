@@ -167,9 +167,9 @@ public class GameManager
         _teamOne.Coins = 10;
         _teamOne.Shop.IncrementTurn();
         _teamOne.Shop.RerollShop();
-        foreach ( PetData pet in _teamOne.Pets )
+        for(LinkedListNode<PetData> petNode = _teamOne.Pets.Last; petNode != null; petNode = petNode.Previous)
         {
-            pet?.OnTurnStart( _teamOne );
+            petNode.Value?.OnTurnStart( _teamOne );
         }
 
         return true;

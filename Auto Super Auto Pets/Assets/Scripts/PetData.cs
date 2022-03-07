@@ -313,7 +313,7 @@ public abstract class PetData
 
     public static PetData PetConstructor( AllPets petType )
     {
-        return petType switch
+        PetData newPet = petType switch
         {
             AllPets.Ant => new AntPet {PetID = 0, Health = 1, Damage = 2,},
             AllPets.Beaver => new BeaverPet {PetID = 1, Health = 2, Damage = 2,},
@@ -375,6 +375,9 @@ public abstract class PetData
             AllPets.Tiger => new TigerPet {PetID = 57, Damage = 4, Health = 3,},
             _ => throw new ArgumentOutOfRangeException(),
         };
+        newPet.BaseDamage = newPet.Damage;
+        newPet.BaseHealth = newPet.Health;
+        return newPet;
     }
 
     public static PetData RandomPet( int tier, bool tierSpecific )
@@ -415,6 +418,7 @@ public abstract class PetData
     public int Level = 1;
     public int StackHeight = 1;
     public int Position = -1;
+    public string Color = "FFFFFF";
     public FoodData.Food Food;
 
     protected PetData()
@@ -424,12 +428,16 @@ public abstract class PetData
 
     public override string ToString()
     {
-        return $"D:{Damage} H:{Health} ID:{(AllPets) PetID}";
+        return $"<color=#{Color}><b>{(AllPets) PetID}</b></color> <color=#C91F37>{Damage}</color> <color=#8DB255>{Health}</color> <color=#22A7F0>{StackHeight}</color>";
     }
 
     public void AddHealth( int amountGiven, bool temp = false )
     {
-        if ( !temp ) BaseHealth += amountGiven;
+        if ( !temp )
+        {
+            BaseHealth += amountGiven;
+        }
+
         Health += amountGiven;
         if ( Health > 50 )
         {
@@ -444,7 +452,11 @@ public abstract class PetData
 
     public void AddDamage( int amountGiven, bool temp = false )
     {
-        if ( !temp ) BaseDamage += amountGiven;
+        if ( !temp )
+        {
+            BaseDamage += amountGiven;
+        }
+
         Damage += amountGiven;
         if ( Health > 50 )
         {
@@ -500,7 +512,10 @@ public abstract class PetData
             selfCopy.Damage = 1;
             selfCopy.BaseDamage = 1;
             selfCopy.Food = FoodData.Food.None;
-            if ( myTeam.TryAddFriend( selfCopy, Position ) ) selfCopy.OnSummon( myTeam );
+            if ( myTeam.TryAddFriend( selfCopy, Position ) )
+            {
+                selfCopy.OnSummon( myTeam );
+            }
         }
 
         foreach ( PetData friend in myTeam.Pets )
@@ -515,11 +530,18 @@ public abstract class PetData
         if ( Food == FoodData.Food.Garlic )
         {
             damageTaken -= 2;
-            if ( damageTaken <= 0 ) damageTaken = 1;
+            if ( damageTaken <= 0 )
+            {
+                damageTaken = 1;
+            }
         } else if ( Food == FoodData.Food.Melon )
         {
             damageTaken -= 20;
-            if ( damageTaken < 0 ) damageTaken = 0;
+            if ( damageTaken < 0 )
+            {
+                damageTaken = 0;
+            }
+
             Food = FoodData.Food.None;
         } else if ( Food == FoodData.Food.Coconut )
         {
@@ -545,8 +567,10 @@ public abstract class PetData
         OnBeforeAttack( myTeam, otherTeam );
 
         int attack = Damage;
-        if ( Food == FoodData.Food.Meatbone ) attack += 5;
-        else if ( Food == FoodData.Food.Steak )
+        if ( Food == FoodData.Food.Meatbone )
+        {
+            attack += 5;
+        } else if ( Food == FoodData.Food.Steak )
         {
             attack += 20;
             Food = FoodData.Food.None;
@@ -558,22 +582,22 @@ public abstract class PetData
             PetData enemy = node.Value;
             enemy.OnHurt( otherTeam, myTeam, attack );
 
-            Debug.Log( $"{myTeam.TeamName}: {myTeam.Pets.First.Value} attacks {enemy} for {attack} damage." );
+            Debug.Log( $"{myTeam.TeamName}: {this} attacks {enemy} for {attack} damage." );
             if ( node.Next != null && Food == FoodData.Food.Chili )
             {
                 PetData enemy2 = node.Next.Value;
-                Debug.Log( $"{myTeam.TeamName}: {myTeam.Pets.First.Value} attacks {enemy2} with Chili!" );
+                Debug.Log( $"{myTeam.TeamName}: {this} attacks {enemy2} with Chili!" );
                 enemy2.OnHurt( otherTeam, myTeam, 5 );
             }
 
             if ( enemy.Health <= 0 )
             {
-                Debug.Log( $"{myTeam.TeamName}: {myTeam.Pets.First.Value} killed {enemy}! {otherTeam.Pets.Count} enemies remain." );
+                Debug.Log( $"{myTeam.TeamName}: {this} killed {enemy}! {otherTeam.Pets.Count} enemies remain." );
                 OnFaintEnemy( myTeam, otherTeam );
             }
         }
 
-        LinkedListNode< PetData > petBehind = myTeam.Pets.Find( this )?.Next;
+        LinkedListNode< PetData > petBehind = myTeam.Pets.Find( this )?.Next ?? myTeam.Pets.First;
 
         petBehind?.Value.OnPetAheadAttack( myTeam, otherTeam );
 
@@ -736,7 +760,10 @@ public abstract class PetData
     //Needs to return false if not the same type of pet??
     public virtual bool OnStack( Team myTeam, PetData pet )
     {
-        if ( StackHeight >= 6 || pet.StackHeight == 0 ) return false;
+        if ( StackHeight >= 6 || pet.StackHeight == 0 )
+        {
+            return false;
+        }
 
         //Stacks all copies of pets stacked on it.
         pet.StackHeight -= 1;
@@ -980,14 +1007,15 @@ public class HedgehogPet : PetData
     {
         base.OnFaint( myTeam, otherTeam );
 
-        foreach ( PetData enemy in otherTeam.Pets )
-        {
-            enemy.OnHurt( otherTeam, myTeam, 2 * Level );
-        }
+        LinkedListNode< PetData > petNode;
 
-        foreach ( PetData friend in myTeam.Pets )
+        for (petNode = otherTeam.Pets.Last; petNode != null; petNode = petNode.Previous )
         {
-            friend.OnHurt( myTeam, otherTeam, 2 * Level );
+            petNode.Value.OnHurt( otherTeam, myTeam, 2 * Level );
+        }
+        for (petNode = myTeam.Pets.Last; petNode != null; petNode = petNode.Previous )
+        {
+            petNode.Value.OnHurt( myTeam, otherTeam, 2 * Level );
         }
     }
 }

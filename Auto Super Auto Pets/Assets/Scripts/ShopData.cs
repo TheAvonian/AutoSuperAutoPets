@@ -56,7 +56,14 @@ public class ShopData
 
     bool SpotFree( int index )
     {
-        return ( index < Items.Count && Items[ index ] == null ) || index >= Items.Count;
+        if ( index < Items.Count && Items[ index ] != null )
+        {
+            if ( Items[ index ].Frozen )
+            {
+                return false;
+            }
+        }
+        return index < Items.Count && Items[ index ] == null || index >= Items.Count;
     }
 
     public FoodData RandomFood() {
@@ -87,6 +94,14 @@ public class ShopData
         if ( index < Items.Count )
         {
             Items.RemoveAt(index);
+        }
+    }
+
+    public void Freeze( int index )
+    {
+        if ( index < Items.Count && Items[index] != null )
+        {
+            Items[ index ].Frozen = !Items[ index ].Frozen;
         }
     }
 }

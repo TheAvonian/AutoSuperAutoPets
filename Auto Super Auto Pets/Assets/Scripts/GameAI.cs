@@ -23,7 +23,7 @@ public class GameAI : Agent
     void FixedUpdate()
     {
         _timer += Time.fixedDeltaTime;
-        if ( _timer > 2f )
+        if ( _timer > .1f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
@@ -184,19 +184,18 @@ public class GameAI : Agent
                 Debug.Log( $"Shop Selection: {actions.DiscreteActions[ 0 ]}: {p}" );
                 if ( actions.DiscreteActions[ 1 ] == 5 )
                 {
-                    Debug.Log( $"Froze Selection: {actions.DiscreteActions[ 1 ]}: {p}" );
-                    // Freeze it
-                    // p.Freeze()
+                    Debug.Log( $"Froze Selection: {p}" );
+                    _myTeam.Shop.Freeze( actions.DiscreteActions[ 0 ] );
                 } else if ( _myTeam.TryPlaceItem( p, actions.DiscreteActions[ 1 ] ) )
                 {
                     _myTeam.Coins -= 3;
                     Debug.Log( $"Bought pet: {p}" );
                     AddReward( 0.00025f );
                     _myTeam.Shop.RemoveItem( actions.DiscreteActions[ 0 ] );
+                } else
+                {
+                    Debug.Log( "Did nothing with selection." );
                 }
-            } else
-            {
-                Debug.Log( "Couldn't buy" );
             }
         }
 
