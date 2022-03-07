@@ -48,6 +48,14 @@ public class Team
             {
                 tempNew.Pets.Last.Value.Food = p.Food;
             }
+
+            tempNew.Pets.Last.Value.Damage = p.Damage;
+            tempNew.Pets.Last.Value.Health = p.Health;
+            tempNew.Pets.Last.Value.BaseDamage = p.BaseDamage;
+            tempNew.Pets.Last.Value.BaseHealth = p.BaseHealth;
+            tempNew.Pets.Last.Value.Level = p.Level;
+            tempNew.Pets.Last.Value.StackHeight = p.StackHeight;
+            tempNew.Pets.Last.Value.Position = p.Position;
         }
 
         tempNew.TeamName = TeamName;

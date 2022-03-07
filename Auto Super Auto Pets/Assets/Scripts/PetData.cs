@@ -453,6 +453,13 @@ public abstract class PetData
             AllPets.Mammoth => new MammothPet {PetID = 55, Damage = 3, Health = 10,},
             AllPets.Snake => new SnakePet {PetID = 56, Damage = 6, Health = 6,},
             AllPets.Tiger => new TigerPet {PetID = 57, Damage = 4, Health = 3,},
+            AllPets.ZombieCricket => new ZombieCricketPet {PetID = 58, Damage = 1, Health = 1},
+            AllPets.Bus => new BusPet {PetID = 59, Damage = 5, Health = 5, Food = FoodData.Food.Chili},
+            AllPets.ZombieFly => new ZombieFlyPet {PetID = 60, Damage = 5, Health = 5},
+            AllPets.DirtyRat => new DirtyRatPet {PetID = 61, Damage = 1, Health = 1},
+            AllPets.Chick => new ChickPet {PetID = 62, Damage = 4, Health = 1},
+            AllPets.Ram => new RamPet {PetID = 63, Damage = 2, Health = 2},
+            AllPets.Bee => new BeePet {PetID = 64, Damage = 1, Health = 1},
             _ => throw new ArgumentOutOfRangeException(),
         };
         newPet.BaseDamage = newPet.Damage;
@@ -721,7 +728,7 @@ public abstract class PetData
                 continue;
             }
 
-            friend.OnFriendSummoned( myTeam, null );
+            friend.OnFriendSummoned( myTeam, this );
         }
     }
 
@@ -1728,8 +1735,8 @@ public class TurkeyPet : PetData
     {
         base.OnFriendSummoned( myTeam, summonedFriend );
 
-        summonedFriend.AddDamage( 3 * Level );
-        summonedFriend.AddHealth( 3 * Level );
+        summonedFriend?.AddDamage( 3 * Level );
+        summonedFriend?.AddHealth( 3 * Level );
     }
 }
 
