@@ -15,7 +15,7 @@ public class PetVisualizer : MonoBehaviour
 
     void Start()
     {
-        Sprites = Resources.LoadAll( "Pets", typeof( Sprite ) ).Cast<Sprite>().ToArray();
+        Sprites = Resources.LoadAll( "Pets", typeof( Sprite ) ).Cast< Sprite >().ToArray();
     }
 
     void Update()
@@ -27,28 +27,48 @@ public class PetVisualizer : MonoBehaviour
 
             while ( node != null )
             {
-                TeamTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
+                if ( Sprites.Any( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) ) )
+                {
+                    TeamTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
+                    if ( node.Value.Food != FoodData.Food.None )
+                    {
+                        TeamTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = Color.white;
+                        TeamTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
+                    } else
+                    {
+                        TeamTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                    }
+
+                    TeamTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
+                }
+
                 node = node.Previous;
                 index++;
             }
-            
+
             for ( int i = index; i < TeamTiles.Length; i++ )
             {
                 TeamTiles[ index ].GetComponent< Image >().sprite = null;
-                TeamTiles[ index ].GetComponent< Image >().color = Color.white;
+                TeamTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
             }
 
             index = 0;
-            foreach(ShopItem item in _myTeam.Shop.Items) {
-                ShopTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( item.Pet != null ? ((PetData.AllPets) item.Pet.PetID ).ToString() : item.Food?.Type.ToString()));
-                ShopTiles[ index ].GetComponent< Image >().color = item.Frozen ? new Color(0,255,235) : new Color(255,255,255);
+            for ( int i = 0; i < _myTeam.Shop.Items.Count; i++ )
+            {
+                ShopItem item = _myTeam.Shop.Items[ i ];
+                if ( item.Pet != null || item.Food != null )
+                {
+                    ShopTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( item.Pet != null ? ( (PetData.AllPets) item.Pet.PetID ).ToString() : item.Food?.Type.ToString() ) );
+                    ShopTiles[ index ].GetComponent< Image >().color = item.Frozen ? new Color( 0, 255, 235 ) : new Color( 255, 255, 255 );
+                }
+
                 index++;
             }
 
             for ( int i = index; i < ShopTiles.Length; i++ )
             {
                 ShopTiles[ index ].GetComponent< Image >().sprite = null;
-                ShopTiles[ index ].GetComponent< Image >().color = Color.white;
+                ShopTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
             }
         } else
         {

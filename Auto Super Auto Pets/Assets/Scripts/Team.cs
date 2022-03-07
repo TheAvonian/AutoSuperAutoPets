@@ -93,19 +93,43 @@ public class Team
     {
         LinkedListNode< PetData > nodeOne = Pets.First;
         LinkedListNode< PetData > nodeTwo = Pets.First;
+        if ( nodeOne is null || nodeTwo is null )
+        {
+            return;
+        }
+        
         for ( int i = 0; i <= indexOne || i <= indexTwo; i++ )
         {
 
-            if ( i <= indexOne )
+            if ( i <= indexOne && nodeOne.Next != null )
             {
                 nodeOne = nodeOne?.Next;
             }
 
-            if ( i <= indexTwo )
+            if ( i <= indexTwo && nodeTwo.Next != null )
             {
                 nodeTwo = nodeTwo?.Next;
             } 
         }
+        
+        //if one
+        if ( ReferenceEquals( nodeOne.Value, nodeTwo.Value ) )
+        {
+            return;
+        }
+
+        PetData tmp = nodeOne.Value;
+        if ( indexOne < indexTwo )
+        {
+            Pets.AddAfter( nodeTwo, tmp );
+            Pets.Remove( nodeOne );
+        } else
+        {
+            Pets.AddBefore( nodeTwo, tmp );
+            Pets.Remove( nodeOne );
+        }
+        
+        Debug.Log( $"Moved {tmp}" );
 
         // finish this
     }

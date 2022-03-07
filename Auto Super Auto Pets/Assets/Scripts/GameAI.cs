@@ -214,7 +214,7 @@ public class GameAI : Agent
                 AddReward( -0.00025f );
             } else
             {
-                Debug.Log( "Moving Pet" );
+                Debug.Log( "Moving Pet " );
                 _myTeam.MovePet( actions.DiscreteActions[ 2 ], actions.DiscreteActions[ 3 ] );
             }
         } else if ( actions.DiscreteActions[ 2 ] == 5 )
