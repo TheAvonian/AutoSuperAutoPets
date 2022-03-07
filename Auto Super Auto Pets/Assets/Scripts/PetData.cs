@@ -71,7 +71,8 @@ public abstract class PetData
         Leopard,
         Mammoth,
         Snake,
-        Tiger
+        Tiger,
+        None
     }
 
     public enum TierOnePets
@@ -323,7 +324,7 @@ public abstract class PetData
             AllPets.Horse => new HorsePet {PetID = 5, Damage = 2, Health = 1,},
             AllPets.Mosquito => new MosquitoPet {PetID = 6, Damage = 2, Health = 2,},
             AllPets.Otter => new OtterPet {PetID = 7, Damage = 1, Health = 2,},
-            AllPets.Pig => new PigPet {PetID = 8, Damage = 3, Health = 2,},
+            AllPets.Pig => new PigPet {PetID = 8, Damage = 3, Health = 1,},
             AllPets.Crab => new CrabPet {PetID = 9, Damage = 3, Health = 3,},
             AllPets.Dodo => new DodoPet {PetID = 10, Damage = 2, Health = 3,},
             AllPets.Elephant => new ElephantPet {PetID = 11, Damage = 3, Health = 5,},

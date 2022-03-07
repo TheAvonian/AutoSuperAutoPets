@@ -10,7 +10,6 @@ public class ShopData
     public int DamageModifier = 0;
     public int Turn = 0;
     public int CurrentTier = 1;
-    public List<FoodData.Food> FoodList = new(FoodData.TierOneFood);
     public void RerollShop()
     {
         // turn 1, 1 food 3 animal
@@ -39,7 +38,7 @@ public class ShopData
             {
                 Items.Add( new ShopItem
                 {
-                    Food = RandomFood(),
+                    Food = FoodData.RandomFood(CurrentTier),
                 } );
             }
         }
@@ -65,11 +64,6 @@ public class ShopData
         }
         return index < Items.Count && Items[ index ] == null || index >= Items.Count;
     }
-
-    public FoodData RandomFood() {
-        return new FoodData(FoodList[Random.Range(0, FoodList.Count)]);
-    }
-
     
     public ShopItem TryGetItem( int index )
     {

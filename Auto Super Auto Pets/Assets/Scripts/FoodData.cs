@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Random = UnityEngine.Random;
 
 public class FoodData
 {
@@ -27,40 +28,6 @@ public class FoodData
         Coconut,
         Poison
     }
-
-    public static List<Food> TierOneFood {get;} = new() {
-        Food.Apple,
-        Food.Honey
-    };
-
-    public static List<Food> TierTwoFood { get; } = new() {
-        Food.Cupcake,
-        Food.Meatbone,
-        Food.Pill
-    };
-
-    public static List<Food> TierThreeFood { get; } = new() {
-        Food.Garlic,
-        Food.Salad
-    };
-
-    public static List<Food> TierFourFood { get; } = new() {
-        Food.CannedFood,
-        Food.Pear
-    };
-
-    public static List<Food> TierFiveFood { get; } = new() {
-        Food.Chili,
-        Food.Chocolate,
-        Food.Sushi
-    };
-
-    public static List<Food> TierSixFood { get; } = new() {
-        Food.Melon,
-        Food.Pizza,
-        Food.Steak,
-        Food.Mushroom
-    };
 
     public int Health;
     public int Damage;
@@ -95,8 +62,60 @@ public class FoodData
         }
     }
 
+    public static FoodData RandomFood(int maxTier) {
+        Array list = maxTier switch
+        {
+            1 => Enum.GetValues( typeof( FoodLists.TierOneFood ) ),
+            2 => Enum.GetValues( typeof( FoodLists.TierTwoFood ) ),
+            3 => Enum.GetValues( typeof( FoodLists.TierThreeFood ) ),
+            4 => Enum.GetValues( typeof( FoodLists.TierFourFood ) ),
+            5 => Enum.GetValues( typeof( FoodLists.TierFiveFood ) ),
+            6 => Enum.GetValues( typeof( FoodLists.TierSixFood ) ),
+            _ => throw new ArgumentOutOfRangeException(),
+        };
+        
+        FoodData.Food randomFood = (FoodData.Food) list.GetValue( Random.Range( 0, list.Length ) );
+        return new FoodData(randomFood);
+    }
+
     public override string ToString()
     {
         return Type.ToString();
     }
+}
+
+public class FoodLists {
+    public enum TierOneFood {
+        Apple = FoodData.Food.Apple,
+        Honey = FoodData.Food.Honey,
+    };
+
+    public enum TierTwoFood {
+        Cupcake = FoodData.Food.Cupcake,
+        Meatbone = FoodData.Food.Meatbone,
+        Pill = FoodData.Food.Pill,
+    };
+
+    public enum TierThreeFood {
+        Garlic = FoodData.Food.Garlic,
+        Salad = FoodData.Food.Salad,
+    };
+
+    public enum TierFourFood {
+        CannedFood = FoodData.Food.CannedFood,
+        Pear = FoodData.Food.Pear,
+    };
+
+    public enum TierFiveFood {
+        Chili = FoodData.Food.Chili,
+        Chocolate = FoodData.Food.Chocolate,
+        Sushi = FoodData.Food.Sushi,
+    };
+
+    public enum TierSixFood {
+        Melon = FoodData.Food.Melon,
+        Mushroom = FoodData.Food.Mushroom,
+        Pizza = FoodData.Food.Pizza,
+        Steak = FoodData.Food.Steak,
+    };
 }
