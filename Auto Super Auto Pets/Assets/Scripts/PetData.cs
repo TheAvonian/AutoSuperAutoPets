@@ -619,11 +619,12 @@ public abstract class PetData
         if ( damageTaken > 0 )
         {
             Health -= damageTaken;
+            BaseHealth -= damageTaken;
         }
 
         if ( Health <= 0 )
         {
-            OnFaint( myTeam, otherTeam );
+            this.OnFaint( myTeam, otherTeam );
         }
 
         return damageTaken;
@@ -980,9 +981,11 @@ public class OtterPet : PetData
         List< PetData > friends = new List<PetData>( myTeam.Pets );
         friends.Remove( this );
 
-        PetData friend = friends.ElementAt( Random.Range( 0, friends.Count ) );
-        friend.AddDamage( 1 * Level );
-        friend.AddHealth( 1 * Level );
+        if(friends.Count > 0) {
+            PetData friend = friends.ElementAt( Random.Range( 0, friends.Count ) );
+            friend.AddDamage( 1 * Level );
+            friend.AddHealth( 1 * Level );
+        }
     }
 }
 
