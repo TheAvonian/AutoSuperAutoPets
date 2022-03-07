@@ -22,13 +22,13 @@ public class PetVisualizer : MonoBehaviour
     {
         if ( _myTeam != null )
         {
-            LinkedListNode< PetData > node = _myTeam.Pets.First;
+            LinkedListNode< PetData > node = _myTeam.Pets.Last;
             int index = 0;
 
             while ( node != null )
             {
                 TeamTiles[ index ].GetComponent< Image >().sprite = Sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
-                node = node.Next;
+                node = node.Previous;
                 index++;
             }
 
