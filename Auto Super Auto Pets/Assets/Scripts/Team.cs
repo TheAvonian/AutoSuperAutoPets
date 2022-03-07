@@ -44,6 +44,10 @@ public class Team
         foreach ( PetData p in Pets )
         {
             tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.PetConstructor((PetData.AllPets)p.PetID) ) );
+            if ( p.Food != FoodData.Food.None )
+            {
+                tempNew.Pets.Last.Value.Food = p.Food;
+            }
         }
 
         tempNew.TeamName = TeamName;
