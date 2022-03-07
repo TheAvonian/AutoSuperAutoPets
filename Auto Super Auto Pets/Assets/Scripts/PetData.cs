@@ -1665,7 +1665,7 @@ public class DragonPet : PetData
         base.OnFriendBought( myTeam, friendBought );
 
         //If friend bought in tier 1
-        if ( friendBought.PetID < 10 )
+        if ( friendBought.PetID < 9 )
         {
             foreach ( PetData friend in myTeam.Pets )
             {
