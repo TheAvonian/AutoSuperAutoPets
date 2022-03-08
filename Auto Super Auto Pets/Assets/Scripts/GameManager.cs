@@ -1,14 +1,22 @@
 using System;
 using System.Collections.Generic;
-using Unity.MLAgents.Actuators;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+    void Awake()
+    {
+        Application.runInBackground = true;
+    }
+
     public Team TeamOne;
+    [HideInInspector]
     public Team TeamTwo;
 
+    [HideInInspector]
     public Team BattleTeamOne;
+    [HideInInspector]
     public Team BattleTeamTwo;
 
     public GameState State;
@@ -55,14 +63,14 @@ public class GameManager : MonoBehaviour
                     if ( BattleTeamOne.Pets.Count > 0 )
                     {
                         TeamOne.Wins++;
-                        Debug.Log( $"Win: {TeamOne.Wins}" );
+                        //Debug.Log( $"Win: {TeamOne.Wins}" );
                         return WinState.Win;
                     }
 
                     if ( BattleTeamTwo.Pets.Count > 0 )
                     {
-                        TeamOne.Health--;
-                        Debug.Log( $"Loss, Health: {TeamOne.Health}" );
+                        TeamOne.Health-= Mathf.Clamp(TeamOne.Shop.Turn / 2 + 1, 1,3);
+                        //Debug.Log( $"Loss, Health: {TeamOne.Health}" );
                         return WinState.Loss;
                     }
 
@@ -119,7 +127,7 @@ public class GameManager : MonoBehaviour
 
         return true;
     }
-
+    public bool Readied;
     bool EndTurn()
     {
         foreach ( PetData pet in TeamOne.Pets )
@@ -127,11 +135,21 @@ public class GameManager : MonoBehaviour
             pet?.OnTurnEnd( TeamOne );
         }
 
+        //Readied = true;
+
+        //if ( !OtherPlayer.Readied )
+        {
+          //  return false;
+        }
+
         BattleTeamOne = TeamOne.CloneTeam();
+        //TeamTwo = OtherPlayer.TeamOne;
+        //BattleTeamTwo = TeamTwo.CloneTeam();
+
         // CHANGE RANDOM ENEMIES
 
         LinkedList< PetData > tmp = new();
-        for ( int i = 0; i < Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 5 ); i++ )
+        for ( int i = 0; i < Mathf.RoundToInt(Random.value * 6f); i++ )
         {
             tmp.AddLast( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 6 ), true ) );
         }
@@ -142,14 +160,15 @@ public class GameManager : MonoBehaviour
             Pets = tmp,
         };
         
-        Debug.Log( $"Enemy Team: {BattleTeamTwo}" );
+        //Debug.Log( $"Enemy Team: {BattleTeamTwo}" );
         return true;
     }
 
 
     bool TurnStart()
     {
-        Debug.Log( "start turn" );
+        Readied = false;
+        //Debug.Log( "start turn" );
         TeamOne.TeamName = "AI";
         TeamOne.Coins = 10;
         TeamOne.Shop.IncrementTurn();

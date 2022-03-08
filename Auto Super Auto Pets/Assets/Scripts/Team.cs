@@ -1,16 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[Serializable]
 public class Team
 {
     public string TeamName;
     public int Health = 10;
     public int Coins = 10;
     public int Wins;
-    public LinkedList< PetData > Pets { get; set; } = new();
-    public ShopData Shop { get; } = new();
+    public LinkedList< PetData > Pets = new();
+    [SerializeField]
+    public ShopData Shop = new();
 
     //Attempts to add a friend to the team at given index
     //Returns true if successful false if unsuccessful
@@ -142,7 +145,8 @@ public class Team
             Pets.Remove( nodeOne );
         }
         
-        Debug.Log( $"Moved {tmp}" );
+        /*
+        Debug.Log( $"Moved {tmp}" );*/
 
         // finish this
     }

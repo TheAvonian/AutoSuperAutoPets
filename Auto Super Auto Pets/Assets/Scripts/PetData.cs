@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public abstract class PetData
 {
     public int PetID;
@@ -672,17 +673,17 @@ public abstract class PetData
             PetData enemy = node.Value;
             enemy.OnHurt( otherTeam, myTeam, attack );
 
-            Debug.Log( $"{myTeam.TeamName}: {this} attacks {enemy} for {attack} damage." );
+            //Debug.Log( $"{myTeam.TeamName}: {this} attacks {enemy} for {attack} damage." );
             if ( node.Next != null && Food == FoodData.Food.Chili )
             {
                 PetData enemy2 = node.Next.Value;
-                Debug.Log( $"{myTeam.TeamName}: {this} attacks {enemy2} with Chili!" );
+                //Debug.Log( $"{myTeam.TeamName}: {this} attacks {enemy2} with Chili!" );
                 enemy2.OnHurt( otherTeam, myTeam, 5 );
             }
 
             if ( enemy.Health <= 0 )
             {
-                Debug.Log( $"{myTeam.TeamName}: {this} killed {enemy}! {otherTeam.Pets.Count} enemies remain." );
+                //Debug.Log( $"{myTeam.TeamName}: {this} killed {enemy}! {otherTeam.Pets.Count} enemies remain." );
                 OnFaintEnemy( myTeam, otherTeam );
             }
         }
@@ -1230,20 +1231,29 @@ public class BadgerPet : PetData
     {
         LinkedListNode< PetData > node = myTeam.Pets.Find( this );
 
-        if ( node?.Next == null )
+        if ( node?.Previous == null )
         {
             PetData enemy = otherTeam?.Pets.First?.Value;
-            enemy?.OnHurt( otherTeam, myTeam, Damage );
+            if(enemy?.PetID != (int)AllPets.Badger)
+            {
+                enemy?.OnHurt( otherTeam, myTeam, Damage );
+            }
         } else
         {
-            PetData friendAhead = node.Next.Value;
-            friendAhead.OnHurt( myTeam, otherTeam, Damage );
+            PetData friendAhead = node.Previous?.Value;
+            if ( friendAhead?.PetID != (int) AllPets.Badger )
+            {
+                friendAhead?.OnHurt( myTeam, otherTeam, Damage );
+            }
         }
 
-        if ( node?.Previous != null )
+        if ( node?.Next != null )
         {
-            PetData friendBehind = node.Previous.Value;
-            friendBehind.OnHurt( myTeam, otherTeam, Damage );
+            PetData friendBehind = node.Next?.Value;
+            if(friendBehind?.PetID != (int)AllPets.Badger)
+            {
+                friendBehind?.OnHurt( myTeam, otherTeam, Damage );
+            }
         }
 
         base.OnFaint( myTeam, otherTeam );

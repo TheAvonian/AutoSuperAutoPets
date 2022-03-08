@@ -151,11 +151,11 @@ public class PetVisualizer : MonoBehaviour
                     _teamOneTiles[ index ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
                     if ( node.Value.Food != FoodData.Food.None )
                     {
-                        _teamOneTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = Color.white;
-                        _teamOneTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
+                        _teamOneTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = Color.white;
+                        _teamOneTiles[ index ].GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
                     } else
                     {
-                        _teamOneTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                        _teamOneTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
                     }
 
                     _teamOneTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
@@ -169,6 +169,7 @@ public class PetVisualizer : MonoBehaviour
             {
                 _teamOneTiles[ index ].GetComponent< Image >().sprite = null;
                 _teamOneTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                _teamOneTiles[ index ].GetChild(0).GetComponent< Image>().color = new Color( 1, 1, 1, 0 );
             }
 
             node = _enemyTeam.Pets.First;
@@ -181,11 +182,11 @@ public class PetVisualizer : MonoBehaviour
                     _teamTwoTiles[ index ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
                     if ( node.Value.Food != FoodData.Food.None )
                     {
-                        _teamTwoTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = Color.white;
-                        _teamTwoTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
+                        _teamTwoTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = Color.white;
+                        _teamTwoTiles[ index ].GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
                     } else
                     {
-                        _teamTwoTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                        _teamTwoTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
                     }
 
                     _teamTwoTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
@@ -199,6 +200,7 @@ public class PetVisualizer : MonoBehaviour
             {
                 _teamTwoTiles[ index ].GetComponent< Image >().sprite = null;
                 _teamTwoTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                _teamTwoTiles[ index ].GetChild(0).GetComponent< Image>().color = new Color( 1, 1, 1, 0 );
             }
         }
     }

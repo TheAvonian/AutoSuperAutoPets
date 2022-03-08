@@ -7,7 +7,7 @@ using Unity.MLAgents.Sensors;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[RequireComponent(typeof(GameManager))]
+[RequireComponent( typeof( GameManager ) )]
 public class GameAI : Agent
 {
 
@@ -22,21 +22,17 @@ public class GameAI : Agent
         _manager.ResetGame();
     }
 
-    void Start()
-    {
-    }
-
     void FixedUpdate()
     {
         _myTeam = _manager.TeamOne;
         _timer += Time.fixedDeltaTime;
-        if ( _timer > .1f )
+        if ( _timer > .5f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
-                Debug.Log( "getting decision" );
+                /*Debug.Log( "getting decision" );
                 Debug.Log( _myTeam );
-                Debug.Log( _myTeam.Shop );
+                Debug.Log( _myTeam.Shop );*/
                 RequestDecision();
             }
 
@@ -46,6 +42,7 @@ public class GameAI : Agent
                     AddReward( -0.1f );
                     if ( _myTeam.Health <= 0 )
                     {
+                        AddReward( -0.5f );
                         EndEpisode();
                     }
 
@@ -57,7 +54,7 @@ public class GameAI : Agent
                     AddReward( 0.1f );
                     if ( _myTeam.Wins >= 10 )
                     {
-                        SetReward( 1.0f );
+                        AddReward( 0.8f );
                         EndEpisode();
                     }
 
@@ -198,28 +195,28 @@ public class GameAI : Agent
             ShopItem p = _myTeam.Shop.TryGetItem( actions.DiscreteActions[ 0 ] );
             if ( p != null && ( p.Food != null || p.Pet != null ) )
             {
-                Debug.Log( $"Shop Selection: {actions.DiscreteActions[ 0 ]}: {p}" );
+                //Debug.Log( $"Shop Selection: {actions.DiscreteActions[ 0 ]}: {p}" );
                 if ( actions.DiscreteActions[ 1 ] == 5 )
                 {
-                    Debug.Log( $"Froze Selection: {p}" );
+                    //Debug.Log( $"Froze Selection: {p}" );
                     _myTeam.Shop.Freeze( actions.DiscreteActions[ 0 ] );
                 } else if ( _myTeam.TryPlaceItem( p, actions.DiscreteActions[ 1 ] ) )
                 {
                     _myTeam.Coins -= 3;
-                    Debug.Log( $"Bought pet: {p}" );
-                    AddReward( 0.00025f );
+                    //Debug.Log( $"Bought pet: {p}" );
+                    AddReward( 0.000025f );
                     _myTeam.Shop.RemoveItem( actions.DiscreteActions[ 0 ] );
                 } else
                 {
                     AddReward( -0.0005f );
-                    Debug.Log( "Did nothing with selection." );
+                    //Debug.Log( "Did nothing with selection." );
                 }
             }
         }
 
         if ( actions.DiscreteActions[ 0 ] == 7 && _myTeam.Coins >= 1 )
         {
-            Debug.Log( "Rerolling" );
+            //Debug.Log( "Rerolling" );
             _myTeam.Shop.RerollShop();
             _myTeam.Coins--;
         }
@@ -232,34 +229,32 @@ public class GameAI : Agent
                 AddReward( -0.00025f );
             } else
             {
-                Debug.Log( "Moving Pet " );
+                //Debug.Log( "Moving Pet " );
                 _myTeam.MovePet( actions.DiscreteActions[ 2 ], actions.DiscreteActions[ 3 ] );
             }
         } else if ( actions.DiscreteActions[ 2 ] == 5 )
         {
-            Debug.Log( $"Sell Selection: {actions.DiscreteActions[ 3 ]}" );
+            //Debug.Log( $"Sell Selection: {actions.DiscreteActions[ 3 ]}" );
             if ( _myTeam.SellPet( actions.DiscreteActions[ 3 ] ) )
             {
-                Debug.Log( "Sold Pet" );
+                //Debug.Log( "Sold Pet" );
                 _myTeam.Coins++;
-                AddReward( -0.00025f );
             }
         }
 
         if ( _myTeam.Coins <= 0 )
         {
-            Debug.Log( "Ending turn" );
+            //Debug.Log( "Ending turn" );
             _manager.State = GameManager.GameState.TurnEnd;
+            AddReward( 0.000025f );
         }
-
-        AddReward( -0.0000025f );
-
     }
 
     public override void CollectObservations( VectorSensor sensor )
     {
         sensor.AddObservation( _myTeam.Coins );
         sensor.AddObservation( _myTeam.Health );
+        sensor.AddObservation( _myTeam.Shop.Turn );
 
         LinkedListNode< PetData > node = _myTeam.Pets.First;
         for ( int i = 0; i < 5; i++ )

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public class ShopData
 {
+    [SerializeField]
     public List< ShopItem > Items = new();
     public int HealthModifier = 0;
     public int DamageModifier = 0;
@@ -100,6 +102,7 @@ public class ShopData
     }
 }
 
+[Serializable]
 public class ShopItem
 {
     public bool Frozen;
