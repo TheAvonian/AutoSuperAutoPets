@@ -122,11 +122,13 @@ public class PetVisualizer : MonoBehaviour
             }
 
             index = 0;
-            for ( int i = 0; i < _myTeam.Shop.Items.Count; i++ )
+            for ( int i = 0; i < _myTeam.Shop.Items.Length; i++ )
             {
                 ShopItem item = _myTeam.Shop.Items[ i ];
-                if ( item.Pet != null || item.Food != null )
-                {
+
+                if(item == null) {
+                    _shopTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                } else if ( item.Pet != null || item.Food != null ) {
                     _shopTiles[ index ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( item.Pet != null ? ( (PetData.AllPets) item.Pet.PetID ).ToString() : item.Food?.Type.ToString() ) );
                     _shopTiles[ index ].GetComponent< Image >().color = item.Frozen ? new Color( 0, 255, 235 ) : new Color( 255, 255, 255 );
                 }

@@ -30,7 +30,7 @@ public class GameAI : Agent
     {
         _myTeam = _manager.TeamOne;
         _timer += Time.fixedDeltaTime;
-        if ( _timer > .1f )
+        if ( _timer > 1f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
@@ -285,7 +285,7 @@ public class GameAI : Agent
 
         for ( int index = 0; index < 7; index++ )
         {
-            ShopItem p = index < _myTeam.Shop.Items.Count ? _myTeam.Shop.Items[ index ] : null;
+            ShopItem p = index < _myTeam.Shop.Items.Length ? _myTeam.Shop.Items[ index ] : null;
             if ( p?.Pet != null )
             {
                 sensor.AddObservation( p.Pet.PetID );
@@ -304,7 +304,7 @@ public class GameAI : Agent
             }
         }
 
-        sensor.AddObservation( _myTeam.Shop.Items.Count );
+        sensor.AddObservation( _myTeam.Shop.Items.Length );
         sensor.AddObservation( _myTeam.Pets.Count );
     }
 }

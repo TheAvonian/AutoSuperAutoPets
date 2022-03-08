@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 public class ShopData
 {
-    public List< ShopItem > Items = new();
+    public ShopItem[] Items = new ShopItem[7];
     public int HealthModifier = 0;
     public int DamageModifier = 0;
     public int Turn = 0;
@@ -19,13 +19,15 @@ public class ShopData
         // turn 9, tier 5, 5 animal
         // turn 11, tier 6
 
-        Items.RemoveAll( x => x is {Frozen: false} );
+        List<ShopItem> ItemsClone = new List<ShopItem>(Items);
+        ItemsClone.RemoveAll( x => x is {Frozen: false} );
+        ItemsClone.CopyTo(Items);
         
         for ( int i = 0; i < 5; i++ )
         {
             if ( SpotFree( i ) )
             {
-                Items.Add( new ShopItem
+                Items[i] = ( new ShopItem
                 {
                     Pet = PetData.RandomPet(CurrentTier, false),
                 } );
@@ -36,7 +38,7 @@ public class ShopData
         {
             if ( SpotFree( i ) )
             {
-                Items.Add( new ShopItem
+                Items[i] = ( new ShopItem
                 {
                     Food = FoodData.RandomFood(CurrentTier),
                 } );
@@ -55,19 +57,19 @@ public class ShopData
 
     bool SpotFree( int index )
     {
-        if ( index < Items.Count && Items[ index ] != null )
+        if ( index < Items.Length && Items[ index ] != null )
         {
             if ( Items[ index ].Frozen )
             {
                 return false;
             }
         }
-        return index < Items.Count && Items[ index ] == null || index >= Items.Count;
+        return index < Items.Length && Items[ index ] == null || index >= Items.Length;
     }
     
     public ShopItem TryGetItem( int index )
     {
-        return index < Items.Count && index > 0 ? Items[ index ] : null;
+        return index < Items.Length && index > 0 ? Items[ index ] : null;
     }
 
     public override string ToString()
@@ -85,15 +87,15 @@ public class ShopData
 
     public void RemoveItem( int index )
     {
-        if ( index < Items.Count )
+        if ( index < Items.Length )
         {
-            Items.RemoveAt(index);
+            Items[index] = null;
         }
     }
 
     public void Freeze( int index )
     {
-        if ( index < Items.Count && Items[index] != null )
+        if ( index < Items.Length && Items[index] != null )
         {
             Items[ index ].Frozen = !Items[ index ].Frozen;
         }

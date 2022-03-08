@@ -1599,7 +1599,7 @@ public class CowPet : PetData
         base.OnBuy( myTeam );
 
         //Change the last two shop slots to be FoodData.Food.Milk
-        List< ShopItem > shopItems = myTeam.Shop.Items;
+        ShopItem[] shopItems = myTeam.Shop.Items;
 
         FoodData milk1 = new( FoodData.Food.Milk );
         milk1.Damage *= Level;
@@ -1607,21 +1607,9 @@ public class CowPet : PetData
         FoodData milk2 = new( FoodData.Food.Milk );
         milk2.Damage *= Level;
         milk2.Health *= Level;
-        if ( shopItems.Count > 5 )
-        {
-            shopItems[ 5 ] = new ShopItem {Food = milk1};
-        } else
-        {
-            shopItems.Add( new ShopItem {Food = milk1} );
-        }
 
-        if ( shopItems.Count > 6 )
-        {
-            shopItems[ 6 ] = new ShopItem {Food = milk2};
-        } else
-        {
-            shopItems.Add( new ShopItem {Food = milk2} );
-        }
+        shopItems[ 5 ] = new ShopItem {Food = milk1};
+        shopItems[ 6 ] = new ShopItem {Food = milk2};
     }
 }
 
