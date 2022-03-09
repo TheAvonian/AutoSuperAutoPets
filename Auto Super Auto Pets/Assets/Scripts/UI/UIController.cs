@@ -13,6 +13,11 @@ public class UIController : MonoBehaviour
 
     UIDocument _document;
 
+    VisualElement _teamsElement;
+    VisualElement _teamOneElement;
+    VisualElement _teamTwoElement;
+    VisualElement _shopElement;
+
     void Awake()
     {
         _document = GetComponent< UIDocument >();
@@ -32,10 +37,15 @@ public class UIController : MonoBehaviour
         _turnsElement = _document.rootVisualElement.Q< Label >( "TeamTurns" );
         _winsElement = _document.rootVisualElement.Q< Label >( "TeamWins" );
 
-        List< VisualElement > teamOneHolder = _document.rootVisualElement.Q< GroupBox >( "TeamOne" ).Children().ToList();
-        List< VisualElement > teamTwoHolder = _document.rootVisualElement.Q< GroupBox >( "TeamTwo" ).Children().ToList();
+        _teamOneElement = _document.rootVisualElement.Q< GroupBox >( "TeamOne" );
+        _teamTwoElement = _document.rootVisualElement.Q< GroupBox >( "TeamTwo" );
+        _shopElement = _document.rootVisualElement.Q< GroupBox >( "ShopPets" );
+        _teamsElement = _teamOneElement.parent;
 
-        List< VisualElement > shopHolder = _document.rootVisualElement.Q< GroupBox >( "ShopPets" ).Children().ToList();
+        List< VisualElement > teamOneHolder = _teamOneElement.Children().ToList();
+        List< VisualElement > teamTwoHolder = _teamTwoElement.Children().ToList();
+
+        List< VisualElement > shopHolder = _shopElement.Children().ToList();
 
         for ( int i = 0; i < 5; i++ )
         {
@@ -81,6 +91,9 @@ public class UIController : MonoBehaviour
         };
     }
 
+    const string FIGHT_STYLE_TEAM = "fight-style";
+    const string FIGHT_STYLE_BOX = "fight-box";
+
     Sprite[] _allSprites;
     PetCard[] _teamOnePets;
     PetCard[] _teamTwoPets;
@@ -97,9 +110,14 @@ public class UIController : MonoBehaviour
         _turnsElement.text = GameManager.TeamOne.Shop.Turn.ToString();
         _winsElement.text = GameManager.TeamOne.Wins.ToString();
 
-        LinkedListNode< PetData > oneNode = GameManager.State is GameManager.GameState.Battle or GameManager.GameState.BattleStart or GameManager.GameState.BattleEnd ? GameManager.BattleTeamOne?.Pets?.First : GameManager.TeamOne?.Pets?.First;
+        bool inBattle = GameManager.State is GameManager.GameState.Battle or GameManager.GameState.BattleStart or GameManager.GameState.BattleEnd;
+
+        LinkedListNode< PetData > oneNode = inBattle ? GameManager.BattleTeamOne?.Pets?.First : GameManager.TeamOne?.Pets?.First;
         LinkedListNode< PetData > twoNode = GameManager.BattleTeamTwo?.Pets?.First;
         ShopItem shopNode = GameManager.TeamOne.Shop?.Items?.Count != 0 ? GameManager.TeamOne.Shop?.Items?[ 0 ] : null;
+
+        _teamsElement.EnableInClassList( FIGHT_STYLE_BOX, inBattle );
+        _teamOneElement.EnableInClassList( FIGHT_STYLE_TEAM, inBattle );
         for ( int i = 0; i < 5; i++ )
         {
 
