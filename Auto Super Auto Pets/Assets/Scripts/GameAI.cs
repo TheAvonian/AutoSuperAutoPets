@@ -280,7 +280,7 @@ public class GameAI : Agent
 
         for ( int index = 0; index < 7; index++ )
         {
-            ShopItem p = index < _myTeam.Shop.Items.Count ? _myTeam.Shop.Items[ index ] : null;
+            ShopItem p = index < _myTeam.Shop.Items.Length ? _myTeam.Shop.Items[ index ] : null;
             if ( p?.Pet != null )
             {
                 sensor.AddObservation( p.Pet.PetID );
@@ -299,7 +299,7 @@ public class GameAI : Agent
             }
         }
 
-        sensor.AddObservation( _myTeam.Shop.Items.Count );
+        sensor.AddObservation( _myTeam.Shop.Items.Length );
         sensor.AddObservation( _myTeam.Pets.Count );
     }
 }
