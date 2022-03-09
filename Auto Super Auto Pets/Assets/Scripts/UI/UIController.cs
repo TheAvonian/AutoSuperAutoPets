@@ -103,7 +103,7 @@ public class UIController : MonoBehaviour
     Label _coinsElement;
     Label _turnsElement;
     Label _winsElement;
-    void LateUpdate()
+    void FixedUpdate()
     {
         _healthElement.text = GameManager.TeamOne.Health.ToString();
         _coinsElement.text = GameManager.TeamOne.Coins.ToString();
@@ -114,52 +114,45 @@ public class UIController : MonoBehaviour
 
         LinkedListNode< PetData > oneNode = inBattle ? GameManager.BattleTeamOne?.Pets?.First : GameManager.TeamOne?.Pets?.First;
         LinkedListNode< PetData > twoNode = GameManager.BattleTeamTwo?.Pets?.First;
-        ShopItem shopNode = GameManager.TeamOne.Shop?.Items?.Count != 0 ? GameManager.TeamOne.Shop?.Items?[ 0 ] : null;
+        ShopItem shopNode = GameManager.TeamOne.Shop.GetFirst();
 
         _teamsElement.EnableInClassList( FIGHT_STYLE_BOX, inBattle );
         _teamOneElement.EnableInClassList( FIGHT_STYLE_TEAM, inBattle );
         for ( int i = 0; i < 5; i++ )
         {
+            CreatePetCard( _teamOnePets[ i ], oneNode?.Value );
+            oneNode = oneNode?.Next;
 
-            if ( oneNode != null )
-            {
-                CreatePetCard( _teamOnePets[ i ], oneNode.Value );
-                oneNode = oneNode.Next;
-            }
+            CreatePetCard( _teamTwoPets[ i ], twoNode?.Value );
+            twoNode = twoNode?.Next;
 
-            if ( twoNode != null )
-            {
-                CreatePetCard( _teamTwoPets[ i ], twoNode.Value );
-                twoNode = twoNode.Next;
-            }
-
-            if ( shopNode != null )
-            {
-                CreatePetCard( _shopCards[ i ], shopNode );
-                shopNode = GameManager.TeamOne.Shop.TryGetItem( i + 1 );
-            }
+            CreatePetCard( _shopCards[ i ], shopNode );
+            shopNode = GameManager.TeamOne.Shop.TryGetItem( i + 1 );
         }
 
         if ( GameManager.TeamOne.Shop?.Items != null )
         {
-            if ( GameManager.TeamOne.Shop.Items.Count > 5 )
-            {
-                CreatePetCard( _shopCards[ 5 ], GameManager.TeamOne.Shop.Items[ 5 ] );
-            }
+            CreatePetCard( _shopCards[ 5 ], GameManager.TeamOne.Shop.Items[ 5 ] );
 
-            if ( GameManager.TeamOne.Shop.Items.Count > 6 )
-            {
-                CreatePetCard( _shopCards[ 6 ], GameManager.TeamOne.Shop.Items[ 6 ] );
-            }
+            CreatePetCard( _shopCards[ 6 ], GameManager.TeamOne.Shop.Items[ 6 ] );
         }
 
     }
 
     void CreatePetCard( PetCard petCard, PetData petItem )
     {
+        if ( petItem == null )
+        {
+            petCard.ImageElement.style.backgroundColor = _borderColor;
+            petCard.FoodElement.style.backgroundColor = _borderColor;
+            petCard.DamageElement.parent.style.opacity = 0;
+            petCard.FoodElement.parent.style.opacity = 0;
+            return;
+        }
         petCard.ImageElement.style.backgroundImage = new StyleBackground( _allSprites.First( x => x.name.Equals( GetPetName( petItem ) ) ) );
         petCard.DamageElement.text = petItem.Damage.ToString();
         petCard.HealthElement.text = petItem.Health.ToString();
+        petCard.ImageElement.style.opacity = 100f;
         if ( petItem.Food != FoodData.Food.None )
         {
             petCard.FoodElement.style.opacity = 100f;
@@ -171,6 +164,8 @@ public class UIController : MonoBehaviour
         }
 
         petCard.ImageElement.style.backgroundColor = _borderColor;
+        petCard.DamageElement.parent.style.opacity = 100f;
+        petCard.HealthElement.parent.style.opacity = 100f;
     }
 
     readonly StyleFloat _borderWidth = new( 0f );
@@ -180,6 +175,14 @@ public class UIController : MonoBehaviour
     readonly StyleColor _frozenColor = new( Color.cyan );
     void CreatePetCard( PetCard petCard, ShopItem shopItem )
     {
+        if ( shopItem == null )
+        {
+            petCard.ImageElement.style.opacity = 0;
+            petCard.FoodElement.style.opacity = 0;
+            petCard.DamageElement.parent.style.opacity = 0;
+            petCard.HealthElement.parent.style.opacity = 0;
+            return;
+        }
         if ( shopItem.Pet != null )
         {
             CreatePetCard( petCard, shopItem.Pet );
@@ -187,6 +190,7 @@ public class UIController : MonoBehaviour
             petCard.HealthElement.parent.style.opacity = 100f;
         } else if ( shopItem.Food != null )
         {
+            petCard.ImageElement.style.opacity = 100f;
             petCard.ImageElement.style.backgroundImage = new StyleBackground( _allSprites.First( x => x.name.Equals( shopItem.Food.ToString() ) ) );
             petCard.DamageElement.parent.style.opacity = 0;
             petCard.HealthElement.parent.style.opacity = 0;

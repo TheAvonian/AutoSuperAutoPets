@@ -26,7 +26,7 @@ public class GameAI : Agent
     {
         _myTeam = _manager.TeamOne;
         _timer += Time.fixedDeltaTime;
-        if ( _timer > .5f )
+        if ( _timer > .1f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
@@ -203,7 +203,8 @@ public class GameAI : Agent
                 } else if ( _myTeam.TryPlaceItem( p, actions.DiscreteActions[ 1 ] ) )
                 {
                     _myTeam.Coins -= 3;
-                    //Debug.Log( $"Bought pet: {p}" );
+                    Debug.Log( $"Bought pet: {p}" );
+                    Debug.Log( _myTeam );
                     AddReward( 0.000025f );
                     _myTeam.Shop.RemoveItem( actions.DiscreteActions[ 0 ] );
                 } else

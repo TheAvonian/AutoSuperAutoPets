@@ -865,13 +865,12 @@ public abstract class PetData
         Health = Math.Max( pet.Health, Health ) + 1;
         Damage = Math.Max( pet.Damage, Damage ) + 1;
 
-        if ( StackHeight == 3 )
+        Level = StackHeight switch
         {
-            Level = 2;
-        } else if ( StackHeight == 6 )
-        {
-            Level = 3;
-        }
+            3 => 2,
+            6 => 3,
+            _ => Level,
+        };
 
         return true;
     }

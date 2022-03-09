@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,31 +21,75 @@ public class ShopData
         // turn 9, tier 5, 5 animal
         // turn 11, tier 6
 
-        List<ShopItem> ItemsClone = new List<ShopItem>(Items);
-        ItemsClone.RemoveAll( x => x is {Frozen: false} );
-        ItemsClone.CopyTo(Items);
+        ReorderShop();
         
-        for ( int i = 0; i < 5; i++ )
+        for ( int i = 0; i < Mathf.Clamp((Turn - 1) / 4 + 3, 3, 5 ); i++ )
         {
             if ( SpotFree( i ) )
             {
-                Items[i] = ( new ShopItem
+                Items[i] = new ShopItem
                 {
                     Pet = PetData.RandomPet(CurrentTier, false),
-                } );
+                };
             }
         }
 
-        for ( int i = 5; i < 7; i++ )
+        for ( int i = 5; i < Mathf.Clamp((Turn - 1) / 2, 1, 2 ) + 5; i++ )
         {
             if ( SpotFree( i ) )
             {
-                Items[i] = ( new ShopItem
+                Items[i] = new ShopItem
                 {
                     Food = FoodData.RandomFood(CurrentTier),
-                } );
+                };
             }
         }
+    }
+
+    public ShopItem GetFirst()
+    {
+        for ( int i = 0; i < 7; i++ )
+        {
+            if ( Items[ i ] != null )
+            {
+                return Items[ i ];
+            }
+        }
+
+        return null;
+    }
+
+    void ReorderShop()
+    {
+        ShopItem[] frozenItems = new ShopItem[ 7 ];
+        for ( int i = 0; i < 7; i++ )
+        {
+            if ( Items[ i ] is {Frozen: true} )
+            {
+                frozenItems[ i ] = Items[ i ];
+            } 
+        }
+
+        int petIndex = 0;
+        int foodIndex = 5;
+        for ( int i = 0; i < 7; i++ )
+        {
+            Items[ i ] = null;
+            switch ( frozenItems[ i ] )
+            {
+                case {Pet: not null}:
+                    Items[ petIndex++ ] = frozenItems[ i ];
+                    break;
+                case {Food: not null}:
+                    Items[ foodIndex++ ] = frozenItems[ i ];
+                    break;
+            }
+        }
+    }
+
+    public bool IsEmpty()
+    {
+        return Items.Any(x=>x != null);
     }
 
     public void IncrementTurn() {
@@ -70,7 +115,7 @@ public class ShopData
     
     public ShopItem TryGetItem( int index )
     {
-        return index < Items.Length && index > 0 ? Items[ index ] : null;
+        return index < Items.Length && index >= 0 ? Items[ index ] : null;
     }
 
     public override string ToString()

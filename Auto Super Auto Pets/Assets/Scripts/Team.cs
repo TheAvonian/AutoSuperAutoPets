@@ -12,7 +12,6 @@ public class Team
     public int Coins = 10;
     public int Wins;
     public LinkedList< PetData > Pets = new();
-    [SerializeField]
     public ShopData Shop = new();
 
     //Attempts to add a friend to the team at given index
@@ -67,7 +66,11 @@ public class Team
 
     public bool TryPlaceItem( ShopItem shopItem, int targetIndex )
     {
-        if ( shopItem == null || ( shopItem.Food == null && shopItem.Pet == null ) ) return false;
+        if ( shopItem == null || shopItem.Food == null && shopItem.Pet == null )
+        {
+            return false;
+        }
+
         LinkedListNode< PetData > petNode = Pets.First;
         int i;
         for ( i = 0; i <= targetIndex && petNode?.Next != null; i++ )
@@ -75,14 +78,17 @@ public class Team
             petNode = petNode.Next;
         }
 
-        if ( i == targetIndex )
+        if ( i == targetIndex && petNode != null )
         {
-            if ( petNode?.Value.PetID == shopItem.Pet?.PetID )
+            if ( petNode.Value.PetID == shopItem.Pet?.PetID )
             {
-                petNode?.Value.OnStack(this, shopItem.Pet);
+                if ( petNode.Value.OnStack( this, shopItem.Pet ) )
+                {
+                    Debug.Log( $"Stacked {shopItem.Pet}" );
+                }
             } else if(shopItem.Food != null)
             {
-                petNode?.Value.OnEatShopFood(this, shopItem.Food);
+                petNode.Value.OnEatShopFood(this, shopItem.Food);
             }
         } else
         {
@@ -102,7 +108,8 @@ public class Team
                 return false;
             }
         }
-        return true;
+
+        return Pets.Count < 5 || shopItem.Food != null;
     }
 
     public void MovePet( int indexOne, int indexTwo )
@@ -131,6 +138,13 @@ public class Team
         //if one
         if ( ReferenceEquals( nodeOne.Value, nodeTwo.Value ) )
         {
+            return;
+        }
+
+        if ( nodeOne.Value.PetID == nodeTwo.Value.PetID )
+        {
+            nodeTwo.Value.OnStack( this, nodeOne.Value );
+            Pets.Remove( nodeOne );
             return;
         }
 
