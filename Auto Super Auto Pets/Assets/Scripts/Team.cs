@@ -11,53 +11,31 @@ public class Team
     public int Health = 10;
     public int Coins = 10;
     public int Wins;
-    public LinkedList< PetData > Pets = new();
+    public PetArray Pets = new PetArray(5);
     public ShopData Shop = new();
-
-    //Attempts to add a friend to the team at given index
-    //Returns true if successful false if unsuccessful
-    public bool TryAddFriend( PetData pet, int index )
-    {
-        if ( Pets.Count >= 5 )
-        {
-            return false;
-        }
-
-        LinkedListNode< PetData > node = Pets.First;
-        for ( int i = 0; i <= index && node?.Next != null; i++)
-        {
-            node = node?.Next;
-        }
-        
-        if ( node != null )
-        {
-            Pets.AddBefore( node, pet );
-        } else
-        {
-            Pets.AddFirst( pet );
-        }
-
-        return true;
-    }
 
     public Team CloneTeam()
     {
         Team tempNew = new();
-        foreach ( PetData p in Pets )
+        for(int i = 0; i < Pets.Size; i++)
         {
-            tempNew.Pets.AddLast( new LinkedListNode< PetData >( PetData.PetConstructor((PetData.AllPets)p.PetID) ) );
+            PetData p = Pets.GetPet(i);
+            if(p == null) continue;
+
+            tempNew.Pets.TryAddFriend( ( PetData.PetConstructor((PetData.AllPets)p.PetID) ), i );
+            PetData newP = tempNew.Pets.GetPet(i);
             if ( p.Food != FoodData.Food.None )
             {
-                tempNew.Pets.Last.Value.Food = p.Food;
+                newP.Food = p.Food;
             }
 
-            tempNew.Pets.Last.Value.Damage = p.Damage;
-            tempNew.Pets.Last.Value.Health = p.Health;
-            tempNew.Pets.Last.Value.BaseDamage = p.BaseDamage;
-            tempNew.Pets.Last.Value.BaseHealth = p.BaseHealth;
-            tempNew.Pets.Last.Value.Level = p.Level;
-            tempNew.Pets.Last.Value.StackHeight = p.StackHeight;
-            tempNew.Pets.Last.Value.Position = p.Position;
+            newP.Damage = p.Damage;
+            newP.Health = p.Health;
+            newP.BaseDamage = p.BaseDamage;
+            newP.BaseHealth = p.BaseHealth;
+            newP.Level = p.Level;
+            newP.StackHeight = p.StackHeight;
+            newP.Position = p.Position;
         }
 
         tempNew.TeamName = TeamName;
@@ -71,36 +49,29 @@ public class Team
             return false;
         }
 
-        LinkedListNode< PetData > petNode = Pets.First;
-        int i;
-        for ( i = 0; i <= targetIndex && petNode?.Next != null; i++ )
-        {
-            petNode = petNode.Next;
-        }
+        PetData target = Pets.GetPet(targetIndex);
 
-        if ( i == targetIndex && petNode != null )
+        if ( target != null )
         {
-            if ( petNode.Value.PetID == shopItem.Pet?.PetID )
+            if ( target.PetID == shopItem.Pet?.PetID )
             {
-                if ( petNode.Value.OnStack( this, shopItem.Pet ) )
+                if ( target.OnStack( this, shopItem.Pet ) )
                 {
+                    target.OnBuy(this);
                     Debug.Log( $"Stacked {shopItem.Pet}" );
                 }
             } else if(shopItem.Food != null)
             {
-                petNode.Value.OnEatShopFood(this, shopItem.Food);
+                target.OnEatShopFood(this, shopItem.Food);
+            } else
+            {
+                return false;
             }
         } else
         {
-            if ( Pets.Count < 5 && shopItem.Food == null )
+            if ( !Pets.IsFull() && shopItem.Food == null )
             {
-                if ( petNode != null )
-                {
-                    Pets.AddBefore( petNode, shopItem.Pet );
-                } else
-                {
-                    Pets.AddFirst( shopItem.Pet );
-                }
+                Pets.TryAddFriend(shopItem.Pet, targetIndex);
                 shopItem.Pet.OnSummon(this);
                 shopItem.Pet.OnBuy(this);
             } else
@@ -109,98 +80,51 @@ public class Team
             }
         }
 
-        return Pets.Count < 5 || shopItem.Food != null;
+        return true;
     }
 
     public void MovePet( int indexOne, int indexTwo )
     {
-        LinkedListNode< PetData > nodeOne = Pets.First;
-        LinkedListNode< PetData > nodeTwo = Pets.First;
-        if ( nodeOne is null || nodeTwo is null )
+        PetData petOne = Pets.GetPet(indexOne);
+        PetData petTwo = Pets.GetPet(indexTwo);
+        
+        if ( ReferenceEquals( petOne, petTwo ))
         {
             return;
         }
         
-        for ( int i = 0; i <= indexOne || i <= indexTwo; i++ )
-        {
-
-            if ( i <= indexOne && nodeOne.Next != null )
-            {
-                nodeOne = nodeOne?.Next;
-            }
-
-            if ( i <= indexTwo && nodeTwo.Next != null )
-            {
-                nodeTwo = nodeTwo?.Next;
-            } 
+        if(petOne != null) {
+            Pets.RemovePet(petOne);
         }
-        
-        //if one
-        if ( ReferenceEquals( nodeOne.Value, nodeTwo.Value ) )
-        {
-            return;
+        if(petTwo != null) {
+            Pets.RemovePet(petTwo);
         }
 
-        if ( nodeOne.Value.PetID == nodeTwo.Value.PetID )
-        {
-            nodeTwo.Value.OnStack( this, nodeOne.Value );
-            Pets.Remove( nodeOne );
-            return;
+        if(petOne != null) {
+            Pets.TryAddFriend(petOne, indexTwo);
         }
-
-        PetData tmp = nodeOne.Value;
-        if ( indexOne < indexTwo )
-        {
-            Pets.AddAfter( nodeTwo, tmp );
-            Pets.Remove( nodeOne );
-        } else
-        {
-            Pets.AddBefore( nodeTwo, tmp );
-            Pets.Remove( nodeOne );
+        if(petTwo != null) {
+            Pets.TryAddFriend(petTwo, indexOne);
         }
-        
-        /*
-        Debug.Log( $"Moved {tmp}" );*/
-
-        // finish this
     }
 
     public bool SellPet( int targetIndex )
     {
-        LinkedListNode< PetData > node = Pets.First;
-        for ( int i = 0; i <= targetIndex; i++ )
-        {
-            if ( i == targetIndex )
-            {
-                break;
-            }
+        PetData pet = Pets.GetPet(targetIndex);
 
-            node = node?.Next;
-        }
-
-        if ( node == null ) return false;
-        Pets.Remove( node! );
+        if ( pet == null ) return false;
+        Pets.RemovePet(pet);
         return true;
     }
 
     public override string ToString()
     {
         string endString = $"Team C:{Coins} H:{Health} : ";
-        int i = 0;
-        foreach ( PetData p in Pets )
-        {
-            endString += $"Pet {++i}: {p}, ";
+        
+        for(int i = 0; i < Pets.Size; i++) {
+            endString += $"Pet {i}: {Pets.GetPet(i)}, ";
         }
 
         return endString;
-    }
-
-    public void UpdatePetPositions() {
-        LinkedListNode<PetData> node = Pets.First;
-        int position = 1;
-        while(node != null) {
-            node.Value.Position = position;
-            node = node.Next;
-        }
     }
 }

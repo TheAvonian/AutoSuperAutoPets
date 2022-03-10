@@ -26,7 +26,7 @@ public class GameAI : Agent
     {
         _myTeam = _manager.TeamOne;
         _timer += Time.fixedDeltaTime;
-        if ( _timer > .1f )
+        if ( _timer > 1.5f )
         {
             if ( _manager.State == GameManager.GameState.Turn )
             {
@@ -257,16 +257,16 @@ public class GameAI : Agent
         sensor.AddObservation( _myTeam.Health );
         sensor.AddObservation( _myTeam.Shop.Turn );
 
-        LinkedListNode< PetData > node = _myTeam.Pets.First;
-        for ( int i = 0; i < 5; i++ )
+        for ( int i = 0; i < _myTeam.Pets.Size; i++ )
         {
-            if ( node != null )
+            PetData pet = _myTeam.Pets.GetPet(i);
+            if ( pet != null )
             {
-                sensor.AddObservation( node.Value.PetID );
-                sensor.AddObservation( node.Value.Damage );
-                sensor.AddObservation( node.Value.Health );
-                sensor.AddObservation( node.Value.StackHeight );
-                sensor.AddObservation( node.Value.Level );
+                sensor.AddObservation( pet.PetID );
+                sensor.AddObservation( pet.Damage );
+                sensor.AddObservation( pet.Health );
+                sensor.AddObservation( pet.StackHeight );
+                sensor.AddObservation( pet.Level );
             } else
             {
                 sensor.AddObservation( -1 );
@@ -275,8 +275,6 @@ public class GameAI : Agent
                 sensor.AddObservation( -1 );
                 sensor.AddObservation( -1 );
             }
-
-            node = node?.Next;
         }
 
         for ( int index = 0; index < 7; index++ )
@@ -301,6 +299,6 @@ public class GameAI : Agent
         }
 
         sensor.AddObservation( _myTeam.Shop.Items.Length );
-        sensor.AddObservation( _myTeam.Pets.Count );
+        sensor.AddObservation( _myTeam.Pets.PetCount );
     }
 }
