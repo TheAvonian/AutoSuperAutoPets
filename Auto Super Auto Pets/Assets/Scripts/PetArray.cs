@@ -25,7 +25,7 @@ public class PetArray {
 
     public PetData GetPetAhead(int index) {
         if(index - 1 >= 0 && index - 1 < Size) {
-            return List[index + 1];
+            return List[index - 1];
         }
         return null;
     }

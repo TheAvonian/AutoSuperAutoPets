@@ -883,7 +883,7 @@ public class AntPet : PetData
         if ( myTeam.Pets.PetCount >= 1 )
         {
             List<PetData> friends = new List<PetData>(myTeam.Pets.List);
-            
+
             PetData randomFriend = friends.ElementAt( Random.Range( 0, friends.Count ) );
             randomFriend.AddDamage( 2 * Level );
             randomFriend.AddHealth( 1 * Level );
