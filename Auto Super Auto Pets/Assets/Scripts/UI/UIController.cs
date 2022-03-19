@@ -95,19 +95,17 @@ public class UIController : MonoBehaviour
 
         bool inBattle = GameManager.State is GameManager.GameState.Battle or GameManager.GameState.BattleStart or GameManager.GameState.BattleEnd;
 
-        LinkedListNode< PetData > oneNode = inBattle ? GameManager.BattleTeamOne?.Pets?.First : GameManager.TeamOne?.Pets?.First;
-        LinkedListNode< PetData > twoNode = GameManager.BattleTeamTwo?.Pets?.First;
+        PetArray teamOne = inBattle ? GameManager.BattleTeamOne?.Pets : GameManager.TeamOne?.Pets;
+        PetArray teamTwo = GameManager.BattleTeamTwo?.Pets;
         ShopItem shopNode = GameManager.TeamOne.Shop.GetFirst();
 
         _teamsElement.EnableInClassList( FIGHT_STYLE_BOX, inBattle );
         _teamOneElement.EnableInClassList( FIGHT_STYLE_TEAM, inBattle );
         for ( int i = 0; i < 5; i++ )
         {
-            CreatePetCard( _teamOnePets[ i ], oneNode?.Value );
-            oneNode = oneNode?.Next;
+            CreatePetCard( _teamOnePets[ i ], teamOne.GetPet(i) );
 
-            CreatePetCard( _teamTwoPets[ i ], twoNode?.Value );
-            twoNode = twoNode?.Next;
+            CreatePetCard( _teamTwoPets[ i ], teamTwo.GetPet(i));
 
             CreatePetCard( _shopCards[ i ], shopNode );
             shopNode = GameManager.TeamOne.Shop.TryGetItem( i + 1 );

@@ -2,9 +2,9 @@ using System.Collections;
 
 public class PetArray {
 
-    int Size;
-    PetData[] List;
-    int PetCount;
+    public int Size;
+    public PetData[] List;
+    public int PetCount;
 
     public PetArray(int size) {
         this.Size = size;
@@ -17,6 +17,32 @@ public class PetArray {
 
     public bool IsFull() {
         return PetCount >= Size;
+    }
+
+    public PetData GetPet(int index) {
+        return this.List[index];
+    }
+
+    public PetData GetPetAhead(int index) {
+        if(index - 1 >= 0 && index - 1 < Size) {
+            return List[index - 1];
+        }
+        return null;
+    }
+
+    public PetData GetPetBehind(int index) {
+        if(index + 1 >= 0 && index + 1 < Size) {
+            return List[index + 1];
+        }
+        return null;
+    }
+
+    public PetData GetFirstPet() {
+        if(this.IsEmpty()) return null;
+        
+        while(GetPet(0) == null) ShiftAllPetsForward();
+
+        return GetPet(0);
     }
 
     //Removes given pet and returns the position is was in. Returns -1 if not found
@@ -40,7 +66,6 @@ public class PetArray {
 
         if(List[index] == null) {
             List[index] = friend;
-            PetCount += 1;
         } else {
             int direction = DetermineShiftDirection(index);
 
@@ -56,6 +81,8 @@ public class PetArray {
             }
         }
 
+        PetCount += 1;
+        UpdatePetPositions();
         return true;
     }
 
@@ -77,6 +104,14 @@ public class PetArray {
                 List[i - 1] = List[i];
                 List[i] = null;
             }
+        }
+        UpdatePetPositions();
+    }
+
+    public void UpdatePetPositions() {
+        for(int i = 0; i < Size; i++) {
+            if(List[i] == null) continue;
+            List[i].Position = i;
         }
     }
 }

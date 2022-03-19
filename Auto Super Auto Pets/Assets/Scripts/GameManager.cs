@@ -60,14 +60,14 @@ public class GameManager : MonoBehaviour
                 if ( EndBattle() )
                 {
                     State = GameState.TurnStart;
-                    if ( BattleTeamOne.Pets.Count > 0 )
+                    if ( BattleTeamOne.Pets.PetCount > 0 )
                     {
                         TeamOne.Wins++;
                         //Debug.Log( $"Win: {TeamOne.Wins}" );
                         return WinState.Win;
                     }
 
-                    if ( BattleTeamTwo.Pets.Count > 0 )
+                    if ( BattleTeamTwo.Pets.PetCount > 0 )
                     {
                         TeamOne.Health-= Mathf.Clamp(TeamOne.Shop.Turn / 2 + 1, 1,3);
                         //Debug.Log( $"Loss, Health: {TeamOne.Health}" );
@@ -100,13 +100,13 @@ public class GameManager : MonoBehaviour
 
     bool BattlePhase()
     {
-        if ( BattleTeamOne.Pets.Count <= 0 || BattleTeamTwo.Pets.Count <= 0 )
+        if ( BattleTeamOne.Pets.PetCount <= 0 || BattleTeamTwo.Pets.PetCount <= 0 )
         {
             return true;
         }
 
-        PetData frontPetOne = BattleTeamOne.Pets.First.Value;
-        PetData frontPetTwo = BattleTeamTwo.Pets.First.Value;
+        PetData frontPetOne = BattleTeamOne.Pets.GetFirstPet();
+        PetData frontPetTwo = BattleTeamTwo.Pets.GetFirstPet();
         frontPetOne.OnAttack( BattleTeamOne, BattleTeamTwo );
         frontPetTwo.OnAttack( BattleTeamTwo, BattleTeamOne );
         return false;
@@ -115,14 +115,16 @@ public class GameManager : MonoBehaviour
     bool StartBattle()
     {
 
-        for ( LinkedListNode< PetData > node = BattleTeamOne.Pets.First; node != null; node = node.Next )
-        {
-            node.Value.OnBattleStart( BattleTeamOne, BattleTeamTwo );
+        for(int i = 0; i < BattleTeamOne.Pets.Size; i++) {
+            PetData pet = BattleTeamOne.Pets.GetPet(i);
+            if(pet == null) continue;
+            pet.OnBattleStart(BattleTeamOne, BattleTeamTwo);
         }
 
-        for ( LinkedListNode< PetData > node = BattleTeamTwo.Pets.First; node != null; node = node.Next )
-        {
-            node.Value.OnBattleStart( BattleTeamTwo, BattleTeamOne );
+        for(int i = 0; i < BattleTeamTwo.Pets.Size; i++) {
+            PetData pet = BattleTeamTwo.Pets.GetPet(i);
+            if(pet == null) continue;
+            pet.OnBattleStart(BattleTeamTwo, BattleTeamOne);
         }
 
         return true;
@@ -130,9 +132,10 @@ public class GameManager : MonoBehaviour
     public bool Readied;
     bool EndTurn()
     {
-        foreach ( PetData pet in TeamOne.Pets )
-        {
-            pet?.OnTurnEnd( TeamOne );
+        for(int i = TeamOne.Pets.Size - 1; i >= 0; i--) {
+            PetData pet = TeamOne.Pets.GetPet(i);
+            if(pet == null) continue;
+            pet.OnTurnEnd(TeamOne);
         }
 
         //Readied = true;
@@ -148,10 +151,10 @@ public class GameManager : MonoBehaviour
 
         // CHANGE RANDOM ENEMIES
 
-        LinkedList< PetData > tmp = new();
+        PetArray tmp = new PetArray(TeamOne.Pets.Size);
         for ( int i = 0; i < Mathf.RoundToInt(Random.value * 6f); i++ )
         {
-            tmp.AddLast( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 6 ), true ) );
+            tmp.TryAddFriend( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 6 ), true ), i );
         }
 
         BattleTeamTwo = new Team
@@ -160,7 +163,7 @@ public class GameManager : MonoBehaviour
             Pets = tmp,
         };
         
-        //Debug.Log( $"Enemy Team: {BattleTeamTwo}" );
+        Debug.Log( $"Enemy Team: {BattleTeamTwo}" );
         return true;
     }
 
@@ -173,9 +176,10 @@ public class GameManager : MonoBehaviour
         TeamOne.Coins = 10;
         TeamOne.Shop.IncrementTurn();
         TeamOne.Shop.RerollShop();
-        for(LinkedListNode<PetData> petNode = TeamOne.Pets.Last; petNode != null; petNode = petNode.Previous)
-        {
-            petNode.Value?.OnTurnStart( TeamOne );
+        for(int i = 0; i < TeamOne.Pets.Size; i++) {
+            PetData pet = TeamOne.Pets.GetPet(i);
+            if(pet == null) continue;
+            pet.OnTurnStart(TeamOne);
         }
 
         return true;

@@ -90,38 +90,29 @@ public class PetVisualizer : MonoBehaviour
 
         if ( _myTeam is {Health: > 0} && _enemyTeam == null )
         {
-
-            LinkedListNode< PetData > node = _myTeam.Pets.First;
-            int index = 0;
-
-            while ( node != null )
+            for(int i = 0; i < _myTeam.Pets.Size; i++)
             {
-                if ( _sprites.Any( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) ) )
+                PetData currPet = _myTeam.Pets.GetPet(i);
+                if(currPet == null) {
+                    _teamOneTiles[ i ].GetComponent< Image >().sprite = null;
+                    _teamOneTiles[ i ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                } else if ( _sprites.Any( x => x.name.Equals( ( (PetData.AllPets) currPet.PetID ).ToString() ) ) )
                 {
-                    _teamOneTiles[ index ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
-                    if ( node.Value.Food != FoodData.Food.None )
+                    _teamOneTiles[ i ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) currPet.PetID ).ToString() ) );
+                    if ( currPet.Food != FoodData.Food.None )
                     {
-                        _teamOneTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = Color.white;
-                        _teamOneTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
+                        _teamOneTiles[ i ].transform.GetChild( 0 ).GetComponent< Image >().color = Color.white;
+                        _teamOneTiles[ i ].transform.GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( currPet.Food.ToString() ) );
                     } else
                     {
-                        _teamOneTiles[ index ].transform.GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                        _teamOneTiles[ i ].transform.GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
                     }
 
-                    _teamOneTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
+                    _teamOneTiles[ i ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
                 }
-
-                node = node.Next;
-                index++;
             }
 
-            for ( int i = index; i < _teamOneTiles.Count; i++ )
-            {
-                _teamOneTiles[ index ].GetComponent< Image >().sprite = null;
-                _teamOneTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
-            }
-
-            index = 0;
+            int index = 0;
             for ( int i = 0; i < _myTeam.Shop.Items.Length; i++ )
             {
                 ShopItem item = _myTeam.Shop.Items[ i ];
@@ -143,66 +134,52 @@ public class PetVisualizer : MonoBehaviour
             }
         } else if ( _enemyTeam != null )
         {
-            LinkedListNode< PetData > node = _myTeam.Pets.First;
-            int index = 0;
-
-            while ( node != null )
+            for(int i = 0; i < _myTeam.Pets.Size; i++)
             {
-                if ( _sprites.Any( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) ) )
+                PetData currPet = _myTeam.Pets.GetPet(i);
+                if(currPet == null) 
                 {
-                    _teamOneTiles[ index ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
-                    if ( node.Value.Food != FoodData.Food.None )
+                    _teamOneTiles[ i ].GetComponent< Image >().sprite = null;
+                    _teamOneTiles[ i ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                    _teamOneTiles[ i ].GetChild(0).GetComponent< Image>().color = new Color( 1, 1, 1, 0 );
+                } else if ( _sprites.Any( x => x.name.Equals( ( (PetData.AllPets) currPet.PetID ).ToString() ) ) )
+                {
+                    _teamOneTiles[ i ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) currPet.PetID ).ToString() ) );
+                    if ( currPet.Food != FoodData.Food.None )
                     {
-                        _teamOneTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = Color.white;
-                        _teamOneTiles[ index ].GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
+                        _teamOneTiles[ i ].GetChild( 0 ).GetComponent< Image >().color = Color.white;
+                        _teamOneTiles[ i ].GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( currPet.Food.ToString() ) );
                     } else
                     {
-                        _teamOneTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                        _teamOneTiles[ i ].GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
                     }
 
-                    _teamOneTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
+                    _teamOneTiles[ i ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
                 }
-
-                node = node.Next;
-                index++;
             }
 
-            for ( int i = index; i < _teamOneTiles.Count; i++ )
+            for(int i = 0; i < _enemyTeam.Pets.Size; i++)
             {
-                _teamOneTiles[ index ].GetComponent< Image >().sprite = null;
-                _teamOneTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
-                _teamOneTiles[ index ].GetChild(0).GetComponent< Image>().color = new Color( 1, 1, 1, 0 );
-            }
-
-            node = _enemyTeam.Pets.First;
-            index = 0;
-
-            while ( node != null )
-            {
-                if ( _sprites.Any( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) ) )
+                PetData currPet = _enemyTeam.Pets.GetPet(i);
+                if(currPet == null) 
                 {
-                    _teamTwoTiles[ index ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) node.Value.PetID ).ToString() ) );
-                    if ( node.Value.Food != FoodData.Food.None )
+                    _teamOneTiles[ i ].GetComponent< Image >().sprite = null;
+                    _teamOneTiles[ i ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                    _teamOneTiles[ i ].GetChild(0).GetComponent< Image>().color = new Color( 1, 1, 1, 0 );
+                } else if ( _sprites.Any( x => x.name.Equals( ( (PetData.AllPets) currPet.PetID ).ToString() ) ) )
+                {
+                    _teamOneTiles[ i ].GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( ( (PetData.AllPets) currPet.PetID ).ToString() ) );
+                    if ( currPet.Food != FoodData.Food.None )
                     {
-                        _teamTwoTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = Color.white;
-                        _teamTwoTiles[ index ].GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( node.Value.Food.ToString() ) );
+                        _teamOneTiles[ i ].GetChild( 0 ).GetComponent< Image >().color = Color.white;
+                        _teamOneTiles[ i ].GetChild( 0 ).GetComponent< Image >().sprite = _sprites.First( x => x.name.Equals( currPet.Food.ToString() ) );
                     } else
                     {
-                        _teamTwoTiles[ index ].GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
+                        _teamOneTiles[ i ].GetChild( 0 ).GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
                     }
 
-                    _teamTwoTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
+                    _teamOneTiles[ i ].GetComponent< Image >().color = new Color( 1, 1, 1, 1 );
                 }
-
-                node = node.Next;
-                index++;
-            }
-
-            for ( int i = index; i < _teamTwoTiles.Count; i++ )
-            {
-                _teamTwoTiles[ index ].GetComponent< Image >().sprite = null;
-                _teamTwoTiles[ index ].GetComponent< Image >().color = new Color( 1, 1, 1, 0 );
-                _teamTwoTiles[ index ].GetChild(0).GetComponent< Image>().color = new Color( 1, 1, 1, 0 );
             }
         }
     }
