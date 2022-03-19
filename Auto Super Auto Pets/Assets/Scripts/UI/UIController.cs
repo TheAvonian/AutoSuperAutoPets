@@ -49,46 +49,29 @@ public class UIController : MonoBehaviour
 
         for ( int i = 0; i < 5; i++ )
         {
-            _teamOnePets[ i ] = new PetCard
-            {
-                HealthElement = teamOneHolder[ i ].Q< Label >( "PetHealth" ),
-                DamageElement = teamOneHolder[ i ].Q< Label >( "PetDamage" ),
-                FoodElement = teamOneHolder[ i ].Q< GroupBox >( "PetFood" ),
-                ImageElement = teamOneHolder[ i ].Q< GroupBox >( "PetImage" ),
-            };
+            _teamOnePets[ i ] = CreateCard( teamOneHolder[ i ] );
 
-            _teamTwoPets[ i ] = new PetCard
-            {
-                HealthElement = teamTwoHolder[ i ].Q< Label >( "PetHealth" ),
-                DamageElement = teamTwoHolder[ i ].Q< Label >( "PetDamage" ),
-                FoodElement = teamTwoHolder[ i ].Q< GroupBox >( "PetFood" ),
-                ImageElement = teamTwoHolder[ i ].Q< GroupBox >( "PetImage" ),
-            };
+            _teamTwoPets[ i ] = CreateCard( teamTwoHolder[ i ] );
 
-            _shopCards[ i ] = new PetCard
-            {
-                HealthElement = shopHolder[ i ].Q< Label >( "PetHealth" ),
-                DamageElement = shopHolder[ i ].Q< Label >( "PetDamage" ),
-                FoodElement = shopHolder[ i ].Q< GroupBox >( "PetFood" ),
-                ImageElement = shopHolder[ i ].Q< GroupBox >( "PetImage" ),
-            };
+            _shopCards[ i ] = CreateCard( shopHolder[ i ] );
         }
 
-        _shopCards[ 5 ] = new PetCard
-        {
-            HealthElement = shopHolder[ 5 ].Q< Label >( "PetHealth" ),
-            DamageElement = shopHolder[ 5 ].Q< Label >( "PetDamage" ),
-            FoodElement = shopHolder[ 5 ].Q< GroupBox >( "PetFood" ),
-            ImageElement = shopHolder[ 5 ].Q< GroupBox >( "PetImage" ),
-        };
+        _shopCards[ 5 ] = CreateCard( shopHolder[ 5 ] );
 
-        _shopCards[ 6 ] = new PetCard
+        _shopCards[ 6 ] = CreateCard( shopHolder[ 6 ] );
+
+        PetCard CreateCard( VisualElement element )
         {
-            HealthElement = shopHolder[ 6 ].Q< Label >( "PetHealth" ),
-            DamageElement = shopHolder[ 6 ].Q< Label >( "PetDamage" ),
-            FoodElement = shopHolder[ 6 ].Q< GroupBox >( "PetFood" ),
-            ImageElement = shopHolder[ 6 ].Q< GroupBox >( "PetImage" ),
-        };
+            return new PetCard
+            {
+                HealthElement = element.Q< Label >( "PetHealth" ),
+                DamageElement = element.Q< Label >( "PetDamage" ),
+                FoodElement = element.Q< GroupBox >( "PetFood" ),
+                ImageElement = element.Q< GroupBox >( "PetImage" ),
+                LevelElement = element.Q< Label >( "Level" ),
+                StackElement = element.Q< Label >( "Stack" ),
+            };
+        }
     }
 
     const string FIGHT_STYLE_TEAM = "fight-style";
@@ -141,62 +124,48 @@ public class UIController : MonoBehaviour
 
     void CreatePetCard( PetCard petCard, PetData petItem )
     {
-        if ( petItem == null )
+        if ( petItem is null )
         {
-            petCard.ImageElement.style.backgroundColor = _borderColor;
-            petCard.FoodElement.style.backgroundColor = _borderColor;
-            petCard.DamageElement.parent.style.opacity = 0;
-            petCard.FoodElement.parent.style.opacity = 0;
+            petCard.ClearPet();
             return;
         }
-        petCard.ImageElement.style.backgroundImage = new StyleBackground( _allSprites.First( x => x.name.Equals( GetPetName( petItem ) ) ) );
-        petCard.DamageElement.text = petItem.Damage.ToString();
-        petCard.HealthElement.text = petItem.Health.ToString();
-        petCard.ImageElement.style.opacity = 100f;
-        if ( petItem.Food != FoodData.Food.None )
+
+        petCard.SetPetImage( new StyleBackground( _allSprites.First( x => x.name.Equals( GetPetName( petItem ) ) ) ) );
+        petCard.SetStats( petItem.Damage, petItem.Health, petItem.Level, petItem.StackHeight );
+        if ( petItem.Food is not FoodData.Food.None )
         {
-            petCard.FoodElement.style.opacity = 100f;
-            petCard.FoodElement.style.backgroundColor = _borderColor;
-            petCard.FoodElement.style.backgroundImage = new StyleBackground( _allSprites.First( x => x.name.Equals( petItem.Food.ToString() ) ) );
+            petCard.SetFoodImage( new StyleBackground( _allSprites.First( x => x.name.Equals( petItem.Food.ToString() ) ) ) );
         } else
         {
             petCard.FoodElement.style.opacity = 0f;
         }
 
-        petCard.ImageElement.style.backgroundColor = _borderColor;
-        petCard.DamageElement.parent.style.opacity = 100f;
-        petCard.HealthElement.parent.style.opacity = 100f;
+        petCard.ImageElement.style.backgroundColor = Color.clear;
+        petCard.ShowStats( true );
+        petCard.ShowLevel( true );
     }
 
-    readonly StyleFloat _borderWidth = new( 0f );
-    readonly StyleColor _borderColor = new( new Color( 1, 1, 1, 0 ) );
-
-    readonly StyleFloat _frozenWidth = new( 2f );
-    readonly StyleColor _frozenColor = new( Color.cyan );
     void CreatePetCard( PetCard petCard, ShopItem shopItem )
     {
-        if ( shopItem == null )
+        if ( shopItem is null )
         {
-            petCard.ImageElement.style.opacity = 0;
-            petCard.FoodElement.style.opacity = 0;
-            petCard.DamageElement.parent.style.opacity = 0;
-            petCard.HealthElement.parent.style.opacity = 0;
+            petCard.ClearPet();
             return;
         }
-        if ( shopItem.Pet != null )
+
+        if ( shopItem.Pet is { } )
         {
             CreatePetCard( petCard, shopItem.Pet );
-            petCard.DamageElement.parent.style.opacity = 100f;
-            petCard.HealthElement.parent.style.opacity = 100f;
-        } else if ( shopItem.Food != null )
+            petCard.ShowStats( true );
+
+        } else if ( shopItem.Food is { } )
         {
-            petCard.ImageElement.style.opacity = 100f;
-            petCard.ImageElement.style.backgroundImage = new StyleBackground( _allSprites.First( x => x.name.Equals( shopItem.Food.ToString() ) ) );
-            petCard.DamageElement.parent.style.opacity = 0;
-            petCard.HealthElement.parent.style.opacity = 0;
+            petCard.SetPetImage( new StyleBackground( _allSprites.First( x => x.name.Equals( shopItem.Food.ToString() ) ) ) );
+            petCard.ShowStats( false );
         }
 
-        petCard.ImageElement.style.backgroundColor = shopItem.Frozen ? _frozenColor : _borderColor;
+        petCard.ShowLevel( false );
+        petCard.ImageElement.style.backgroundColor = shopItem.Frozen ? Color.cyan : Color.clear;
 
         petCard.FoodElement.style.opacity = 0f;
     }
@@ -231,4 +200,52 @@ class PetCard
     public VisualElement FoodElement;
     public Label DamageElement;
     public Label HealthElement;
+    public Label LevelElement;
+    public Label StackElement;
+
+    public void SetPetImage( StyleBackground image )
+    {
+        ImageElement.style.backgroundColor = Color.clear;
+        ImageElement.style.opacity = 1f;
+        ImageElement.style.backgroundImage = image;
+    }
+
+    public void SetFoodImage( StyleBackground image )
+    {
+        FoodElement.style.opacity = 1f;
+        FoodElement.style.backgroundColor = Color.clear;
+        FoodElement.style.backgroundImage = image;
+    }
+
+    public void ShowStats( bool show )
+    {
+        DamageElement.parent.style.opacity = show ? 1f : 0;
+        HealthElement.parent.style.opacity = show ? 1f : 0;
+    }
+
+    public void ShowLevel( bool show )
+    {
+        StackElement.parent.style.opacity = show ? 1f : 0;
+    }
+
+    public void SetStats( int damage, int health, int level, int stack )
+    {
+        DamageElement.parent.style.opacity = 1f;
+        HealthElement.parent.style.opacity = 1f;
+        DamageElement.text = damage.ToString();
+        HealthElement.text = health.ToString();
+        StackElement.parent.style.opacity = 1f;
+        StackElement.text = stack.ToString();
+        LevelElement.text = level.ToString();
+    }
+
+    public void ClearPet()
+    {
+        ImageElement.style.backgroundColor = Color.clear;
+        ImageElement.style.opacity = 0;
+        FoodElement.style.opacity = 0;
+        DamageElement.parent.style.opacity = 0;
+        HealthElement.parent.style.opacity = 0;
+        StackElement.parent.style.opacity = 0;
+    }
 }
