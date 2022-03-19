@@ -11,3 +11,4 @@ Super Auto Pets is an amazing game that blew up recently (2021-2022) in populari
 <a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by Freepik - Flaticon</a><br>
 <a href="https://www.flaticon.com/free-icons/sandclock" title="sandclock icons">Sandclock icons created by Freepik - Flaticon</a><br>
 <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/trophy" title="trophy icons">Trophy icons created by Pixel perfect - Flaticon</a>
