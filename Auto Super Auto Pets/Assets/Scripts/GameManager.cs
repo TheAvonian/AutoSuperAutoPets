@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,6 +9,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Application.runInBackground = true;
+        _teams = Resources.LoadAll< TeamSO >( "Teams" );
     }
 
     public Team TeamOne;
@@ -20,6 +22,8 @@ public class GameManager : MonoBehaviour
     public Team BattleTeamTwo;
 
     public GameState State;
+
+    TeamSO[] _teams;
 
     public WinState GameUpdate()
     {
@@ -117,25 +121,24 @@ public class GameManager : MonoBehaviour
 
         for(int i = 0; i < BattleTeamOne.Pets.Size; i++) {
             PetData pet = BattleTeamOne.Pets.GetPet(i);
-            if(pet == null) continue;
-            pet.OnBattleStart(BattleTeamOne, BattleTeamTwo);
+
+            pet?.OnBattleStart(BattleTeamOne, BattleTeamTwo);
         }
 
         for(int i = 0; i < BattleTeamTwo.Pets.Size; i++) {
             PetData pet = BattleTeamTwo.Pets.GetPet(i);
-            if(pet == null) continue;
-            pet.OnBattleStart(BattleTeamTwo, BattleTeamOne);
+
+            pet?.OnBattleStart(BattleTeamTwo, BattleTeamOne);
         }
 
         return true;
     }
-    public bool Readied;
     bool EndTurn()
     {
         for(int i = TeamOne.Pets.Size - 1; i >= 0; i--) {
             PetData pet = TeamOne.Pets.GetPet(i);
-            if(pet == null) continue;
-            pet.OnTurnEnd(TeamOne);
+
+            pet?.OnTurnEnd(TeamOne);
         }
 
         //Readied = true;
@@ -151,10 +154,29 @@ public class GameManager : MonoBehaviour
 
         // CHANGE RANDOM ENEMIES
 
-        PetArray tmp = new PetArray(TeamOne.Pets.Size);
-        for ( int i = 0; i < Mathf.RoundToInt(Random.value * 6f); i++ )
+        PetArray tmp = new(TeamOne.Pets.Size);
+        
+        List< TeamSO > teams = _teams.Where( x => x.Turn == TeamOne.Shop.Turn ).ToList();
+
+        if ( teams.Count > 0 )
         {
-            tmp.TryAddFriend( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 6 ), true ), i );
+            TeamSO randomEnemy = teams.ElementAt( Random.Range( 0, teams.Count ) );
+
+            for ( int i = 0; i < randomEnemy.Pets.Count; i++ )
+            {
+                PetData pet = PetData.PetConstructor( randomEnemy.Pets[ i ].Pet );
+                pet.Damage = randomEnemy.Pets[ i ].Damage;
+                pet.Health = randomEnemy.Pets[ i ].Health;
+                pet.Level = randomEnemy.Pets[ i ].Level;
+                pet.Food = randomEnemy.Pets[ i ].Food;
+                tmp.TryAddFriend( pet, i );
+            }
+        } else
+        {
+            for ( int i = 0; i < Mathf.RoundToInt(Random.value * 6f); i++ )
+            {
+                tmp.TryAddFriend( PetData.RandomPet( Math.Clamp( TeamOne.Shop.Turn / 2 + 1, 0, 6 ), true ), i );
+            }
         }
 
         BattleTeamTwo = new Team
@@ -170,7 +192,6 @@ public class GameManager : MonoBehaviour
 
     bool TurnStart()
     {
-        Readied = false;
         //Debug.Log( "start turn" );
         TeamOne.TeamName = "AI";
         TeamOne.Coins = 10;
@@ -178,8 +199,8 @@ public class GameManager : MonoBehaviour
         TeamOne.Shop.RerollShop();
         for(int i = 0; i < TeamOne.Pets.Size; i++) {
             PetData pet = TeamOne.Pets.GetPet(i);
-            if(pet == null) continue;
-            pet.OnTurnStart(TeamOne);
+
+            pet?.OnTurnStart(TeamOne);
         }
 
         return true;

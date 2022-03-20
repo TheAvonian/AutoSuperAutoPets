@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Random = UnityEngine.Random;
 
 public class FoodData
@@ -26,12 +24,12 @@ public class FoodData
         Steak,
         Milk,
         Coconut,
-        Poison
+        Poison,
     }
 
     public int Health;
     public int Damage;
-    public Food Type;
+    public readonly Food Type;
 
     public FoodData( Food food )
     {
@@ -74,7 +72,7 @@ public class FoodData
             _ => throw new ArgumentOutOfRangeException(),
         };
         
-        FoodData.Food randomFood = (FoodData.Food) list.GetValue( Random.Range( 0, list.Length ) );
+        Food randomFood = (Food) list.GetValue( Random.Range( 0, list.Length ) );
         return new FoodData(randomFood);
     }
 
@@ -88,34 +86,34 @@ public class FoodLists {
     public enum TierOneFood {
         Apple = FoodData.Food.Apple,
         Honey = FoodData.Food.Honey,
-    };
+    }
 
     public enum TierTwoFood {
         Cupcake = FoodData.Food.Cupcake,
         Meatbone = FoodData.Food.Meatbone,
         Pill = FoodData.Food.Pill,
-    };
+    }
 
     public enum TierThreeFood {
         Garlic = FoodData.Food.Garlic,
         Salad = FoodData.Food.Salad,
-    };
+    }
 
     public enum TierFourFood {
         CannedFood = FoodData.Food.CannedFood,
         Pear = FoodData.Food.Pear,
-    };
+    }
 
     public enum TierFiveFood {
         Chili = FoodData.Food.Chili,
         Chocolate = FoodData.Food.Chocolate,
         Sushi = FoodData.Food.Sushi,
-    };
+    }
 
     public enum TierSixFood {
         Melon = FoodData.Food.Melon,
         Mushroom = FoodData.Food.Mushroom,
         Pizza = FoodData.Food.Pizza,
         Steak = FoodData.Food.Steak,
-    };
+    }
 }

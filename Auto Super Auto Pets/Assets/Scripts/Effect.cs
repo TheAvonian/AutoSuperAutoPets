@@ -1,5 +1,7 @@
 ﻿
-[System.Serializable]
+using System;
+
+[Serializable]
 public class Ability
 {
     public Trigger Trigger;
@@ -8,7 +10,7 @@ public class Ability
     public GiveStatsData StatsData;
 }
 
-[System.Serializable]
+[Serializable]
 public class Trigger
 {
     public TriggerType TriggerType;
@@ -42,7 +44,7 @@ public enum Target
     AllEnemies,
     All,
     ShopPets,
-    ShopFoods
+    ShopFoods,
 }
 
 public enum Effect
@@ -56,7 +58,7 @@ public enum Effect
     
 }
 
-[System.Serializable]
+[Serializable]
 public class GiveStatsData
 {
     public int Damage;

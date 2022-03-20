@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 [Serializable]
 public class ShopData
 {
     public ShopItem[] Items = new ShopItem[7];
-    public int HealthModifier = 0;
-    public int DamageModifier = 0;
-    public int Turn = 0;
+    public int HealthModifier;
+    public int DamageModifier;
+    public int Turn;
     public int CurrentTier = 1;
     public void RerollShop()
     {

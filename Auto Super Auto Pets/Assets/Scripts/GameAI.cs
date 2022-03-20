@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
@@ -39,7 +37,7 @@ public class GameAI : Agent
             switch ( _manager.GameUpdate() )
             {
                 case GameManager.WinState.Loss:
-                    AddReward( -0.1f );
+                    AddReward( -0.01f );
                     if ( _myTeam.Health <= 0 )
                     {
                         AddReward( -0.5f );
@@ -189,6 +187,7 @@ public class GameAI : Agent
     public override void OnActionReceived( ActionBuffers actions )
     {
         // Handle turn here
+        AddReward( -0.000025f );
 
         if ( actions.DiscreteActions[ 0 ] != 7 && _myTeam.Coins >= 3 )
         {
@@ -200,12 +199,13 @@ public class GameAI : Agent
                 {
                     //Debug.Log( $"Froze Selection: {p}" );
                     _myTeam.Shop.Freeze( actions.DiscreteActions[ 0 ] );
+                    AddReward( 0.00005f );
                 } else if ( _myTeam.TryPlaceItem( p, actions.DiscreteActions[ 1 ] ) )
                 {
                     _myTeam.Coins -= 3;
                     Debug.Log( $"Bought pet: {p}" );
                     Debug.Log( _myTeam );
-                    AddReward( 0.000025f );
+                    AddReward( 0.00025f );
                     _myTeam.Shop.RemoveItem( actions.DiscreteActions[ 0 ] );
                 } else
                 {
@@ -220,6 +220,7 @@ public class GameAI : Agent
             //Debug.Log( "Rerolling" );
             _myTeam.Shop.RerollShop();
             _myTeam.Coins--;
+            AddReward( 0.0000025f );
         }
 
         if ( actions.DiscreteActions[ 2 ] != 5 )
@@ -232,6 +233,7 @@ public class GameAI : Agent
             {
                 //Debug.Log( "Moving Pet " );
                 _myTeam.MovePet( actions.DiscreteActions[ 2 ], actions.DiscreteActions[ 3 ] );
+                AddReward( 0.00000025f );
             }
         } else if ( actions.DiscreteActions[ 2 ] == 5 )
         {
@@ -240,6 +242,7 @@ public class GameAI : Agent
             {
                 //Debug.Log( "Sold Pet" );
                 _myTeam.Coins++;
+                AddReward( -0.00025f );
             }
         }
 
@@ -247,7 +250,7 @@ public class GameAI : Agent
         {
             //Debug.Log( "Ending turn" );
             _manager.State = GameManager.GameState.TurnEnd;
-            AddReward( 0.000025f );
+            AddReward( 0.0005f );
         }
     }
 
@@ -259,7 +262,7 @@ public class GameAI : Agent
 
         for ( int i = 0; i < _myTeam.Pets.Size; i++ )
         {
-            PetData pet = _myTeam.Pets.GetPet(i);
+            PetData pet = _myTeam.Pets.GetPet( i );
             if ( pet != null )
             {
                 sensor.AddObservation( pet.PetID );

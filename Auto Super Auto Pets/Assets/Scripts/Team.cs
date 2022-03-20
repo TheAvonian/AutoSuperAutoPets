@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -11,7 +8,7 @@ public class Team
     public int Health = 10;
     public int Coins = 10;
     public int Wins;
-    public PetArray Pets = new PetArray(5);
+    public PetArray Pets = new(5);
     public ShopData Shop = new();
 
     public Team CloneTeam()
@@ -20,9 +17,12 @@ public class Team
         for(int i = 0; i < Pets.Size; i++)
         {
             PetData p = Pets.GetPet(i);
-            if(p == null) continue;
+            if(p == null)
+            {
+                continue;
+            }
 
-            tempNew.Pets.TryAddFriend( ( PetData.PetConstructor((PetData.AllPets)p.PetID) ), i );
+            tempNew.Pets.TryAddFriend( PetData.PetConstructor((PetData.AllPets)p.PetID), i );
             PetData newP = tempNew.Pets.GetPet(i);
             if ( p.Food != FoodData.Food.None )
             {
@@ -112,7 +112,11 @@ public class Team
     {
         PetData pet = Pets.GetPet(targetIndex);
 
-        if ( pet == null ) return false;
+        if ( pet == null )
+        {
+            return false;
+        }
+
         Pets.RemovePet(pet);
         return true;
     }
